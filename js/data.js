@@ -149,3 +149,5 @@ const DATA = {
     },
   ],
 };
+
+export { DATA };
