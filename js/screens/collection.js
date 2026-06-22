@@ -11,21 +11,21 @@ export function renderCollection() {
   if (items.length === 0) {
     container.innerHTML = `
       <div class="feed-header">
-        <h1>My Collection</h1>
-        <p class="subtitle">Your saved nail art</p>
+        <h1>Saved</h1>
+        <p class="subtitle">Your Curated Collection</p>
       </div>
       <div class="empty-state">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        <h3>No saved designs yet</h3>
-        <p>Save nail art from the Home feed or upload your own!</p>
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <h3>Your collection awaits</h3>
+        <p>Save nail art from the feed or upload your own designs to begin curating.</p>
       </div>
     `;
   } else {
     const newestFirst = [...items].reverse();
     container.innerHTML = `
       <div class="feed-header">
-        <h1>My Collection</h1>
-        <p class="subtitle">${newestFirst.length} saved design${newestFirst.length !== 1 ? 's' : ''}</p>
+        <h1>Saved</h1>
+        <p class="subtitle">${newestFirst.length} Curated Piece${newestFirst.length !== 1 ? 's' : ''}</p>
       </div>
       <div class="masonry" id="collection-masonry">
         ${newestFirst.map(item => `

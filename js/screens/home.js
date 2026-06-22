@@ -8,11 +8,11 @@ export function renderHome() {
   container.innerHTML = `
     <div class="feed-header">
       <h1>NailPin</h1>
-      <p class="subtitle">Discover nail art inspiration</p>
+      <p class="subtitle">The Art of Nail Inspiration</p>
     </div>
     <div class="cta-banner" id="home-cta">
-      <h3>💅 Got a look you love?</h3>
-      <p>Tap Upload to save your own designs</p>
+      <h3>Curate Your Collection</h3>
+      <p>Save looks you love &amp; upload your own</p>
     </div>
     <div class="masonry" id="home-masonry">
       ${DATA.feed.map(item => `

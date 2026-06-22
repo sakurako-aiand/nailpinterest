@@ -10,13 +10,13 @@ export function renderUpload() {
   container.innerHTML = `
     <div class="upload-screen">
       <h1>Upload</h1>
-      <p class="subtitle">Save to your private collection</p>
+      <p class="subtitle">Your Private Collection</p>
 
       <div class="form-group">
         <label>Photo</label>
         <div class="image-upload-area" id="upload-area">
           <div class="upload-placeholder">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             <span>Tap to add a photo</span>
             <small>Your photo stays private</small>
           </div>
@@ -26,15 +26,15 @@ export function renderUpload() {
 
       <div class="form-group">
         <label>Title</label>
-        <input type="text" id="upload-title" placeholder="e.g. Summer Ombre ..." maxlength="60" />
+        <input type="text" id="upload-title" placeholder="e.g. Summer Ombré" maxlength="60" />
       </div>
 
       <div class="form-group">
-        <label>Colors Used</label>
+        <label>The Palette</label>
         <textarea id="upload-colors" placeholder="Base: OPI Funny Bunny&#10;Accent: Essie Blanc&#10;Top Coat: Seche Vite"></textarea>
       </div>
 
-      <button class="upload-submit" id="upload-submit-btn">Save to My Collection</button>
+      <button class="upload-submit" id="upload-submit-btn">Save to Collection</button>
     </div>
   `;
 
@@ -91,7 +91,7 @@ export function renderUpload() {
     area.classList.remove('has-image');
     area.innerHTML = `
       <div class="upload-placeholder">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         <span>Tap to add a photo</span>
         <small>Your photo stays private</small>
       </div>
