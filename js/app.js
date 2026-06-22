@@ -22,7 +22,7 @@ function updateLangToggle() {
 }
 
 function closeAllOverlays() {
-  for (const id of ['detail-view', 'estimator-view', 'policy-view']) {
+  for (const id of ['detail-view', 'estimator-view', 'policy-view', 'canvas-view']) {
     const el = document.getElementById(id);
     if (el) {
       el.classList.remove('active');

@@ -2,6 +2,7 @@ import { showToast, navigateTo } from '../utils.js';
 import { store } from '../store.js';
 import { getTierPrice, getTierLabel, formatPrice } from '../data.js';
 import { openEstimator } from './estimator.js';
+import { openCanvas } from './canvas.js';
 import { i18n } from '../i18n.js';
 
 export function openDetailView(item) {
@@ -35,6 +36,7 @@ export function openDetailView(item) {
         <div class="investment-price">${formatPrice(estPrice)}+</div>
         <div class="investment-note">${i18n.t('detail.investmentNote')}</div>
         <button class="estimate-btn" id="open-estimator">${i18n.t('detail.customizeEstimate')}</button>
+        <button class="estimate-btn" id="try-canvas" style="margin-top: 8px;">${i18n.t('canvas.tryOnCanvas')}</button>
       </div>
 
       <div class="colors-section">
@@ -82,6 +84,7 @@ export function openDetailView(item) {
 
   view.querySelector('#detail-back').addEventListener('click', () => closeDetailView());
   view.querySelector('#open-estimator').addEventListener('click', () => openEstimator());
+  view.querySelector('#try-canvas').addEventListener('click', () => openCanvas(item));
 
   view.querySelectorAll('.tag-pill').forEach(pill => {
     pill.addEventListener('click', () => {

@@ -1404,3 +1404,346 @@ html, body {
   border-bottom: 1px solid var(--taupe-light);
   padding-bottom: 2px;
 }
+
+/* ═══════════════════════════════════════
+   Tiyu Design Canvas
+   ═══════════════════════════════════════ */
+
+.canvas-screen {
+  padding: 8px 24px 24px;
+}
+
+.canvas-screen .brand {
+  font-family: var(--font-brand);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--taupe-dark);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.canvas-screen h1 {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 500;
+  font-style: italic;
+  margin-bottom: 6px;
+  color: var(--espresso);
+  letter-spacing: -0.5px;
+}
+
+.canvas-hint {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--espresso-muted);
+  margin-bottom: 16px;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+.canvas-clear-btn {
+  border: none;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--espresso-muted);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  padding: 8px 0;
+  transition: color 0.2s ease;
+}
+
+.canvas-clear-btn:active { color: var(--taupe-dark); }
+
+/* ── Hand Model ── */
+.hand-container {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto 20px;
+  aspect-ratio: 300 / 460;
+}
+
+.hand-svg-wrap {
+  width: 100%;
+  height: 100%;
+}
+
+.hand-svg-wrap svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 20px rgba(64, 64, 64, 0.06));
+}
+
+/* ── Nail Drop Zones ── */
+.nail-zone {
+  position: absolute;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  overflow: hidden;
+  cursor: pointer;
+  background: transparent;
+  transition: box-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nail-zone.ready {
+  background: rgba(201, 169, 145, 0.12);
+  box-shadow: 0 0 0 2px var(--taupe);
+  animation: nailPulse 1.8s ease infinite;
+}
+
+@keyframes nailPulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(201, 169, 145, 0.4); }
+  50% { box-shadow: 0 0 0 4px rgba(201, 169, 145, 0.2); }
+}
+
+.nail-zone.has-design {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.nail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.nail-remove {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(64,64,64,0.65);
+  color: white;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.nail-zone.has-design:active .nail-remove { opacity: 1; }
+
+/* ── Design Strip ── */
+.design-strip-header {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--espresso-muted);
+  font-weight: 500;
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+
+.design-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 4px 12px;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.design-strip::-webkit-scrollbar { display: none; }
+
+.design-thumb {
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
+  background: var(--white);
+  box-shadow: var(--shadow-soft);
+}
+
+.design-thumb.selected {
+  border-color: var(--taupe);
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(201, 169, 145, 0.3);
+}
+
+.design-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Finalize Button ── */
+.finalize-btn {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: var(--espresso);
+  color: var(--bg);
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.finalize-btn:active { transform: scale(0.98); }
+
+.finalize-btn.disabled {
+  background: var(--border);
+  color: var(--espresso-muted);
+  cursor: not-allowed;
+}
+
+/* ── Canvas Result Modal ── */
+.canvas-result-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(64, 64, 64, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+  padding: 24px;
+}
+
+.canvas-result-modal {
+  background: var(--bg);
+  border-radius: 24px;
+  padding: 32px 24px 24px;
+  max-width: 360px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: center;
+  animation: slideUpModal 0.35s ease;
+  box-shadow: var(--shadow-lg);
+}
+
+.canvas-result-modal .brand {
+  font-family: var(--font-brand);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--taupe-dark);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.canvas-result-modal h2 {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--espresso);
+  margin-bottom: 20px;
+}
+
+.result-image-wrap {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.result-image-wrap img {
+  width: 100%;
+  display: block;
+}
+
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.result-btn {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: var(--white);
+  color: var(--espresso);
+  transition: all 0.25s ease;
+}
+
+.result-btn:active { transform: scale(0.98); }
+
+.result-btn.primary {
+  background: linear-gradient(135deg, var(--taupe-dark), var(--taupe));
+  color: var(--white);
+  border: none;
+  box-shadow: 0 4px 16px rgba(163, 136, 116, 0.25);
+}
+
+.result-btn.ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--espresso-muted);
+}
+
+/* ── Canvas CTA on Home ── */
+.canvas-cta {
+  margin: 8px 18px;
+  padding: 24px 20px;
+  background: linear-gradient(135deg, var(--taupe-light), var(--beige));
+  border-radius: var(--radius);
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.canvas-cta:active { transform: scale(0.98); }
+
+.canvas-cta h3 {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 500;
+  font-style: italic;
+  margin-bottom: 6px;
+  color: var(--espresso);
+}
+
+.canvas-cta p {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--espresso-light);
+  font-weight: 300;
+}
+
+.canvas-cta .cta-arrow {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--taupe-dark);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
