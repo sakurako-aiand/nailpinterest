@@ -92,6 +92,8 @@ const translations = {
     },
     canvas: {
       title: 'Design Canvas',
+      modeHand: 'Hand',
+      modeBoard: 'Board',
       selectDesign: 'Select a design below, then tap a finger to apply',
       tapFinger: 'Now tap a finger to apply the design',
       clearAll: 'Clear',
@@ -115,6 +117,17 @@ const translations = {
       ctaTitle: 'Design Canvas',
       ctaDesc: 'Mix and match designs on a virtual hand',
       ctaArrow: 'Open Canvas',
+    },
+    moodboard: {
+      title: 'Look Board',
+      subtitle: 'Drag images from the gallery to build your look',
+      galleryTitle: 'Gallery',
+      boardTitle: 'Final Look Board',
+      upload: 'Upload',
+      clear: 'Clear',
+      dropHere: 'Drop image here',
+      finalizeBoard: 'Save Board',
+      boardSaved: 'Board saved!',
     },
     policy: {
       title: 'Our Policy',
@@ -256,6 +269,8 @@ const translations = {
     },
     canvas: {
       title: 'デザインキャンバス',
+      modeHand: 'ハンド',
+      modeBoard: 'ボード',
       selectDesign: '下のデザインを選んで、指をタップして適用',
       tapFinger: '指をタップしてデザインを適用',
       clearAll: 'クリア',
@@ -279,6 +294,17 @@ const translations = {
       ctaTitle: 'デザインキャンバス',
       ctaDesc: 'バーチャルな手でデザインを組み合わせ',
       ctaArrow: 'キャンバスを開く',
+    },
+    moodboard: {
+      title: 'ルックボード',
+      subtitle: 'ギャラリーから画像をドラッグしてルックを作成',
+      galleryTitle: 'ギャラリー',
+      boardTitle: 'フィナル ルックボード',
+      upload: 'アップロード',
+      clear: 'クリア',
+      dropHere: '画像をドロップ',
+      finalizeBoard: 'ボードを保存',
+      boardSaved: 'ボードを保存しました！',
     },
     policy: {
       title: '当サロンポリシー',
