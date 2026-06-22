@@ -1,4 +1,4 @@
-import { showToast } from '../utils.js';
+import { showToast, navigateTo } from '../utils.js';
 import { store } from '../store.js';
 import { getTierPrice, getTierLabel, formatPrice } from '../data.js';
 import { openEstimator } from './estimator.js';
@@ -50,6 +50,15 @@ export function openDetailView(item) {
         </div>
       </div>
 
+      ${(item.tags || []).length ? `
+        <div class="tags-section">
+          <h2>${i18n.t('detail.tags')}</h2>
+          <div class="tag-pills-wrap">
+            ${item.tags.map(tag => `<button class="tag-pill" data-tag="${tag}">${tag}</button>`).join('')}
+          </div>
+        </div>
+      ` : ''}
+
       <button class="save-btn ${isSaved ? 'saved' : ''}" id="detail-save-btn">
         ${isSaved ? `
           <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--taupe)" stroke="var(--taupe)" stroke-width="1.2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -73,6 +82,17 @@ export function openDetailView(item) {
 
   view.querySelector('#detail-back').addEventListener('click', () => closeDetailView());
   view.querySelector('#open-estimator').addEventListener('click', () => openEstimator());
+
+  view.querySelectorAll('.tag-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const tag = pill.dataset.tag;
+      closeDetailView();
+      navigateTo('search');
+      import('./search.js').then(m => {
+        m.searchByTag(tag);
+      });
+    });
+  });
 
   const saveBtn = view.querySelector('#detail-save-btn');
   saveBtn.addEventListener('click', () => {

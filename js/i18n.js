@@ -25,6 +25,7 @@ const translations = {
       removed: 'Removed from wishlist',
       saved: 'Saved to your wishlist',
       tierCustom: 'Custom Inspo',
+      tags: 'Tags',
     },
     estimator: {
       title: 'Price Estimator',
@@ -83,6 +84,7 @@ const translations = {
       title: 'Search',
       placeholder: 'Search styles, colors, tiers...',
       noResults: 'No looks found. Try a different search.',
+      popularTags: 'Popular Tags',
     },
     toast: {
       removed: 'Removed from wishlist',
@@ -161,6 +163,7 @@ const translations = {
       removed: 'ウィッシュリストから削除しました',
       saved: 'ウィッシュリストに保存しました',
       tierCustom: 'カスタムインスポ',
+      tags: 'タグ',
     },
     estimator: {
       title: '料金計算ツール',
@@ -219,6 +222,7 @@ const translations = {
       title: '検索',
       placeholder: 'スタイル・カラー・レベルで検索...',
       noResults: '見つかりませんでした。別のキーワードでお試しください。',
+      popularTags: '人気のタグ',
     },
     toast: {
       removed: 'ウィッシュリストから削除しました',
