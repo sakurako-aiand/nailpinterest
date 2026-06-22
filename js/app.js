@@ -3,8 +3,27 @@ import { renderHome } from './screens/home.js';
 import { renderUpload } from './screens/upload.js';
 import { renderCollection } from './screens/collection.js';
 import { store } from './store.js';
+import { i18n } from './i18n.js';
+
+function updateLangToggle() {
+  const toggle = document.getElementById('lang-toggle');
+  if (!toggle) return;
+  const en = toggle.querySelector('.lang-en');
+  const ja = toggle.querySelector('.lang-ja');
+  en.classList.toggle('active', i18n.lang === 'en');
+  ja.classList.toggle('active', i18n.lang === 'ja');
+  const navSpans = document.querySelectorAll('.nav-btn span');
+  if (navSpans.length >= 4) {
+    navSpans[0].textContent = i18n.t('nav.gallery');
+    navSpans[1].textContent = i18n.t('nav.search');
+    navSpans[2].textContent = i18n.t('nav.inspo');
+    navSpans[3].textContent = i18n.t('nav.wishlist');
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+  document.documentElement.lang = i18n.lang;
+
   renderHome();
   renderUpload();
 
@@ -13,6 +32,33 @@ document.addEventListener('DOMContentLoaded', () => {
     if (activeScreen && activeScreen.dataset.screen === 'collection') {
       renderCollection();
     }
+  });
+
+  i18n.onChange(() => {
+    updateLangToggle();
+    renderHome();
+    renderUpload();
+    const activeScreen = document.querySelector('.nav-btn.active');
+    if (activeScreen) {
+      const screen = activeScreen.dataset.screen;
+      if (screen === 'collection') renderCollection();
+      if (screen === 'search') import('./screens/search.js').then(m => m.initSearch());
+    }
+    const detail = document.getElementById('detail-view');
+    if (detail && detail.querySelector('#detail-back')) {
+      const back = detail.querySelector('#detail-back');
+      back.lastChild.textContent = ' ' + i18n.t('detail.back');
+    }
+    const est = document.getElementById('estimator-view');
+    if (est && est.querySelector('.estimator-content')) {
+      est.classList.remove('active');
+      est.style.display = 'none';
+      est.innerHTML = '';
+    }
+  });
+
+  document.getElementById('lang-toggle').addEventListener('click', () => {
+    i18n.toggle();
   });
 
   document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -24,4 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('.nav-btn[data-screen="home"].active')) {
     navigateTo('home');
   }
+
+  updateLangToggle();
 });

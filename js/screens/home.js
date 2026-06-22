@@ -1,6 +1,7 @@
-import { DATA, PRICING, getTierPrice, formatPrice } from '../data.js';
+import { DATA, getTierPrice, formatPrice } from '../data.js';
 import { openDetailView } from './detail.js';
 import { openEstimator } from './estimator.js';
+import { i18n } from '../i18n.js';
 
 export function renderHome() {
   const container = document.getElementById('screen-home');
@@ -8,14 +9,14 @@ export function renderHome() {
 
   container.innerHTML = `
     <div class="feed-header">
-      <div class="brand">tiyu salon tokyo</div>
-      <h1>The Lookbook</h1>
-      <p class="subtitle">A curated gallery of our work</p>
+      <div class="brand">${i18n.t('home.brand')}</div>
+      <h1>${i18n.t('home.title')}</h1>
+      <p class="subtitle">${i18n.t('home.subtitle')}</p>
     </div>
     <div class="cta-banner" id="estimator-cta">
-      <h3>Plan Your Visit</h3>
-      <p>Estimate your investment with our price calculator</p>
-      <span class="cta-arrow">Open Estimator &rarr;</span>
+      <h3>${i18n.t('home.ctaTitle')}</h3>
+      <p>${i18n.t('home.ctaDesc')}</p>
+      <span class="cta-arrow">${i18n.t('home.ctaArrow')} &rarr;</span>
     </div>
     <div class="masonry" id="home-masonry">
       ${DATA.feed.map(item => `

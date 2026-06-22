@@ -1,5 +1,6 @@
 import { DATA, getTierPrice, getTierLabel, formatPrice } from '../data.js';
 import { openDetailView } from './detail.js';
+import { i18n } from '../i18n.js';
 
 export function initSearch() {
   const container = document.getElementById('screen-search');
@@ -7,11 +8,11 @@ export function initSearch() {
 
   container.innerHTML = `
     <div class="search-screen">
-      <div class="brand">tiyu salon tokyo</div>
-      <h1>Search</h1>
+      <div class="brand">${i18n.t('home.brand')}</div>
+      <h1>${i18n.t('search.title')}</h1>
       <div class="search-input-wrapper">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="search-input" placeholder="Search styles, colors, tiers..." autocomplete="off" />
+        <input type="text" id="search-input" placeholder="${i18n.t('search.placeholder')}" autocomplete="off" />
       </div>
       <div class="search-results" id="search-results">
         <div class="masonry" id="search-masonry"></div>
@@ -33,7 +34,8 @@ export function initSearch() {
 
     const filtered = DATA.feed.filter(item => {
       const inTitle = item.title.toLowerCase().includes(q);
-      const inTier = getTierLabel(item.tier).toLowerCase().includes(q);
+      const tierLabel = i18n.t(`estimator.designs.${item.tier}.label`);
+      const inTier = tierLabel.toLowerCase().includes(q);
       const inColors = (item.colors || []).some(c =>
         c.brand.toLowerCase().includes(q) ||
         c.color.toLowerCase().includes(q) ||
@@ -47,7 +49,7 @@ export function initSearch() {
       if (!resultsDiv.querySelector('.no-results')) {
         const noResults = document.createElement('div');
         noResults.className = 'no-results';
-        noResults.innerHTML = '<p>No looks found. Try a different search.</p>';
+        noResults.innerHTML = `<p>${i18n.t('search.noResults')}</p>`;
         resultsDiv.appendChild(noResults);
       }
     } else {

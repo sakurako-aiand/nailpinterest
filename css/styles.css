@@ -71,6 +71,42 @@ html, body {
 
 .screen.active { display: block; }
 
+/* ── Language Toggle ── */
+.lang-toggle {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(252, 251, 247, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--espresso-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.lang-toggle:active { transform: scale(0.95); }
+
+.lang-toggle .lang-sep { opacity: 0.4; }
+
+.lang-toggle .lang-en,
+.lang-toggle .lang-ja {
+  transition: color 0.3s ease, font-weight 0.3s ease;
+}
+
+.lang-toggle .lang-en.active { color: var(--taupe-dark); font-weight: 600; }
+.lang-toggle .lang-ja.active { color: var(--taupe-dark); font-weight: 600; }
+
 /* ── Bottom Navigation ── */
 #bottom-nav {
   position: fixed;

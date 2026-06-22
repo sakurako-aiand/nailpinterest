@@ -2,6 +2,7 @@ import { showToast } from '../utils.js';
 import { store } from '../store.js';
 import { getTierPrice, getTierLabel, formatPrice } from '../data.js';
 import { openEstimator } from './estimator.js';
+import { i18n } from '../i18n.js';
 
 export function openDetailView(item) {
   const view = document.getElementById('detail-view');
@@ -11,13 +12,15 @@ export function openDetailView(item) {
 
   const isSaved = store.isInCollection(item.id);
   const estPrice = getTierPrice(item.tier);
-  const tierLabel = item.tier === 'custom' ? 'Custom Inspo' : getTierLabel(item.tier);
+  const tierLabel = item.tier === 'custom'
+    ? i18n.t('detail.tierCustom')
+    : i18n.t(`estimator.designs.${item.tier}.label`);
 
   view.innerHTML = `
     <div class="detail-header">
       <button class="back-btn" id="detail-back">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        Back
+        ${i18n.t('detail.back')}
       </button>
     </div>
     <div class="detail-image-container">
@@ -28,14 +31,14 @@ export function openDetailView(item) {
       <div class="detail-tier">${tierLabel}</div>
 
       <div class="investment-section">
-        <h2>Estimated Investment</h2>
+        <h2>${i18n.t('detail.investment')}</h2>
         <div class="investment-price">${formatPrice(estPrice)}+</div>
-        <div class="investment-note">Final pricing varies with length, removal, and custom details</div>
-        <button class="estimate-btn" id="open-estimator">Customize My Estimate</button>
+        <div class="investment-note">${i18n.t('detail.investmentNote')}</div>
+        <button class="estimate-btn" id="open-estimator">${i18n.t('detail.customizeEstimate')}</button>
       </div>
 
       <div class="colors-section">
-        <h2>The Tiyu Palette</h2>
+        <h2>${i18n.t('detail.palette')}</h2>
         <div class="color-chip-list">
           ${(item.colors || []).map(c => `
             <div class="color-chip">
@@ -50,10 +53,10 @@ export function openDetailView(item) {
       <button class="save-btn ${isSaved ? 'saved' : ''}" id="detail-save-btn">
         ${isSaved ? `
           <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--taupe)" stroke="var(--taupe)" stroke-width="1.2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          Saved to Wishlist
+          ${i18n.t('detail.savedWishlist')}
         ` : `
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          Add to Wishlist
+          ${i18n.t('detail.saveWishlist')}
         `}
       </button>
     </div>
@@ -78,17 +81,17 @@ export function openDetailView(item) {
       saveBtn.classList.remove('saved');
       saveBtn.innerHTML = `
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        Add to Wishlist
+        ${i18n.t('detail.saveWishlist')}
       `;
-      showToast('Removed from wishlist');
+      showToast(i18n.t('toast.removed'));
     } else {
       store.saveToCollection(item);
       saveBtn.classList.add('saved');
       saveBtn.innerHTML = `
         <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--taupe)" stroke="var(--taupe)" stroke-width="1.2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        Saved to Wishlist
+        ${i18n.t('detail.savedWishlist')}
       `;
-      showToast('Saved to your wishlist', 'success');
+      showToast(i18n.t('toast.saved'), 'success');
     }
   });
 }
