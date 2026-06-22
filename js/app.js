@@ -21,6 +21,38 @@ function updateLangToggle() {
   }
 }
 
+function updateViewToggle() {
+  const app = document.getElementById('app');
+  const viewToggle = document.getElementById('view-toggle');
+  if (!app || !viewToggle) return;
+  const isDesktop = app.classList.contains('full-width');
+  viewToggle.classList.toggle('desktop', isDesktop);
+  const iconMobile = viewToggle.querySelector('.icon-mobile');
+  const iconDesktop = viewToggle.querySelector('.icon-desktop');
+  if (iconMobile) iconMobile.style.display = isDesktop ? 'none' : 'block';
+  if (iconDesktop) iconDesktop.style.display = isDesktop ? 'block' : 'none';
+}
+
+function toggleViewMode() {
+  const app = document.getElementById('app');
+  if (!app) return;
+  const isDesktop = app.classList.toggle('full-width');
+  document.body.classList.toggle('view-desktop', isDesktop);
+  localStorage.setItem('tiyu_view', isDesktop ? 'desktop' : 'mobile');
+  updateViewToggle();
+}
+
+function loadViewMode() {
+  const saved = localStorage.getItem('tiyu_view');
+  const app = document.getElementById('app');
+  if (!app) return;
+  if (saved === 'desktop') {
+    app.classList.add('full-width');
+    document.body.classList.add('view-desktop');
+  }
+  updateViewToggle();
+}
+
 function closeAllOverlays() {
   for (const id of ['detail-view', 'estimator-view', 'policy-view', 'canvas-view']) {
     const el = document.getElementById(id);
@@ -37,6 +69,7 @@ function closeAllOverlays() {
 
 document.addEventListener('DOMContentLoaded', () => {
   document.documentElement.lang = i18n.lang;
+  loadViewMode();
 
   renderHome();
   renderUpload();
@@ -63,6 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('lang-toggle').addEventListener('click', () => {
     i18n.toggle();
+  });
+
+  document.getElementById('view-toggle').addEventListener('click', () => {
+    toggleViewMode();
   });
 
   document.querySelectorAll('.nav-btn').forEach(btn => {

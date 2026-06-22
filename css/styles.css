@@ -51,6 +51,48 @@ html, body {
   margin: 0 auto;
   position: relative;
   background: var(--bg);
+  transition: max-width 0.4s ease;
+}
+
+#app.full-width {
+  max-width: 100%;
+}
+
+#app.full-width .masonry {
+  column-count: 4;
+  column-gap: 16px;
+  padding: 16px 24px;
+}
+
+#app.full-width .feed-header,
+#app.full-width .upload-screen,
+#app.full-width .search-screen,
+#app.full-width .canvas-screen,
+#app.full-width .detail-content,
+#app.full-width .estimator-content,
+#app.full-width .policy-screen {
+  padding-left: max(24px, calc((100% - 720px) / 2));
+  padding-right: max(24px, calc((100% - 720px) / 2));
+}
+
+#app.full-width .detail-image-container img {
+  max-height: 60vh;
+}
+
+#app.full-width .design-strip {
+  padding-left: max(4px, calc((100% - 720px) / 2));
+  padding-right: max(4px, calc((100% - 720px) / 2));
+}
+
+#app.full-width .cta-banner,
+#app.full-width .canvas-cta {
+  margin-left: max(18px, calc((100% - 720px) / 2));
+  margin-right: max(18px, calc((100% - 720px) / 2));
+}
+
+#app.full-width .book-btn {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #screen-container {
@@ -70,6 +112,37 @@ html, body {
 }
 
 .screen.active { display: block; }
+
+/* ── View Toggle (Desktop/Mobile) ── */
+.view-toggle {
+  position: fixed;
+  top: 16px;
+  left: 20px;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(252, 251, 247, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: var(--espresso-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-toggle:active { transform: scale(0.92); }
+.view-toggle:hover { color: var(--taupe-dark); border-color: var(--taupe-light); }
+
+.view-toggle .icon-desktop { display: none; }
+.view-toggle .icon-mobile { display: block; }
+
+#app.full-width ~ .view-toggle .icon-desktop,
+body.view-desktop .view-toggle .icon-desktop { display: block; }
+body.view-desktop .view-toggle .icon-mobile { display: none; }
 
 /* ── Language Toggle ── */
 .lang-toggle {
