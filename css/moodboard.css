@@ -1,0 +1,349 @@
+/* ═══════════════════════════════════════
+   Mood Board — Drag & Drop Look Builder
+   ═══════════════════════════════════════ */
+
+:root {
+  --bg: #FCFBF7;
+  --bg-alt: #F7F4EF;
+  --white: #FFFFFF;
+  --espresso: #3D3D3D;
+  --espresso-light: #6B6B6B;
+  --espresso-muted: #9A9A9A;
+  --taupe: #C9A991;
+  --taupe-dark: #A38874;
+  --taupe-light: #E5D9CC;
+  --beige: #EDE6DA;
+  --border: #EBE6DE;
+  --shadow-soft: 0 2px 16px rgba(64,64,64,0.04);
+  --shadow-md: 0 4px 24px rgba(64,64,64,0.08);
+  --radius: 14px;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Questrial', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--espresso);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+}
+
+/* ── App Shell ── */
+.app-shell {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.gallery-column {
+  width: 55%;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.board-column {
+  width: 45%;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--bg-alt);
+}
+
+.gallery-column::-webkit-scrollbar,
+.board-column::-webkit-scrollbar { width: 6px; }
+.gallery-column::-webkit-scrollbar-thumb,
+.board-column::-webkit-scrollbar-thumb {
+  background: var(--taupe-light);
+  border-radius: 3px;
+}
+
+/* ── Gallery Header ── */
+.gallery-header {
+  position: sticky;
+  top: 0;
+  background: rgba(252,251,247,0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 28px 28px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+}
+
+.gallery-header h1 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--espresso);
+  letter-spacing: -0.3px;
+}
+
+.gallery-header p {
+  font-size: 12px;
+  color: var(--espresso-muted);
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 1px solid var(--taupe);
+  border-radius: 28px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--taupe-dark);
+  background: var(--white);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.upload-btn:hover {
+  background: var(--taupe);
+  color: var(--white);
+}
+
+.upload-btn:active { transform: scale(0.96); }
+
+/* ── Masonry (Left Gallery) ── */
+.masonry {
+  column-count: 3;
+  column-gap: 14px;
+  padding: 20px;
+}
+
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 14px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: grab;
+  position: relative;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.gallery-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.gallery-item:active {
+  cursor: grabbing;
+  opacity: 0.7;
+}
+
+.gallery-item.dragging {
+  opacity: 0.4;
+  transform: scale(0.95);
+}
+
+.gallery-item img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.gallery-item .item-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 12px 10px;
+  background: linear-gradient(transparent, rgba(64,64,64,0.5));
+  color: white;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.gallery-item:hover .item-label { opacity: 1; }
+
+/* ── Board Header ── */
+.board-header {
+  position: sticky;
+  top: 0;
+  background: rgba(247,244,239,0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 28px 28px 16px;
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.board-header h1 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--espresso);
+  letter-spacing: -0.3px;
+}
+
+.board-header p {
+  font-size: 12px;
+  color: var(--espresso-muted);
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+  flex: 1;
+}
+
+.clear-btn {
+  padding: 10px 18px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--espresso-muted);
+  background: var(--white);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.clear-btn:hover {
+  border-color: var(--taupe);
+  color: var(--taupe-dark);
+}
+
+.clear-btn:active { transform: scale(0.96); }
+
+/* ── Board Grid (Right) ── */
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 24px;
+}
+
+.board-card {
+  aspect-ratio: 3 / 4;
+  border: 2px dashed var(--taupe-light);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: var(--white);
+}
+
+.board-card.drag-over {
+  border-color: var(--taupe);
+  border-style: solid;
+  background: var(--bg);
+  transform: scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+
+.board-card.filled {
+  border-style: solid;
+  border-color: var(--border);
+}
+
+.board-card .placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--espresso-muted);
+  pointer-events: none;
+}
+
+.board-card .placeholder svg {
+  opacity: 0.4;
+}
+
+.board-card .placeholder span {
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.board-card .card-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.board-card .remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(64,64,64,0.6);
+  backdrop-filter: blur(8px);
+  color: white;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 5;
+}
+
+.board-card.filled:hover .remove-btn { opacity: 1; }
+
+/* ── Drag Ghost ── */
+.drag-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  width: 120px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  opacity: 0.85;
+  transform: translate(-50%, -50%);
+}
+
+.drag-ghost img {
+  width: 100%;
+  display: block;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .app-shell { flex-direction: column; }
+  .gallery-column { width: 100%; height: 50vh; border-right: none; border-bottom: 1px solid var(--border); }
+  .board-column { width: 100%; height: 50vh; }
+  .masonry { column-count: 2; }
+  .gallery-header h1, .board-header h1 { font-size: 18px; }
+  .gallery-header { padding: 16px; }
+  .board-header { padding: 16px; }
+  .board-grid { padding: 12px; gap: 10px; }
+}
