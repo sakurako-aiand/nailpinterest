@@ -1,7 +1,7 @@
 import { store } from '../store.js';
 import { openDetailView } from './detail.js';
-import { PRICING } from '../data.js';
 import { i18n } from '../i18n.js';
+import { openBookingModal } from './booking.js';
 
 export function renderCollection() {
   const container = document.getElementById('screen-collection');
@@ -21,10 +21,10 @@ export function renderCollection() {
         <h3>${i18n.t('collection.emptyTitle')}</h3>
         <p>${i18n.t('collection.emptyDesc')}</p>
       </div>
-      <a class="book-btn" href="${PRICING.bookingUrl}" target="_blank" rel="noopener">
+      <button class="book-btn" id="book-appointment-btn">
         ${i18n.t('collection.bookBtn')}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
+      </button>
     `;
   } else {
     const newestFirst = [...items].reverse();
@@ -44,10 +44,10 @@ export function renderCollection() {
           </div>
         `).join('')}
       </div>
-      <a class="book-btn" href="${PRICING.bookingUrl}" target="_blank" rel="noopener">
+      <button class="book-btn" id="book-appointment-btn">
         ${i18n.t('collection.bookBtn')}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
+      </button>
     `;
 
     container.querySelectorAll('.masonry-item').forEach(el => {
@@ -56,5 +56,10 @@ export function renderCollection() {
         if (item) openDetailView(item);
       });
     });
+  }
+
+  const bookBtn = container.querySelector('#book-appointment-btn');
+  if (bookBtn) {
+    bookBtn.addEventListener('click', () => openBookingModal());
   }
 }

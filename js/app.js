@@ -21,6 +21,20 @@ function updateLangToggle() {
   }
 }
 
+function closeAllOverlays() {
+  for (const id of ['detail-view', 'estimator-view', 'policy-view']) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.remove('active');
+      el.style.display = 'none';
+      el.innerHTML = '';
+    }
+  }
+  const modal = document.getElementById('booking-modal');
+  if (modal) modal.classList.remove('active');
+  document.documentElement.style.overflow = '';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.documentElement.lang = i18n.lang;
 
@@ -44,17 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (screen === 'collection') renderCollection();
       if (screen === 'search') import('./screens/search.js').then(m => m.initSearch());
     }
-    const detail = document.getElementById('detail-view');
-    if (detail && detail.querySelector('#detail-back')) {
-      const back = detail.querySelector('#detail-back');
-      back.lastChild.textContent = ' ' + i18n.t('detail.back');
-    }
-    const est = document.getElementById('estimator-view');
-    if (est && est.querySelector('.estimator-content')) {
-      est.classList.remove('active');
-      est.style.display = 'none';
-      est.innerHTML = '';
-    }
+    closeAllOverlays();
   });
 
   document.getElementById('lang-toggle').addEventListener('click', () => {

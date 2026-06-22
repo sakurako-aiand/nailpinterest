@@ -19,18 +19,19 @@ function navigateTo(screenName) {
   const navBtn = document.querySelector(`.nav-btn[data-screen="${screenName}"]`);
   if (navBtn) navBtn.classList.add('active');
 
-  const detailView = document.getElementById('detail-view');
-  if (detailView) {
-    detailView.classList.remove('active');
-    detailView.style.display = 'none';
-    document.documentElement.style.overflow = '';
+  for (const id of ['detail-view', 'estimator-view', 'policy-view']) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.remove('active');
+      el.style.display = 'none';
+      el.innerHTML = '';
+    }
   }
 
-  const estimatorView = document.getElementById('estimator-view');
-  if (estimatorView) {
-    estimatorView.classList.remove('active');
-    estimatorView.style.display = 'none';
-  }
+  const modal = document.getElementById('booking-modal');
+  if (modal) modal.classList.remove('active');
+
+  document.documentElement.style.overflow = '';
 
   document.getElementById('screen-container').scrollTop = 0;
 
