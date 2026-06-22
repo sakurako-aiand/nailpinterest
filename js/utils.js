@@ -26,6 +26,12 @@ function navigateTo(screenName) {
     document.documentElement.style.overflow = '';
   }
 
+  const estimatorView = document.getElementById('estimator-view');
+  if (estimatorView) {
+    estimatorView.classList.remove('active');
+    estimatorView.style.display = 'none';
+  }
+
   document.getElementById('screen-container').scrollTop = 0;
 
   if (screenName === 'collection') {

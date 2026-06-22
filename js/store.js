@@ -1,6 +1,6 @@
 class Store {
   constructor() {
-    const saved = localStorage.getItem('nailpin_collection');
+    const saved = localStorage.getItem('tiyu_wishlist');
     this._collection = saved ? JSON.parse(saved) : [];
     this._listeners = [];
   }
@@ -44,17 +44,18 @@ class Store {
           label,
           brand: brand || 'Custom',
           color: label,
-          swatch: 'pink-swatch',
+          swatch: 'taupe-swatch',
         };
       });
 
     const item = {
       id: 'u_' + Date.now(),
-      title: title || 'Untitled',
+      title: title || 'Untitled Inspo',
       image: imageDataUrl,
       colors,
       savedAt: Date.now(),
       isUpload: true,
+      tier: 'custom',
     };
     this._collection.push(item);
     this._save();
@@ -70,7 +71,7 @@ class Store {
   }
 
   _save() {
-    localStorage.setItem('nailpin_collection', JSON.stringify(this._collection));
+    localStorage.setItem('tiyu_wishlist', JSON.stringify(this._collection));
   }
 
   _notify() {
