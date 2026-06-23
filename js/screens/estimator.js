@@ -27,7 +27,7 @@ export function openEstimator(item) {
     aiSuggested: false,
   };
 
-  function render() {
+  function buildShell() {
     view.innerHTML = `
       <div class="est-backdrop" id="est-backdrop"></div>
       <div class="est-sheet" id="est-sheet">
@@ -35,24 +35,8 @@ export function openEstimator(item) {
         <button class="est-close-btn" id="est-close" aria-label="Close">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
-        <div class="est-sheet-scroll">
-          <div class="est-sheet-header">
-            <h1>${i18n.t('estimator.title')}</h1>
-            <p class="subtitle">${i18n.t('estimator.subtitle')}</p>
-          </div>
-          ${renderPhotoSection()}
-          ${renderRemovalsSection()}
-          ${renderExtensionsSection()}
-          ${renderNailMap()}
-          ${renderArtLevelSelector()}
-          ${renderReceipt()}
-        </div>
-        <div class="estimate-total">
-          <div class="total-range-block">
-            <span class="total-label">${i18n.t('estimator.investment')}</span>
-            <span class="total-amount-range" id="est-range">${renderRange()}</span>
-          </div>
-        </div>
+        <div class="est-sheet-scroll" id="est-scroll"></div>
+        <div class="estimate-total" id="est-total-bar"></div>
       </div>
     `;
 
@@ -62,8 +46,43 @@ export function openEstimator(item) {
       document.body.classList.add('est-open');
     });
 
-    bindEvents();
+    view.querySelector('#est-close').addEventListener('click', (e) => { e.preventDefault(); closeEstimator(); });
+    view.querySelector('#est-backdrop').addEventListener('click', (e) => { e.preventDefault(); closeEstimator(); });
     bindSwipeClose();
+  }
+
+  function updateContent() {
+    const scrollEl = view.querySelector('#est-scroll');
+    if (!scrollEl) return;
+
+    const savedScroll = scrollEl.scrollTop;
+
+    scrollEl.innerHTML = `
+      <div class="est-sheet-header">
+        <h1>${i18n.t('estimator.title')}</h1>
+        <p class="subtitle">${i18n.t('estimator.subtitle')}</p>
+      </div>
+      ${renderPhotoSection()}
+      ${renderRemovalsSection()}
+      ${renderExtensionsSection()}
+      ${renderNailMap()}
+      ${renderArtLevelSelector()}
+      ${renderReceipt()}
+    `;
+
+    const totalBar = view.querySelector('#est-total-bar');
+    if (totalBar) {
+      const calc = calculate();
+      totalBar.innerHTML = `
+        <div class="total-range-block">
+          <span class="total-label">${i18n.t('estimator.investment')}</span>
+          <span class="total-amount-range">${formatPrice(calc.low)} — ${formatPrice(calc.high)}</span>
+        </div>
+      `;
+    }
+
+    scrollEl.scrollTop = savedScroll;
+    bindContentEvents();
   }
 
   function renderPhotoSection() {
@@ -231,11 +250,6 @@ export function openEstimator(item) {
     `;
   }
 
-  function renderRange() {
-    const calc = calculate();
-    return `${formatPrice(calc.low)} — ${formatPrice(calc.high)}`;
-  }
-
   function getArtColor(artId) {
     const colors = {
       oneColor: 'neutral',
@@ -321,14 +335,12 @@ export function openEstimator(item) {
     };
   }
 
-  function bindEvents() {
-    view.querySelector('#est-close').addEventListener('click', () => closeEstimator());
-    view.querySelector('#est-backdrop').addEventListener('click', () => closeEstimator());
-
+  function bindContentEvents() {
     view.querySelectorAll('[data-removal]').forEach(el => {
-      el.addEventListener('click', () => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
         state.removal = el.dataset.removal;
-        render();
+        updateContent();
       });
     });
 
@@ -336,9 +348,10 @@ export function openEstimator(item) {
     if (overlayToggle) {
       overlayToggle.addEventListener('click', (e) => {
         if (e.target.closest('.count-btn')) return;
+        e.preventDefault();
         state.overlayEnabled = !state.overlayEnabled;
         if (state.overlayEnabled && state.overlayCount === 0) state.overlayCount = 1;
-        render();
+        updateContent();
       });
     }
 
@@ -346,9 +359,10 @@ export function openEstimator(item) {
     if (extToggle) {
       extToggle.addEventListener('click', (e) => {
         if (e.target.closest('.count-btn')) return;
+        e.preventDefault();
         state.extensionEnabled = !state.extensionEnabled;
         if (state.extensionEnabled && state.extensionCount === 0) state.extensionCount = 1;
-        render();
+        updateContent();
       });
     }
 
@@ -356,28 +370,31 @@ export function openEstimator(item) {
     bindCounter('#ext-minus', '#ext-plus', () => state.extensionCount, (v) => state.extensionCount = Math.max(0, Math.min(10, v)));
 
     view.querySelectorAll('[data-finger]').forEach(el => {
-      el.addEventListener('click', () => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
         const idx = parseInt(el.dataset.finger);
         state.selectedFinger = state.selectedFinger === idx ? null : idx;
-        render();
+        updateContent();
       });
     });
 
     view.querySelectorAll('[data-art]').forEach(el => {
-      el.addEventListener('click', () => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
         if (state.selectedFinger === null) return;
         state.fingers[state.selectedFinger] = el.dataset.art;
-        render();
+        updateContent();
       });
     });
 
     const applyAll = view.querySelector('#apply-all-btn');
     if (applyAll) {
-      applyAll.addEventListener('click', () => {
+      applyAll.addEventListener('click', (e) => {
+        e.preventDefault();
         if (state.selectedFinger === null) return;
         const art = state.fingers[state.selectedFinger];
         state.fingers = new Array(FINGER_COUNT).fill(art);
-        render();
+        updateContent();
       });
     }
 
@@ -386,10 +403,10 @@ export function openEstimator(item) {
     const photoArea = view.querySelector('#est-photo-area');
 
     if (uploadBtn) {
-      uploadBtn.addEventListener('click', () => fileInput.click());
+      uploadBtn.addEventListener('click', (e) => { e.preventDefault(); fileInput.click(); });
     }
     if (photoArea && !state.photoUrl) {
-      photoArea.addEventListener('click', () => fileInput.click());
+      photoArea.addEventListener('click', (e) => { e.preventDefault(); fileInput.click(); });
     }
     if (fileInput) {
       fileInput.addEventListener('change', (e) => {
@@ -403,9 +420,8 @@ export function openEstimator(item) {
 
     const galleryBtn = view.querySelector('#est-gallery-btn');
     if (galleryBtn) {
-      galleryBtn.addEventListener('click', () => openGalleryPicker());
+      galleryBtn.addEventListener('click', (e) => { e.preventDefault(); openGalleryPicker(); });
     }
-
   }
 
   function bindSwipeClose() {
@@ -456,14 +472,16 @@ export function openEstimator(item) {
     const minus = view.querySelector(minusSel);
     const plus = view.querySelector(plusSel);
     if (minus) minus.addEventListener('click', (e) => {
+      e.preventDefault();
       e.stopPropagation();
       setter(getter() - 1);
-      render();
+      updateContent();
     });
     if (plus) plus.addEventListener('click', (e) => {
+      e.preventDefault();
       e.stopPropagation();
       setter(getter() + 1);
-      render();
+      updateContent();
     });
   }
 
@@ -488,13 +506,14 @@ export function openEstimator(item) {
     document.body.appendChild(overlay);
     requestAnimationFrame(() => overlay.classList.add('active'));
 
-    overlay.querySelector('#gp-close').addEventListener('click', () => closePicker());
+    overlay.querySelector('#gp-close').addEventListener('click', (e) => { e.preventDefault(); closePicker(); });
     overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) closePicker();
+      if (e.target === overlay) { e.preventDefault(); closePicker(); }
     });
 
     overlay.querySelectorAll('.gp-item').forEach(el => {
-      el.addEventListener('click', () => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
         const src = el.dataset.src;
         closePicker();
         analyzeAndSuggest(src);
@@ -507,10 +526,10 @@ export function openEstimator(item) {
     }
   }
 
-  async function analyzeAndSuggest(imageSrc, item) {
+  async function analyzeAndSuggest(imageSrc, sourceItem) {
     state.photoUrl = imageSrc;
     state.aiSuggested = false;
-    render();
+    updateContent();
 
     const loadingEl = view.querySelector('.est-photo-placeholder span');
     if (loadingEl) loadingEl.textContent = i18n.t('estimator.analyzing');
@@ -520,14 +539,14 @@ export function openEstimator(item) {
       applyAISuggestion(result);
       state.aiSuggested = true;
     } catch (err) {
-      if (item && item.tags) {
-        applyTagBasedSuggestion(item.tags);
+      if (sourceItem && sourceItem.tags) {
+        applyTagBasedSuggestion(sourceItem.tags);
         state.aiSuggested = true;
       } else {
         state.aiSuggested = false;
       }
     }
-    render();
+    updateContent();
   }
 
   function analyzeImage(src) {
@@ -575,7 +594,6 @@ export function openEstimator(item) {
 
           const distinctColors = Object.keys(colorBuckets).length;
           const brightRatio = brightPixels / pixelCount;
-          const darkRatio = darkPixels / pixelCount;
 
           let baseArt = 'oneColor';
           let accentArt = null;
@@ -648,7 +666,8 @@ export function openEstimator(item) {
     state.fingers = fingers;
   }
 
-  render();
+  buildShell();
+  updateContent();
 
   if (item && item.image) {
     analyzeAndSuggest(item.image, item);

@@ -916,9 +916,12 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 /* ── Price Estimator — Bottom Sheet ── */
 .estimator-sheet-container {
   display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 300;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 9999 !important;
   pointer-events: none;
 }
 
