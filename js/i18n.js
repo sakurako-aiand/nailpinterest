@@ -21,6 +21,15 @@ const translations = {
       prepNote: 'Before your appointment',
       addOns: 'Add-ons',
     },
+    booking: {
+      chooseLocation: 'Choose a Location',
+      chooseLocationDesc: 'Select where to book your appointment',
+      salon: 'Tiyu Salon Tokyo',
+      salonDesc: 'Kagurazaka',
+      studio: 'Tiyu Studio Tokyo',
+      studioDesc: 'Waseda',
+      select: 'Select',
+    },
     home: {
       title: 'The Lookbook',
       subtitle: 'A curated gallery of our work',
@@ -248,6 +257,15 @@ const translations = {
       bookBtn: '予約する',
       prepNote: 'ご来店前に',
       addOns: 'オプション',
+    },
+    booking: {
+      chooseLocation: '店舗を選択',
+      chooseLocationDesc: 'ご予約の店舗をお選びください',
+      salon: 'Tiyu Salon Tokyo',
+      salonDesc: '神楽坂',
+      studio: 'Tiyu Studio Tokyo',
+      studioDesc: '早稲田',
+      select: '選択',
     },
     home: {
       title: 'ルックブック',

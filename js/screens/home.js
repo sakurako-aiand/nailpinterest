@@ -1,4 +1,4 @@
-import { DATA, PRICING, SERVICES, PRICE_LISTS, getTierPrice, getFeedByCategory, formatPrice } from '../data.js';
+import { DATA, PRICING, SERVICES, LOCATIONS, PRICE_LISTS, getTierPrice, getFeedByCategory, formatPrice } from '../data.js';
 import { openDetailView } from './detail.js';
 import { openEstimator } from './estimator.js';
 import { openPolicy } from './policy.js';
@@ -6,6 +6,20 @@ import { openCanvas } from './canvas.js';
 import { i18n } from '../i18n.js';
 
 let activeCategory = 'nails';
+
+function getLocationDot(loc) {
+  if (loc === 'salon') return '<span class="loc-dot salon-dot"></span>';
+  if (loc === 'studio') return '<span class="loc-dot studio-dot"></span>';
+  if (loc === 'both') return '<span class="loc-dot dual-dot"></span>';
+  return '';
+}
+
+function getLocationPill(loc) {
+  if (loc === 'salon') return '<span class="loc-pill salon-pill"></span>';
+  if (loc === 'studio') return '<span class="loc-pill studio-pill"></span>';
+  if (loc === 'both') return '<span class="loc-pill dual-pill"></span>';
+  return '';
+}
 
 export function renderHome() {
   const container = document.getElementById('screen-home');
@@ -22,7 +36,8 @@ export function renderHome() {
       <div class="service-tabs" id="service-tabs">
         ${SERVICES.map(s => `
           <button class="service-tab ${activeCategory === s.id ? 'active' : ''}" data-service="${s.id}">
-            ${i18n.t(`services.${s.id}`)}
+            ${getLocationDot(s.location)}
+            <span>${i18n.t(`services.${s.id}`)}</span>
           </button>
         `).join('')}
       </div>
@@ -53,6 +68,7 @@ export function renderHome() {
       ${feed.map(item => `
         <div class="masonry-item" data-id="${item.id}">
           <img src="${item.image}" alt="${item.title}" loading="lazy" />
+          ${getLocationPill(item.location)}
           <div class="pin-overlay">
             <span class="pin-title">${item.title}</span>
             ${item.tier ? `<div class="pin-price">${formatPrice(getTierPrice(item.tier))}+</div>` : ''}

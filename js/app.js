@@ -4,6 +4,7 @@ import { renderUpload } from './screens/upload.js';
 import { renderCollection } from './screens/collection.js';
 import { store } from './store.js';
 import { i18n } from './i18n.js';
+import { LOCATIONS } from './data.js';
 
 function updateLangToggle() {
   const toggle = document.getElementById('lang-toggle');
@@ -105,6 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleViewMode();
   });
 
+  document.getElementById('book-now-btn').addEventListener('click', () => {
+    openBookingModal();
+  });
+
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       navigateTo(btn.dataset.screen);
@@ -117,3 +122,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateLangToggle();
 });
+
+function openBookingModal() {
+  const modal = document.getElementById('booking-modal');
+  const content = document.getElementById('booking-modal-content');
+  if (!modal || !content) return;
+
+  content.innerHTML = `
+    <div class="booking-location-header">
+      <h2>${i18n.t('booking.chooseLocation')}</h2>
+      <p>${i18n.t('booking.chooseLocationDesc')}</p>
+      <button class="booking-close" id="booking-close">&times;</button>
+    </div>
+    <a href="${LOCATIONS.salon.bookingUrl}" target="_blank" rel="noopener noreferrer" class="booking-location-card salon-card">
+      <span class="booking-dot salon-dot"></span>
+      <div class="booking-location-info">
+        <span class="booking-location-name">${i18n.t('booking.salon')}</span>
+        <span class="booking-location-desc">${i18n.t('booking.salonDesc')}</span>
+      </div>
+      <span class="booking-select">${i18n.t('booking.select')} &rarr;</span>
+    </a>
+    <a href="${LOCATIONS.studio.bookingUrl}" target="_blank" rel="noopener noreferrer" class="booking-location-card studio-card">
+      <span class="booking-dot studio-dot"></span>
+      <div class="booking-location-info">
+        <span class="booking-location-name">${i18n.t('booking.studio')}</span>
+        <span class="booking-location-desc">${i18n.t('booking.studioDesc')}</span>
+      </div>
+      <span class="booking-select">${i18n.t('booking.select')} &rarr;</span>
+    </a>
+  `;
+
+  modal.classList.add('active');
+  document.body.classList.add('est-open');
+
+  document.getElementById('booking-close').addEventListener('click', () => {
+    modal.classList.remove('active');
+    document.body.classList.remove('est-open');
+  });
+}

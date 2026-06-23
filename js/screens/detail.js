@@ -1,9 +1,16 @@
 import { showToast, navigateTo } from '../utils.js';
 import { store } from '../store.js';
-import { getTierPrice, getTierLabel, formatPrice, PRICE_LISTS, PRICING } from '../data.js';
+import { getTierPrice, getTierLabel, formatPrice, PRICE_LISTS, PRICING, LOCATIONS } from '../data.js';
 import { openEstimator } from './estimator.js';
 import { openCanvas } from './canvas.js';
 import { i18n } from '../i18n.js';
+
+function getLocationIndicator(loc) {
+  if (loc === 'salon') return `<span class="loc-indicator"><span class="loc-dot salon-dot"></span>${i18n.t('booking.salon')}</span>`;
+  if (loc === 'studio') return `<span class="loc-indicator"><span class="loc-dot studio-dot"></span>${i18n.t('booking.studio')}</span>`;
+  if (loc === 'both') return `<span class="loc-indicator"><span class="loc-dot dual-dot"></span>${i18n.t('booking.salon')} &amp; ${i18n.t('booking.studio')}</span>`;
+  return '';
+}
 
 export function openDetailView(item) {
   const view = document.getElementById('detail-view');
@@ -31,6 +38,7 @@ export function openDetailView(item) {
     <div class="detail-content">
       <h1 class="detail-title">${item.title}</h1>
       <div class="detail-tier">${tierLabel}</div>
+      ${getLocationIndicator(item.location)}
 
       <div class="investment-section">
         <h2>${i18n.t('detail.investment')}</h2>

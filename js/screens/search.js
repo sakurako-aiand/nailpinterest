@@ -78,10 +78,11 @@ export function initSearch() {
       masonry.innerHTML = filtered.map(item => `
         <div class="masonry-item" data-id="${item.id}">
           <img src="${item.image}" alt="${item.title}" loading="lazy" />
-            <div class="pin-overlay">
-              <span class="pin-title">${item.title}</span>
-              ${item.tier ? `<div class="pin-price">${formatPrice(getTierPrice(item.tier))}+</div>` : ''}
-            </div>
+          ${item.location === 'salon' ? '<span class="loc-pill salon-pill"></span>' : item.location === 'studio' ? '<span class="loc-pill studio-pill"></span>' : item.location === 'both' ? '<span class="loc-pill dual-pill"></span>' : ''}
+          <div class="pin-overlay">
+            <span class="pin-title">${item.title}</span>
+            ${item.tier ? `<div class="pin-price">${formatPrice(getTierPrice(item.tier))}+</div>` : ''}
+          </div>
         </div>
       `).join('');
 
