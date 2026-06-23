@@ -1146,6 +1146,103 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
   border-bottom-color: var(--taupe);
 }
 
+/* ── Booking Funnel: Technician Grid ── */
+.tech-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tech-chip {
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--white);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--espresso-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tech-chip.selected {
+  background: var(--taupe);
+  border-color: var(--taupe);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.tech-chip:active { transform: scale(0.95); }
+
+/* ── Booking Funnel: Checkboxes ── */
+.funnel-checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.funnel-checkbox-row input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.funnel-checkbox-custom {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: var(--white);
+  position: relative;
+  transition: all 0.2s ease;
+  margin-top: 1px;
+}
+
+.funnel-checkbox-row input:checked ~ .funnel-checkbox-custom {
+  background: var(--taupe);
+  border-color: var(--taupe);
+}
+
+.funnel-checkbox-row input:checked ~ .funnel-checkbox-custom::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.funnel-checkbox-text {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--espresso-light);
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+}
+
+/* ── Booking Funnel: Drink Policy Box ── */
+.drink-policy-box {
+  background: #F5E6D3;
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  border: 1px solid rgba(229, 211, 179, 0.5);
+}
+
+/* ── Booking Funnel: Disabled Next Button ── */
+.funnel-next-btn.disabled {
+  background: var(--border);
+  color: var(--espresso-muted);
+  pointer-events: none;
+}
+
 /* ── Booking Funnel: Summary ── */
 .funnel-summary {
   background: var(--white);

@@ -232,8 +232,10 @@ function openBookingModal() {
   const funnelState = {
     step: 0,
     location: null,
-    tech: '',
+    tech: 'no-preference',
     language: 'english',
+    friendRequest: false,
+    drinkPolicy: false,
     notes: '',
   };
 
@@ -326,7 +328,25 @@ function openBookingModal() {
   }
 
   function renderPreferencesStep(el) {
-    const techs = ['Tiyu', 'Aya', 'Mika', 'No preference'];
+    const techs = [
+      { id: 'nanaho',   en: 'Nanaho',   ja: 'ナナホ' },
+      { id: 'pramila',  en: 'Pramila',  ja: 'プラミラ' },
+      { id: 'yoshino',  en: 'Yoshino',  ja: 'ヨシノ' },
+      { id: 'ujin',    en: 'Ujin',     ja: 'ウジン' },
+      { id: 'nozomi',   en: 'Nozomi',   ja: 'ノゾミ' },
+      { id: 'diana',    en: 'Diana',    ja: 'ディアナ' },
+      { id: 'mihane',   en: 'Mihane',   ja: 'ミハネ' },
+      { id: 'nikita',   en: 'Nikita',   ja: 'ニキタ' },
+      { id: 'misaki',   en: 'Misaki',   ja: 'ミサキ' },
+      { id: 'ema',      en: 'Ema',      ja: 'エマ' },
+      { id: 'yumi',     en: 'Yumi',     ja: 'ユミ' },
+      { id: 'ishara',   en: 'Ishara',   ja: 'イシャーラ' },
+      { id: 'nyah',     en: 'Nyah',     ja: 'ナイア' },
+      { id: 'shanay',   en: 'Shanay',   ja: 'シャネイ' },
+    ];
+
+    const nextBtnDisabled = !funnelState.drinkPolicy;
+
     el.innerHTML = `
       <div class="funnel-header">
         <button class="booking-back" id="booking-back">&larr;</button>
@@ -337,9 +357,14 @@ function openBookingModal() {
       <div class="funnel-scroll">
         <div class="funnel-field">
           <label class="funnel-label">${i18n.t('funnel.nailTech')}</label>
-          <select class="funnel-select" id="pref-tech">
-            ${techs.map(t => `<option value="${t}" ${funnelState.tech === t ? 'selected' : ''}>${t}</option>`).join('')}
-          </select>
+          <div class="tech-grid" id="tech-grid">
+            <button class="tech-chip ${funnelState.tech === 'no-preference' ? 'selected' : ''}" data-tech="no-preference">${i18n.t('funnel.noPreference')}</button>
+            ${techs.map(t => `
+              <button class="tech-chip ${funnelState.tech === t.id ? 'selected' : ''}" data-tech="${t.id}">
+                ${i18n.isJapanese ? t.ja : t.en}
+              </button>
+            `).join('')}
+          </div>
         </div>
         <div class="funnel-field">
           <label class="funnel-label">${i18n.t('funnel.languagePref')}</label>
@@ -349,24 +374,63 @@ function openBookingModal() {
           </div>
         </div>
         <div class="funnel-field">
+          <label class="funnel-checkbox-row">
+            <input type="checkbox" id="pref-friend" ${funnelState.friendRequest ? 'checked' : ''} />
+            <span class="funnel-checkbox-custom"></span>
+            <span class="funnel-checkbox-text">${i18n.t('funnel.friendRequest')}</span>
+          </label>
+        </div>
+        <div class="funnel-field">
+          <div class="drink-policy-box">
+            <label class="funnel-checkbox-row">
+              <input type="checkbox" id="pref-drink" ${funnelState.drinkPolicy ? 'checked' : ''} />
+              <span class="funnel-checkbox-custom"></span>
+              <span class="funnel-checkbox-text">${i18n.t('funnel.drinkPolicy')}</span>
+            </label>
+          </div>
+        </div>
+        <div class="funnel-field">
           <label class="funnel-label">${i18n.t('funnel.specialNotes')}</label>
           <textarea class="funnel-textarea" id="pref-notes" placeholder="${i18n.t('funnel.notesPlaceholder')}" rows="4">${funnelState.notes}</textarea>
         </div>
       </div>
-      <button class="funnel-next-btn" id="funnel-next">${i18n.t('funnel.proceedCalendar')} &rarr;</button>
+      <button class="funnel-next-btn ${nextBtnDisabled ? 'disabled' : ''}" id="funnel-next" ${nextBtnDisabled ? 'disabled' : ''}>${i18n.t('funnel.proceedCalendar')} &rarr;</button>
     `;
     el.scrollTop = 0;
     el.querySelector('#booking-close').addEventListener('click', closeModal);
     el.querySelector('#booking-back').addEventListener('click', () => { funnelState.step = 1; render(); });
-    el.querySelector('#pref-tech').addEventListener('change', (e) => { funnelState.tech = e.target.value; });
+
+    el.querySelectorAll('[data-tech]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        funnelState.tech = btn.dataset.tech;
+        el.querySelectorAll('[data-tech]').forEach(b => b.classList.toggle('selected', b === btn));
+      });
+    });
+
     el.querySelectorAll('[data-lang]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', () => {
         funnelState.language = btn.dataset.lang;
         el.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('active', b === btn));
       });
     });
+
+    el.querySelector('#pref-friend').addEventListener('change', (e) => {
+      funnelState.friendRequest = e.target.checked;
+    });
+
+    el.querySelector('#pref-drink').addEventListener('change', (e) => {
+      funnelState.drinkPolicy = e.target.checked;
+      const nextBtn = el.querySelector('#funnel-next');
+      nextBtn.classList.toggle('disabled', !funnelState.drinkPolicy);
+      nextBtn.disabled = !funnelState.drinkPolicy;
+    });
+
     el.querySelector('#pref-notes').addEventListener('input', (e) => { funnelState.notes = e.target.value; });
-    el.querySelector('#funnel-next').addEventListener('click', () => { funnelState.step = 3; render(); });
+    el.querySelector('#funnel-next').addEventListener('click', () => {
+      if (!funnelState.drinkPolicy) return;
+      funnelState.step = 3;
+      render();
+    });
   }
 
   function renderRedirectStep(el) {
@@ -374,7 +438,14 @@ function openBookingModal() {
       ? LOCATIONS.studio.bookingUrl
       : LOCATIONS.salon.bookingUrl;
     const locLabel = funnelState.location === 'studio' ? i18n.t('booking.studio') : i18n.t('booking.salon');
-    const techLabel = funnelState.tech || 'No preference';
+    const techMap = {
+      'no-preference': i18n.t('funnel.noPreference'),
+      'nanaho': 'Nanaho', 'pramila': 'Pramila', 'yoshino': 'Yoshino', 'ujin': 'Ujin',
+      'nozomi': 'Nozomi', 'diana': 'Diana', 'mihane': 'Mihane', 'nikita': 'Nikita',
+      'misaki': 'Misaki', 'ema': 'Ema', 'yumi': 'Yumi', 'ishara': 'Ishara',
+      'nyah': 'Nyah', 'shanay': 'Shanay',
+    };
+    const techLabel = techMap[funnelState.tech] || i18n.t('funnel.noPreference');
     const langLabel = funnelState.language === 'english' ? i18n.t('funnel.english') : i18n.t('funnel.japanese');
 
     el.innerHTML = `
@@ -396,6 +467,10 @@ function openBookingModal() {
         <div class="funnel-summary-row">
           <span class="funnel-summary-label">${i18n.t('funnel.languagePref')}</span>
           <span class="funnel-summary-value">${langLabel}</span>
+        </div>
+        <div class="funnel-summary-row">
+          <span class="funnel-summary-label">${i18n.t('funnel.friendShort')}</span>
+          <span class="funnel-summary-value">${funnelState.friendRequest ? i18n.t('funnel.yes') : i18n.t('funnel.no')}</span>
         </div>
         ${funnelState.notes ? `
           <div class="funnel-summary-row">
