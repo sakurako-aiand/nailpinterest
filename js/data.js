@@ -104,6 +104,7 @@ const ESTIMATOR_PRICING = {
     extensionPerFinger: 600,
     extensionFlat: 4500,
     extensionThreshold: 8,
+    extensionAllFingers: 4500,
   },
   artLevels: [
     { id: 'oneColor', price: 0,   key: 'estimator.art.oneColor' },
@@ -112,6 +113,14 @@ const ESTIMATOR_PRICING = {
     { id: 'art2dL1',  price: 200, key: 'estimator.art.art2dL1'  },
     { id: 'art2dL2',  price: 300, key: 'estimator.art.art2dL2'  },
   ],
+  addOns: [
+    { id: 'charmL',    price: 200, key: 'estimator.addOn.charmL'    },
+    { id: 'charmM',    price: 100, key: 'estimator.addOn.charmM'    },
+    { id: 'charmS',    price: 100, key: 'estimator.addOn.charmS', bundleOf: 3 },
+    { id: 'piercing',  price: 200, key: 'estimator.addOn.piercing'  },
+    { id: 'pierceCharm', price: 200, key: 'estimator.addOn.pierceCharm' },
+  ],
+  allYouCanTakeCharms: 2000,
 };
 
 function img(hash, w = 400, h = 500) {

@@ -21,7 +21,10 @@ export function openEstimator(item) {
     overlayCount: 0,
     extensionEnabled: false,
     extensionCount: 0,
+    extensionAllFingers: false,
     fingers: new Array(FINGER_COUNT).fill('oneColor'),
+    fingerAddOns: new Array(FINGER_COUNT).fill(null).map(() => ({})),
+    allYouCanTake: false,
     selectedFinger: null,
     photoUrl: null,
     aiSuggested: false,
@@ -151,6 +154,13 @@ export function openEstimator(item) {
         <h3>${i18n.t('estimator.extensions')}</h3>
         <p class="group-hint">${i18n.t('estimator.extensionsHint')}</p>
         <div class="ext-toggles">
+          <div class="ext-toggle-card ${state.extensionAllFingers ? 'active' : ''}" id="ext-all-toggle">
+            <div class="ext-toggle-header">
+              <span class="ext-toggle-label">${i18n.t('estimator.extensionAllFingers')}</span>
+              <div class="toggle-switch ${state.extensionAllFingers ? 'on' : ''}"><div class="toggle-knob"></div></div>
+            </div>
+            <span class="ext-toggle-desc">${i18n.t('estimator.extensionAllDesc')}</span>
+          </div>
           <div class="ext-toggle-card ${state.overlayEnabled ? 'active' : ''}" id="overlay-toggle">
             <div class="ext-toggle-header">
               <span class="ext-toggle-label">${i18n.t('estimator.overlay')}</span>
@@ -192,15 +202,19 @@ export function openEstimator(item) {
         <h3>${i18n.t('estimator.nailMap')}</h3>
         <p class="group-hint">${i18n.t('estimator.nailMapHint')}</p>
         <div class="nail-map" id="nail-map">
-          ${state.fingers.map((art, i) => `
-            <div class="nail-slot ${state.selectedFinger === i ? 'selected' : ''} ${art !== 'oneColor' ? 'has-art' : ''}"
-                 data-finger="${i}">
-              <div class="nail-shape nail-${getArtColor(art)}">
-                <span class="nail-num">${i + 1}</span>
+          ${state.fingers.map((art, i) => {
+            const hasAddOns = Object.values(state.fingerAddOns[i]).some(c => c > 0);
+            return `
+              <div class="nail-slot ${state.selectedFinger === i ? 'selected' : ''} ${art !== 'oneColor' ? 'has-art' : ''} ${hasAddOns ? 'has-addons' : ''}"
+                   data-finger="${i}">
+                <div class="nail-shape nail-${getArtColor(art)}">
+                  <span class="nail-num">${i + 1}</span>
+                  ${hasAddOns ? '<span class="nail-addon-dot"></span>' : ''}
+                </div>
+                <span class="nail-art-label">${getArtShortLabel(art)}</span>
               </div>
-              <span class="nail-art-label">${getArtShortLabel(art)}</span>
-            </div>
-          `).join('')}
+            `;
+          }).join('')}
         </div>
       </div>
     `;
@@ -208,12 +222,14 @@ export function openEstimator(item) {
 
   function renderArtLevelSelector() {
     if (state.selectedFinger === null) return '';
+    const fingerIdx = state.selectedFinger;
+    const addOns = state.fingerAddOns[fingerIdx];
     return `
       <div class="estimate-group art-selector" id="art-selector">
-        <h3>${i18n.t('estimator.selectArtLevel')} <span class="finger-indicator">#${state.selectedFinger + 1}</span></h3>
+        <h3>${i18n.t('estimator.selectArtLevel')} <span class="finger-indicator">#${fingerIdx + 1}</span></h3>
         <div class="estimate-options">
           ${P.artLevels.map(a => `
-            <div class="estimate-option ${state.fingers[state.selectedFinger] === a.id ? 'selected' : ''}" data-art="${a.id}">
+            <div class="estimate-option ${state.fingers[fingerIdx] === a.id ? 'selected' : ''}" data-art="${a.id}">
               <div class="opt-info">
                 <span class="opt-label">${i18n.t(`estimator.art.${a.id}.label`)}</span>
                 <span class="opt-desc">${i18n.t(`estimator.art.${a.id}.desc`)}</span>
@@ -224,6 +240,34 @@ export function openEstimator(item) {
           `).join('')}
         </div>
         <button class="apply-all-btn" id="apply-all-btn">${i18n.t('estimator.applyToAll')} &rarr;</button>
+      </div>
+      <div class="estimate-group add-ons-section">
+        <h3>${i18n.t('estimator.addOns')} <span class="finger-indicator">#${fingerIdx + 1}</span></h3>
+        <p class="group-hint">${i18n.t('estimator.addOnsHint')}</p>
+        ${state.allYouCanTake ? `
+          <p class="ayct-active-note">${i18n.t('estimator.allYouCanTake')} — ${i18n.t('estimator.allYouCanTakeDesc')}</p>
+        ` : `
+          <div class="add-on-grid">
+            ${P.addOns.map(a => {
+              const count = addOns[a.id] || 0;
+              return `
+                <button class="add-on-chip ${count > 0 ? 'active' : ''}" data-addon="${a.id}">
+                  <span class="add-on-name">${i18n.t(`estimator.addOn.${a.id}.label`)}</span>
+                  <span class="add-on-count">${count}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `}
+      </div>
+      <div class="estimate-group ayct-section">
+        <div class="ext-toggle-card ${state.allYouCanTake ? 'active' : ''}" id="ayct-toggle">
+          <div class="ext-toggle-header">
+            <span class="ext-toggle-label">${i18n.t('estimator.allYouCanTake')}</span>
+            <div class="toggle-switch ${state.allYouCanTake ? 'on' : ''}"><div class="toggle-knob"></div></div>
+          </div>
+          <span class="ext-toggle-desc">${i18n.t('estimator.allYouCanTakeDesc')} — ${formatPrice(P.allYouCanTakeCharms)}</span>
+        </div>
       </div>
     `;
   }
@@ -291,6 +335,11 @@ export function openEstimator(item) {
       }
     }
 
+    if (state.extensionAllFingers) {
+      total += P.extensions.extensionAllFingers;
+      lines.push({ label: i18n.t('estimator.extensionAllFingers'), price: P.extensions.extensionAllFingers });
+    }
+
     if (state.overlayEnabled && state.overlayCount > 0) {
       const overlayTotal = P.extensions.overlayPerFinger * state.overlayCount;
       total += overlayTotal;
@@ -311,6 +360,11 @@ export function openEstimator(item) {
       lines.push({ label: extLabel, price: extTotal });
     }
 
+    if (state.allYouCanTake) {
+      total += P.allYouCanTakeCharms;
+      lines.push({ label: i18n.t('estimator.allYouCanTake'), price: P.allYouCanTakeCharms });
+    }
+
     const artCounts = {};
     state.fingers.forEach(artId => {
       artCounts[artId] = (artCounts[artId] || 0) + 1;
@@ -328,6 +382,32 @@ export function openEstimator(item) {
       }
     });
 
+    if (!state.allYouCanTake) {
+      const fingerLabels = ['Thumb', 'Index', 'Middle', 'Ring', 'Pinky', 'Thumb', 'Index', 'Middle', 'Ring', 'Pinky'];
+      const totalCounts = {};
+      state.fingerAddOns.forEach(addOns => {
+        Object.entries(addOns).forEach(([id, count]) => {
+          if (count > 0) totalCounts[id] = (totalCounts[id] || 0) + count;
+        });
+      });
+
+      P.addOns.forEach(a => {
+        const total_count = totalCounts[a.id] || 0;
+        if (total_count === 0) return;
+        let addOnTotal;
+        if (a.bundleOf) {
+          addOnTotal = Math.ceil(total_count / a.bundleOf) * a.price;
+        } else {
+          addOnTotal = a.price * total_count;
+        }
+        total += addOnTotal;
+        const label = a.bundleOf
+          ? `${i18n.t(`estimator.addOn.${a.id}.label`)} (${total_count})`
+          : `${i18n.t(`estimator.addOn.${a.id}.label`)} (${total_count})`;
+        lines.push({ label, price: addOnTotal });
+      });
+    }
+
     return {
       lines,
       low: total,
@@ -343,6 +423,18 @@ export function openEstimator(item) {
         updateContent();
       });
     });
+
+    const extAllToggle = view.querySelector('#ext-all-toggle');
+    if (extAllToggle) {
+      extAllToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        state.extensionAllFingers = !state.extensionAllFingers;
+        if (state.extensionAllFingers) {
+          state.extensionEnabled = false;
+        }
+        updateContent();
+      });
+    }
 
     const overlayToggle = view.querySelector('#overlay-toggle');
     if (overlayToggle) {
@@ -362,6 +454,7 @@ export function openEstimator(item) {
         e.preventDefault();
         state.extensionEnabled = !state.extensionEnabled;
         if (state.extensionEnabled && state.extensionCount === 0) state.extensionCount = 1;
+        if (state.extensionEnabled) state.extensionAllFingers = false;
         updateContent();
       });
     }
@@ -394,6 +487,36 @@ export function openEstimator(item) {
         if (state.selectedFinger === null) return;
         const art = state.fingers[state.selectedFinger];
         state.fingers = new Array(FINGER_COUNT).fill(art);
+        updateContent();
+      });
+    }
+
+    view.querySelectorAll('[data-addon]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (state.selectedFinger === null || state.allYouCanTake) return;
+        const addonId = el.dataset.addon;
+        const current = state.fingerAddOns[state.selectedFinger][addonId] || 0;
+        state.fingerAddOns[state.selectedFinger][addonId] = current + 1;
+        updateContent();
+      });
+      el.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        if (state.selectedFinger === null || state.allYouCanTake) return;
+        const addonId = el.dataset.addon;
+        const current = state.fingerAddOns[state.selectedFinger][addonId] || 0;
+        if (current > 0) {
+          state.fingerAddOns[state.selectedFinger][addonId] = current - 1;
+          updateContent();
+        }
+      });
+    });
+
+    const ayctToggle = view.querySelector('#ayct-toggle');
+    if (ayctToggle) {
+      ayctToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        state.allYouCanTake = !state.allYouCanTake;
         updateContent();
       });
     }
