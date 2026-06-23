@@ -688,7 +688,126 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 
 .save-btn.saved svg { fill: var(--taupe); stroke: var(--taupe); }
 
-/* ── Price Estimator ── */
+/* ── Price Estimator — Bottom Sheet ── */
+.estimator-sheet-container {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+}
+
+.estimator-sheet-container.active {
+  pointer-events: auto;
+}
+
+.est-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(64, 64, 64, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: background 0.35s ease, backdrop-filter 0.35s ease;
+}
+
+.estimator-sheet-container.active .est-backdrop {
+  background: rgba(64, 64, 64, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.est-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 100%;
+  max-width: 480px;
+  height: 85%;
+  background: var(--bg);
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -8px 40px rgba(64, 64, 64, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.estimator-sheet-container.active .est-sheet {
+  transform: translateX(-50%) translateY(0);
+}
+
+.est-sheet-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  margin: 10px auto 6px;
+  flex-shrink: 0;
+  cursor: grab;
+}
+
+.est-sheet-handle:active { cursor: grabbing; }
+
+.est-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--bg-alt);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--espresso-light);
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.est-close-btn:active {
+  background: var(--taupe-light);
+  transform: scale(0.9);
+}
+
+.est-sheet-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 24px 16px;
+}
+
+.est-sheet-scroll::-webkit-scrollbar { display: none; }
+
+.est-sheet-header {
+  padding-top: 8px;
+  margin-bottom: 8px;
+}
+
+.est-sheet-header h1 {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 500;
+  font-style: italic;
+  margin-bottom: 4px;
+  color: var(--espresso);
+}
+
+.est-sheet-header .subtitle {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--espresso-muted);
+  letter-spacing: 0.5px;
+}
+
+body.est-open {
+  overflow: hidden;
+}
+
+/* Keep old estimator-content styles for backward compat */
 .estimator-content { padding: 32px 24px 48px; }
 
 .estimator-content h1 {
@@ -846,10 +965,9 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 
 /* ── Estimate Total ── */
 .estimate-total {
-  position: sticky;
-  bottom: 0;
+  flex-shrink: 0;
   background: var(--bg);
-  padding: 20px 24px calc(16px + var(--safe-bottom));
+  padding: 16px 24px calc(16px + var(--safe-bottom));
   border-top: 1px solid var(--border);
   display: flex;
   align-items: center;

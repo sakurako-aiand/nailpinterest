@@ -29,41 +29,41 @@ export function openEstimator(item) {
 
   function render() {
     view.innerHTML = `
-      <div class="detail-header">
-        <button class="back-btn" id="est-back">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-          ${i18n.t('detail.back')}
+      <div class="est-backdrop" id="est-backdrop"></div>
+      <div class="est-sheet" id="est-sheet">
+        <div class="est-sheet-handle" id="est-handle"></div>
+        <button class="est-close-btn" id="est-close" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
-      </div>
-      <div class="estimator-content">
-        <h1>${i18n.t('estimator.title')}</h1>
-        <p class="subtitle">${i18n.t('estimator.subtitle')}</p>
-
-        ${renderPhotoSection()}
-
-        ${renderRemovalsSection()}
-
-        ${renderExtensionsSection()}
-
-        ${renderNailMap()}
-
-        ${renderArtLevelSelector()}
-
-        ${renderReceipt()}
-      </div>
-      <div class="estimate-total">
-        <div class="total-range-block">
-          <span class="total-label">${i18n.t('estimator.investment')}</span>
-          <span class="total-amount-range" id="est-range">${renderRange()}</span>
+        <div class="est-sheet-scroll">
+          <div class="est-sheet-header">
+            <h1>${i18n.t('estimator.title')}</h1>
+            <p class="subtitle">${i18n.t('estimator.subtitle')}</p>
+          </div>
+          ${renderPhotoSection()}
+          ${renderRemovalsSection()}
+          ${renderExtensionsSection()}
+          ${renderNailMap()}
+          ${renderArtLevelSelector()}
+          ${renderReceipt()}
+        </div>
+        <div class="estimate-total">
+          <div class="total-range-block">
+            <span class="total-label">${i18n.t('estimator.investment')}</span>
+            <span class="total-amount-range" id="est-range">${renderRange()}</span>
+          </div>
         </div>
       </div>
     `;
 
     view.style.display = 'block';
-    requestAnimationFrame(() => { view.classList.add('active'); });
-    view.scrollTop = 0;
+    requestAnimationFrame(() => {
+      view.classList.add('active');
+      document.body.classList.add('est-open');
+    });
 
     bindEvents();
+    bindSwipeClose();
   }
 
   function renderPhotoSection() {
@@ -322,7 +322,8 @@ export function openEstimator(item) {
   }
 
   function bindEvents() {
-    view.querySelector('#est-back').addEventListener('click', () => closeEstimator());
+    view.querySelector('#est-close').addEventListener('click', () => closeEstimator());
+    view.querySelector('#est-backdrop').addEventListener('click', () => closeEstimator());
 
     view.querySelectorAll('[data-removal]').forEach(el => {
       el.addEventListener('click', () => {
@@ -405,10 +406,50 @@ export function openEstimator(item) {
       galleryBtn.addEventListener('click', () => openGalleryPicker());
     }
 
-    const header = view.querySelector('.detail-header');
-    view.addEventListener('scroll', () => {
-      header.classList.toggle('scrolled', view.scrollTop > 10);
-    }, { once: false });
+  }
+
+  function bindSwipeClose() {
+    const sheet = view.querySelector('#est-sheet');
+    const handle = view.querySelector('#est-handle');
+    if (!sheet || !handle) return;
+
+    let startY = 0;
+    let currentY = 0;
+    let dragging = false;
+
+    const onStart = (e) => {
+      dragging = true;
+      startY = e.touches ? e.touches[0].clientY : e.clientY;
+      sheet.style.transition = 'none';
+    };
+
+    const onMove = (e) => {
+      if (!dragging) return;
+      currentY = e.touches ? e.touches[0].clientY : e.clientY;
+      const delta = currentY - startY;
+      if (delta > 0) {
+        sheet.style.transform = `translateY(${delta}px)`;
+      }
+    };
+
+    const onEnd = () => {
+      if (!dragging) return;
+      dragging = false;
+      sheet.style.transition = '';
+      const delta = currentY - startY;
+      if (delta > 120) {
+        closeEstimator();
+      } else {
+        sheet.style.transform = '';
+      }
+    };
+
+    handle.addEventListener('touchstart', onStart, { passive: true });
+    handle.addEventListener('touchmove', onMove, { passive: true });
+    handle.addEventListener('touchend', onEnd);
+    handle.addEventListener('mousedown', onStart);
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onEnd);
   }
 
   function bindCounter(minusSel, plusSel, getter, setter) {
@@ -618,5 +659,6 @@ export function closeEstimator() {
   const view = document.getElementById('estimator-view');
   if (!view) return;
   view.classList.remove('active');
-  setTimeout(() => { view.style.display = 'none'; view.innerHTML = ''; }, 300);
+  document.body.classList.remove('est-open');
+  setTimeout(() => { view.style.display = 'none'; view.innerHTML = ''; }, 350);
 }

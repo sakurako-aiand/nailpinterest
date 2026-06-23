@@ -64,6 +64,7 @@ function closeAllOverlays() {
   }
   const modal = document.getElementById('booking-modal');
   if (modal) modal.classList.remove('active');
+  document.body.classList.remove('est-open');
   document.documentElement.style.overflow = '';
 }
 
