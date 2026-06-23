@@ -123,8 +123,17 @@ export function renderHome() {
 }
 
 function openPriceList(category) {
-  const items = PRICE_LISTS[category];
-  if (!items) return;
+  const data = PRICE_LISTS[category];
+  if (!data) return;
+
+  const items = data.items;
+  const prepNote = data.prepNote;
+
+  const formatPriceRange = (low, high) => {
+    if (high === null) return `${formatPrice(low)}〜`;
+    if (low === high) return formatPrice(low);
+    return `${formatPrice(low)} 〜 ${formatPrice(high)}`;
+  };
 
   const overlay = document.createElement('div');
   overlay.className = 'pricelist-overlay';
@@ -140,14 +149,25 @@ function openPriceList(category) {
           <h1>${i18n.t('services.priceList')}</h1>
           <p class="subtitle">${i18n.t('services.priceListDesc')}</p>
         </div>
+        ${prepNote ? `
+          <div class="pricelist-prep-note">
+            <span class="pricelist-prep-label">${i18n.t('services.prepNote')}</span>
+            <p class="pricelist-prep-text">${prepNote}</p>
+          </div>
+        ` : ''}
         <div class="receipt pricelist-receipt">
           ${items.map(item => `
-            <div class="receipt-line">
+            <div class="receipt-line pricelist-line">
               <div class="pricelist-item-info">
                 <span class="receipt-item">${item.label}</span>
                 <span class="pricelist-item-desc">${item.desc}</span>
+                ${item.addOns ? `
+                  <div class="pricelist-addons">
+                    ${item.addOns.map(a => `<span class="pricelist-addon">+${formatPrice(a.price)} ${a.label}</span>`).join('')}
+                  </div>
+                ` : ''}
               </div>
-              <span class="receipt-price">${formatPrice(item.price)}</span>
+              <span class="receipt-price">${formatPriceRange(item.low, item.high)}</span>
             </div>
           `).join('')}
           <div class="receipt-divider"></div>

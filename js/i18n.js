@@ -11,11 +11,15 @@ const translations = {
     services: {
       nails: 'Nails',
       lashes: 'Lashes',
+      brows: 'Brows',
       tattoos: 'Tattoos',
       pressons: 'Press-ons',
+      pedicures: 'Pedicures',
       priceList: 'Price List',
       priceListDesc: 'Service pricing for this category',
       bookBtn: 'Book Appointment',
+      prepNote: 'Before your appointment',
+      addOns: 'Add-ons',
     },
     home: {
       title: 'The Lookbook',
@@ -235,11 +239,15 @@ const translations = {
     services: {
       nails: 'ネイル',
       lashes: 'まつ毛',
+      brows: '眉',
       tattoos: 'タトゥー',
       pressons: 'プレスオン',
+      pedicures: 'ペディキュア',
       priceList: '価格表',
       priceListDesc: 'このサービスの料金',
       bookBtn: '予約する',
+      prepNote: 'ご来店前に',
+      addOns: 'オプション',
     },
     home: {
       title: 'ルックブック',

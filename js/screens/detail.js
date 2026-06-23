@@ -13,7 +13,7 @@ export function openDetailView(item) {
 
   const isSaved = store.isInCollection(item.id);
   const isNails = item.category === 'nails' || (!item.category && item.tier);
-  const estPrice = isNails ? getTierPrice(item.tier) : (PRICE_LISTS[item.category]?.[0]?.price || 0);
+  const estPrice = isNails ? getTierPrice(item.tier) : (PRICE_LISTS[item.category]?.items?.[0]?.low || 0);
   const tierLabel = isNails
     ? (item.tier === 'custom' ? i18n.t('detail.tierCustom') : i18n.t(`estimator.tierLabels.${item.tier}`))
     : i18n.t(`services.${item.category}`);

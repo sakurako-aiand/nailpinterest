@@ -396,6 +396,61 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 
 .book-now-link:active { transform: scale(0.97); }
 
+/* ── Price List: Prep Note & Add-ons ── */
+.pricelist-prep-note {
+  background: var(--bg-alt);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.pricelist-prep-label {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--taupe-dark);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.pricelist-prep-text {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--espresso-light);
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+}
+
+.pricelist-addons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.pricelist-addon {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  color: var(--taupe-dark);
+  background: var(--taupe-light);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+.pricelist-line {
+  align-items: flex-start;
+}
+
+.pricelist-line .receipt-price {
+  align-self: flex-start;
+  white-space: nowrap;
+}
+
 /* ── Feed Headers ── */
 .feed-header {
   padding: 40px 24px 16px;

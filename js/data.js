@@ -26,37 +26,59 @@ const PRICING = {
 };
 
 const SERVICES = [
-  { id: 'nails',    label: 'Nails',    jaLabel: 'ネイル' },
-  { id: 'lashes',  label: 'Lashes',   jaLabel: 'まつ毛' },
-  { id: 'tattoos', label: 'Tattoos',  jaLabel: 'タトゥー' },
-  { id: 'pressons', label: 'Press-ons', jaLabel: 'プレスオン' },
+  { id: 'nails',     label: 'Nails',      jaLabel: 'ネイル' },
+  { id: 'lashes',   label: 'Lashes',     jaLabel: 'まつ毛' },
+  { id: 'brows',    label: 'Brows',      jaLabel: '眉' },
+  { id: 'tattoos',  label: 'Tattoos',    jaLabel: 'タトゥー' },
+  { id: 'pressons', label: 'Press-ons',  jaLabel: 'プレスオン' },
+  { id: 'pedicures', label: 'Pedicures', jaLabel: 'ペディキュア' },
 ];
 
 const PRICE_LISTS = {
-  lashes: [
-    { label: 'Classic Set',          desc: 'Natural 1:1 lash extensions',       price: 8000  },
-    { label: 'Volume Set',           desc: '2D-6D volume fans for fullness',     price: 12000 },
-    { label: 'Mega Volume Set',      desc: '7D+ ultra-full dramatic look',       price: 15000 },
-    { label: 'Lash Lift & Tint',     desc: 'Perm + tint for natural lashes',     price: 5000  },
-    { label: 'Lash Refill',          desc: '2-3 week maintenance fill',         price: 5000  },
-    { label: 'Lash Removal',         desc: 'Safe removal of extensions',         price: 2000  },
-  ],
-  tattoos: [
-    { label: 'Small Design (≤3cm)',  desc: 'Minimal line work or fine script',   price: 10000 },
-    { label: 'Medium Design (3-7cm)', desc: 'Moderate detail and shading',        price: 20000 },
-    { label: 'Large Design (7cm+)',   desc: 'Detailed piece, multi-session',      price: 35000 },
-    { label: 'Custom Consultation',  desc: 'Design planning + placement',         price: 5000  },
-    { label: 'Touch-Up Session',     desc: 'Healing touch-up within 1 month',     price: 5000  },
-    { label: 'Cover-Up Work',        desc: 'Covering existing tattoo',           price: 25000 },
-  ],
-  pressons: [
-    { label: 'Full Set (10 nails)',   desc: 'Reusable press-on nail set',         price: 3500  },
-    { label: 'Custom Design Set',    desc: 'Bespoke art & charms',               price: 5000  },
-    { label: 'Individual Nail',      desc: 'Single replacement press-on',        price: 400   },
-    { label: 'Refill Kit',            desc: 'Adhesive + prep tools',              price: 1500  },
-    { label: 'Gel Overlay Set',       desc: 'Overlay on natural nails',           price: 6000  },
-    { label: 'Removal & Re-glaze',   desc: 'Remove + refresh existing set',     price: 2000  },
-  ],
+  lashes: {
+    prepNote: 'Please arrive with no makeup on your lashes',
+    items: [
+      { label: 'Omakase / Custom Anime Lash',  desc: 'SIGNATURE — Custom design based on your eyes & style. 120-160 lashes / 90 min', low: 16000, high: 16000, addOns: [{ label: 'Removal', price: 1500 }] },
+      { label: 'Single Lash Extensions',         desc: 'Super lightweight, long lasting. Only menu you can combine with lash lift. 120-200 lashes / 60-90 min', low: 11000, high: 19000, addOns: [{ label: 'Removal', price: 1500 }, { label: 'Upper Lash Lift', price: 7000 }] },
+      { label: 'Double Lash Extensions',        desc: 'Clumpy lash bundles for a bold, trendy look. 120-200 lashes / 60-90 min', low: 12500, high: 20500, addOns: [{ label: 'Removal', price: 1500 }] },
+      { label: 'Volume Lash Extensions',         desc: 'Layers of ultra-thin extensions for a fluffy look. 400-1000 lashes / 90 min', low: 15000, high: 21000, addOns: [{ label: 'Removal', price: 1500 }] },
+      { label: 'Lash Lift',                       desc: 'Upper & lower lash lift for a naturally defined look. 90 min', low: 13000, high: 13000 },
+    ],
+  },
+  brows: {
+    prepNote: 'Please arrive with no makeup on your brows. Avoid trimming or plucking for at least 2 weeks prior. Mild redness may occur — book ahead of important events.',
+    items: [
+      { label: 'Eyebrow Wax',     desc: 'Removes unwanted hair using wax and tweezers to shape and define your brows based on your natural bone structure. 50 min', low: 8000, high: 8000 },
+      { label: 'Hybrid Brow',     desc: 'Beautifully styled brows without makeup. Combines a specialized brow perm with waxing to correct hair direction and create a fuller, lifted look. 75 min', low: 10000, high: 10000 },
+    ],
+  },
+  tattoos: {
+    items: [
+      { label: 'Small Size',      desc: 'Up to 5cm × 5cm (approx. 2" × 2"). Price varies with design complexity', low: 8000, high: 12000 },
+      { label: 'Medium Size',     desc: 'Up to 5cm × 8cm (approx. 2" × 3.1"). Price varies with design complexity', low: 15000, high: 21000 },
+      { label: 'Large Size',      desc: 'Up to 10cm × 10cm (approx. 3.9" × 3.9"). Price varies with design complexity', low: 25000, high: 35000 },
+      { label: 'Custom',          desc: 'For custom designs, please DM us for inquiries. Send inspiration images in advance', low: 35000, high: null },
+    ],
+  },
+  pressons: {
+    items: [
+      { label: 'Custom Press-Ons',  desc: '¥3,500 OFF from the gel manicure design menu price. Reusable custom set', low: 3500, high: null },
+      { label: 'Full Set (10 nails)', desc: 'Reusable press-on nail set based on your selected design', low: 3500, high: null },
+      { label: 'Individual Nail',    desc: 'Single replacement press-on nail', low: 400, high: null },
+      { label: 'Refill Kit',          desc: 'Adhesive + prep tools', low: 1500, high: null },
+      { label: 'Removal & Re-glaze',  desc: 'Remove + refresh existing press-on set', low: 2000, high: null },
+    ],
+  },
+  pedicures: {
+    prepNote: 'All pedicures include a wet massage. Removal charges apply additionally.',
+    items: [
+      { label: 'Single Color',       desc: 'Solid color / Cat Eye / Chrome. +¥1,000 for Cat Eye and Chrome', low: 9000, high: 10000 },
+      { label: 'French Tips / Dots',  desc: 'Classic French tips or dot designs', low: 10500, high: 10500 },
+      { label: 'Design',              desc: 'With 2D art or charms', low: 11000, high: 11000 },
+      { label: 'Polish Removal',      desc: 'Regular polish removal (additional charge)', low: 1000, high: 1000 },
+      { label: 'Gel Removal',         desc: 'Gel polish removal (additional charge)', low: 2000, high: 2000 },
+    ],
+  },
 };
 
 const ESTIMATOR_PRICING = {
@@ -263,6 +285,36 @@ const DATA = {
       colors: [] },
     { id: 'po6', title: 'Nude Minimalist Press-On',    category: 'pressons', image: img('7c92d2_f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3'),
       tags: ['#Nude', '#Minimalist', '#PressOn', '#Natural', '#Everyday'],
+      colors: [] },
+    { id: 'b1',  title: 'Sculpted Arch Brows',          category: 'brows',   image: img('7c92d2_a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9'),
+      tags: ['#Brows', '#Sculpted', '#Arch', '#Wax', '#Defined'],
+      colors: [] },
+    { id: 'b2',  title: 'Natural Hybrid Brow',           category: 'brows',   image: img('7c92d2_b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0'),
+      tags: ['#Brows', '#Hybrid', '#Natural', '#Perm', '#Lifted'],
+      colors: [] },
+    { id: 'b3',  title: 'Bold Feathered Brow',          category: 'brows',   image: img('7c92d2_c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1'),
+      tags: ['#Brows', '#Bold', '#Feathered', '#Full', '#Laminated'],
+      colors: [] },
+    { id: 'b4',  title: 'Soft Natural Brow Shape',       category: 'brows',   image: img('7c92d2_d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2'),
+      tags: ['#Brows', '#Soft', '#Natural', '#Wax', '#Everyday'],
+      colors: [] },
+    { id: 'pe1', title: 'Classic Single Color Pedi',     category: 'pedicures', image: img('7c92d2_a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0'),
+      tags: ['#Pedicure', '#SingleColor', '#Classic', '#Glossy', '#Natural'],
+      colors: [] },
+    { id: 'pe2', title: 'French Tip Pedicure',           category: 'pedicures', image: img('7c92d2_b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1'),
+      tags: ['#Pedicure', '#FrenchTip', '#White', '#Classic', '#Clean'],
+      colors: [] },
+    { id: 'pe3', title: 'Chrome Cat Eye Pedi',           category: 'pedicures', image: img('7c92d2_c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2'),
+      tags: ['#Pedicure', '#Chrome', '#CatEye', '#Silver', '#Modern'],
+      colors: [] },
+    { id: 'pe4', title: 'Floral Design Pedi',            category: 'pedicures', image: img('7c92d2_d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3'),
+      tags: ['#Pedicure', '#Floral', '#Art', '#Pink', '#Detailed'],
+      colors: [] },
+    { id: 'pe5', title: 'Minimalist Nude Pedi',          category: 'pedicures', image: img('7c92d2_e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4'),
+      tags: ['#Pedicure', '#Nude', '#Minimalist', '#Natural', '#Everyday'],
+      colors: [] },
+    { id: 'pe6', title: 'Bold Red Glamour Pedi',         category: 'pedicures', image: img('7c92d2_f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5'),
+      tags: ['#Pedicure', '#Red', '#Bold', '#Glamour', '#Classic'],
       colors: [] },
   ],
 };
