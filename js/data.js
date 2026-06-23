@@ -25,6 +25,33 @@ const PRICING = {
   pressonDiscount: 3500,
 };
 
+const ESTIMATOR_PRICING = {
+  currency: '¥',
+  base: 8000,
+  removalOnlyPrice: 5000,
+  variance: 1500,
+  removals: [
+    { id: 'none',        price: 0 },
+    { id: 'polish',      price: 1000 },
+    { id: 'gel',         price: 2000 },
+    { id: 'acrylic',     price: 3000 },
+    { id: 'removalOnly', price: 5000, replacesBase: true },
+  ],
+  extensions: {
+    overlayPerFinger: 450,
+    extensionPerFinger: 600,
+    extensionFlat: 4500,
+    extensionThreshold: 8,
+  },
+  artLevels: [
+    { id: 'oneColor', price: 0,   key: 'estimator.art.oneColor' },
+    { id: 'catEye',   price: 100, key: 'estimator.art.catEye'   },
+    { id: 'french',   price: 150, key: 'estimator.art.french'   },
+    { id: 'art2dL1',  price: 200, key: 'estimator.art.art2dL1'  },
+    { id: 'art2dL2',  price: 300, key: 'estimator.art.art2dL2'  },
+  ],
+};
+
 function img(hash, w = 400, h = 500) {
   return `https://static.wixstatic.com/media/${hash}~mv2.jpg/v1/fill/w_${w},h_${h},q_90/${hash}~mv2.jpg`;
 }
@@ -174,4 +201,4 @@ function getAllTags() {
   return Array.from(tagSet).sort();
 }
 
-export { DATA, PRICING, getTierPrice, getTierLabel, formatPrice, getAllTags };
+export { DATA, PRICING, ESTIMATOR_PRICING, getTierPrice, getTierLabel, formatPrice, getAllTags };

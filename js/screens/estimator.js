@@ -1,7 +1,9 @@
-import { PRICING, formatPrice } from '../data.js';
+import { ESTIMATOR_PRICING, formatPrice, DATA } from '../data.js';
 import { i18n } from '../i18n.js';
 
-export function openEstimator() {
+const FINGER_COUNT = 10;
+
+export function openEstimator(item) {
   const view = document.getElementById('estimator-view');
   if (!view) return;
 
@@ -11,10 +13,19 @@ export function openEstimator() {
     detailView.style.display = 'none';
   }
 
-  let selectedDesign = 'single';
-  let selectedExtension = 'natural';
-  let selectedRemoval = 'none';
-  let fingerCount = 1;
+  const P = ESTIMATOR_PRICING;
+
+  const state = {
+    removal: 'none',
+    overlayEnabled: false,
+    overlayCount: 0,
+    extensionEnabled: false,
+    extensionCount: 0,
+    fingers: new Array(FINGER_COUNT).fill('oneColor'),
+    selectedFinger: null,
+    photoUrl: null,
+    aiSuggested: false,
+  };
 
   function render() {
     view.innerHTML = `
@@ -28,65 +39,23 @@ export function openEstimator() {
         <h1>${i18n.t('estimator.title')}</h1>
         <p class="subtitle">${i18n.t('estimator.subtitle')}</p>
 
-        <div class="estimate-group">
-          <h3>${i18n.t('estimator.design')}</h3>
-          <div class="estimate-options">
-            ${PRICING.designs.map(d => `
-              <div class="estimate-option ${selectedDesign === d.id ? 'selected' : ''}" data-design="${d.id}">
-                <div class="opt-info">
-                  <span class="opt-label">${i18n.t(`estimator.designs.${d.id}.label`)}</span>
-                  <span class="opt-desc">${i18n.t(`estimator.designs.${d.id}.desc`)}</span>
-                </div>
-                <span class="opt-price">${d.price === 0 ? i18n.t('estimator.base') : '+' + formatPrice(d.price)}</span>
-                <div class="opt-check"></div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
+        ${renderPhotoSection()}
 
-        <div class="estimate-group">
-          <h3>${i18n.t('estimator.extensions')}</h3>
-          <div class="estimate-options">
-            ${PRICING.extensions.map(e => `
-              <div class="estimate-option ${selectedExtension === e.id ? 'selected' : ''}" data-ext="${e.id}">
-                <div class="opt-info">
-                  <span class="opt-label">${i18n.t(`estimator.exts.${e.id}.label`)}</span>
-                  <span class="opt-desc">${i18n.t(`estimator.exts.${e.id}.desc`)}</span>
-                </div>
-                <span class="opt-price">${e.price === 0 ? i18n.t('estimator.included') : '+' + formatPrice(e.price)}</span>
-                <div class="opt-check"></div>
-              </div>
-            `).join('')}
-          </div>
-          ${PRICING.extensions.find(e => e.id === selectedExtension)?.hasCount ? `
-            <div class="estimate-finger-count">
-              <span class="count-label">${i18n.t('estimator.fingerCount')}</span>
-              <button class="count-btn" id="count-minus">&minus;</button>
-              <span class="count-value">${fingerCount}</span>
-              <button class="count-btn" id="count-plus">+</button>
-            </div>
-          ` : ''}
-        </div>
+        ${renderRemovalsSection()}
 
-        <div class="estimate-group">
-          <h3>${i18n.t('estimator.removal')}</h3>
-          <div class="estimate-options">
-            ${PRICING.removals.map(r => `
-              <div class="estimate-option ${selectedRemoval === r.id ? 'selected' : ''}" data-removal="${r.id}">
-                <div class="opt-info">
-                  <span class="opt-label">${i18n.t(`estimator.removals.${r.id}.label`)}</span>
-                  <span class="opt-desc">${i18n.t(`estimator.removals.${r.id}.desc`)}</span>
-                </div>
-                <span class="opt-price">${r.price === 0 ? i18n.t('estimator.noCharge') : '+' + formatPrice(r.price)}</span>
-                <div class="opt-check"></div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
+        ${renderExtensionsSection()}
+
+        ${renderNailMap()}
+
+        ${renderArtLevelSelector()}
+
+        ${renderReceipt()}
       </div>
       <div class="estimate-total">
-        <span class="total-label">${i18n.t('estimator.total')}</span>
-        <span class="total-amount" id="est-total">${formatPrice(calculate())}</span>
+        <div class="total-range-block">
+          <span class="total-label">${i18n.t('estimator.investment')}</span>
+          <span class="total-amount-range" id="est-range">${renderRange()}</span>
+        </div>
       </div>
     `;
 
@@ -94,24 +63,347 @@ export function openEstimator() {
     requestAnimationFrame(() => { view.classList.add('active'); });
     view.scrollTop = 0;
 
+    bindEvents();
+  }
+
+  function renderPhotoSection() {
+    return `
+      <div class="estimate-group">
+        <h3>${i18n.t('estimator.photoAnalyze')}</h3>
+        <p class="group-hint">${i18n.t('estimator.photoHint')}</p>
+        <div class="est-photo-area" id="est-photo-area">
+          ${state.photoUrl ? `
+            <img src="${state.photoUrl}" alt="Nail photo" class="est-photo-preview" />
+            ${state.aiSuggested ? `<span class="ai-badge">${i18n.t('estimator.aiSuggested')}</span>` : ''}
+          ` : `
+            <div class="est-photo-placeholder">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span>${i18n.t('estimator.noPhoto')}</span>
+            </div>
+          `}
+          <input type="file" id="est-file" accept="image/*" style="display:none" />
+        </div>
+        <div class="est-photo-buttons">
+          <button class="est-photo-btn" id="est-upload-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            ${i18n.t('estimator.uploadPhoto')}
+          </button>
+          <button class="est-photo-btn" id="est-gallery-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            ${i18n.t('estimator.selectFromGallery')}
+          </button>
+        </div>
+        ${state.aiSuggested ? `<p class="ai-suggest-desc">${i18n.t('estimator.aiSuggestDesc')}</p>` : ''}
+      </div>
+    `;
+  }
+
+  function renderRemovalsSection() {
+    const removals = [
+      { id: 'none',        label: i18n.t('estimator.removalNone'),       desc: '', price: 0 },
+      { id: 'polish',      label: i18n.t('estimator.removalPolish'),    desc: i18n.t('estimator.removalPolishDesc'),    price: 1000 },
+      { id: 'gel',         label: i18n.t('estimator.removalGel'),       desc: i18n.t('estimator.removalGelDesc'),       price: 2000 },
+      { id: 'acrylic',     label: i18n.t('estimator.removalAcrylic'),   desc: i18n.t('estimator.removalAcrylicDesc'),   price: 3000 },
+      { id: 'removalOnly', label: i18n.t('estimator.removalOnly'),      desc: i18n.t('estimator.removalOnlyDesc'),      price: 5000 },
+    ];
+    return `
+      <div class="estimate-group">
+        <h3>${i18n.t('estimator.removals')}</h3>
+        <p class="group-hint">${i18n.t('estimator.removalsHint')}</p>
+        <div class="estimate-options">
+          ${removals.map(r => `
+            <div class="estimate-option ${state.removal === r.id ? 'selected' : ''}" data-removal="${r.id}">
+              <div class="opt-info">
+                <span class="opt-label">${r.label}</span>
+                ${r.desc ? `<span class="opt-desc">${r.desc}</span>` : ''}
+              </div>
+              <span class="opt-price">${r.price === 0 ? '—' : r.id === 'removalOnly' ? formatPrice(r.price) : '+' + formatPrice(r.price)}</span>
+              <div class="opt-check"></div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderExtensionsSection() {
+    return `
+      <div class="estimate-group">
+        <h3>${i18n.t('estimator.extensions')}</h3>
+        <p class="group-hint">${i18n.t('estimator.extensionsHint')}</p>
+        <div class="ext-toggles">
+          <div class="ext-toggle-card ${state.overlayEnabled ? 'active' : ''}" id="overlay-toggle">
+            <div class="ext-toggle-header">
+              <span class="ext-toggle-label">${i18n.t('estimator.overlay')}</span>
+              <div class="toggle-switch ${state.overlayEnabled ? 'on' : ''}"><div class="toggle-knob"></div></div>
+            </div>
+            <span class="ext-toggle-desc">${i18n.t('estimator.overlayDesc')}</span>
+            ${state.overlayEnabled ? `
+              <div class="ext-counter">
+                <button class="count-btn" id="overlay-minus">&minus;</button>
+                <span class="count-value">${state.overlayCount}</span>
+                <button class="count-btn" id="overlay-plus">+</button>
+                <span class="ext-counter-label">${i18n.t('estimator.overlayCount')}</span>
+              </div>
+            ` : ''}
+          </div>
+          <div class="ext-toggle-card ${state.extensionEnabled ? 'active' : ''}" id="extension-toggle">
+            <div class="ext-toggle-header">
+              <span class="ext-toggle-label">${i18n.t('estimator.extension')}</span>
+              <div class="toggle-switch ${state.extensionEnabled ? 'on' : ''}"><div class="toggle-knob"></div></div>
+            </div>
+            <span class="ext-toggle-desc">${i18n.t('estimator.extensionDesc')}</span>
+            ${state.extensionEnabled ? `
+              <div class="ext-counter">
+                <button class="count-btn" id="ext-minus">&minus;</button>
+                <span class="count-value">${state.extensionCount}</span>
+                <button class="count-btn" id="ext-plus">+</button>
+                <span class="ext-counter-label">${i18n.t('estimator.extensionCount')}</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderNailMap() {
+    return `
+      <div class="estimate-group">
+        <h3>${i18n.t('estimator.nailMap')}</h3>
+        <p class="group-hint">${i18n.t('estimator.nailMapHint')}</p>
+        <div class="nail-map" id="nail-map">
+          ${state.fingers.map((art, i) => `
+            <div class="nail-slot ${state.selectedFinger === i ? 'selected' : ''} ${art !== 'oneColor' ? 'has-art' : ''}"
+                 data-finger="${i}">
+              <div class="nail-shape nail-${getArtColor(art)}">
+                <span class="nail-num">${i + 1}</span>
+              </div>
+              <span class="nail-art-label">${getArtShortLabel(art)}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderArtLevelSelector() {
+    if (state.selectedFinger === null) return '';
+    return `
+      <div class="estimate-group art-selector" id="art-selector">
+        <h3>${i18n.t('estimator.selectArtLevel')} <span class="finger-indicator">#${state.selectedFinger + 1}</span></h3>
+        <div class="estimate-options">
+          ${P.artLevels.map(a => `
+            <div class="estimate-option ${state.fingers[state.selectedFinger] === a.id ? 'selected' : ''}" data-art="${a.id}">
+              <div class="opt-info">
+                <span class="opt-label">${i18n.t(`estimator.art.${a.id}.label`)}</span>
+                <span class="opt-desc">${i18n.t(`estimator.art.${a.id}.desc`)}</span>
+              </div>
+              <span class="opt-price">${a.price === 0 ? '—' : '+' + formatPrice(a.price)}</span>
+              <div class="opt-check"></div>
+            </div>
+          `).join('')}
+        </div>
+        <button class="apply-all-btn" id="apply-all-btn">${i18n.t('estimator.applyToAll')} &rarr;</button>
+      </div>
+    `;
+  }
+
+  function renderReceipt() {
+    const calc = calculate();
+    return `
+      <div class="estimate-group receipt-section">
+        <h3>${i18n.t('estimator.breakdown')}</h3>
+        <div class="receipt">
+          ${calc.lines.map(line => `
+            <div class="receipt-line">
+              <span class="receipt-item">${line.label}</span>
+              <span class="receipt-price">${line.price === 0 ? '—' : formatPrice(line.price)}</span>
+            </div>
+          `).join('')}
+          <div class="receipt-divider"></div>
+          <div class="receipt-line receipt-total-line">
+            <span class="receipt-item">${i18n.t('estimator.totalRange')}</span>
+            <span class="receipt-price">${formatPrice(calc.low)} — ${formatPrice(calc.high)}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderRange() {
+    const calc = calculate();
+    return `${formatPrice(calc.low)} — ${formatPrice(calc.high)}`;
+  }
+
+  function getArtColor(artId) {
+    const colors = {
+      oneColor: 'neutral',
+      catEye: 'champagne',
+      french: 'ivory',
+      art2dL1: 'taupe',
+      art2dL2: 'espresso',
+    };
+    return colors[artId] || 'neutral';
+  }
+
+  function getArtShortLabel(artId) {
+    const map = {
+      oneColor: '',
+      catEye: 'CE',
+      french: 'FR',
+      art2dL1: 'L1',
+      art2dL2: 'L2',
+    };
+    return map[artId] || '';
+  }
+
+  function calculate() {
+    const lines = [];
+    let total = 0;
+
+    const removal = P.removals.find(r => r.id === state.removal);
+    const isRemovalOnly = state.removal === 'removalOnly';
+
+    if (isRemovalOnly) {
+      total += P.removalOnlyPrice;
+      lines.push({ label: i18n.t('estimator.removalOnly'), price: P.removalOnlyPrice });
+    } else {
+      total += P.base;
+      lines.push({ label: i18n.t('estimator.lineBase'), price: P.base });
+      if (removal && removal.price > 0) {
+        total += removal.price;
+        lines.push({ label: i18n.t('estimator.lineRemoval'), price: removal.price });
+      }
+    }
+
+    if (state.overlayEnabled && state.overlayCount > 0) {
+      const overlayTotal = P.extensions.overlayPerFinger * state.overlayCount;
+      total += overlayTotal;
+      lines.push({ label: i18n.t('estimator.lineOverlayCount')(state.overlayCount), price: overlayTotal });
+    }
+
+    if (state.extensionEnabled && state.extensionCount > 0) {
+      let extTotal;
+      let extLabel;
+      if (state.extensionCount >= P.extensions.extensionThreshold) {
+        extTotal = P.extensions.extensionFlat;
+        extLabel = i18n.t('estimator.lineExtensionFlat');
+      } else {
+        extTotal = P.extensions.extensionPerFinger * state.extensionCount;
+        extLabel = i18n.t('estimator.lineExtension')(state.extensionCount);
+      }
+      total += extTotal;
+      lines.push({ label: extLabel, price: extTotal });
+    }
+
+    const artCounts = {};
+    state.fingers.forEach(artId => {
+      artCounts[artId] = (artCounts[artId] || 0) + 1;
+    });
+
+    P.artLevels.forEach(a => {
+      const count = artCounts[a.id] || 0;
+      if (count > 0 && a.price > 0) {
+        const artTotal = a.price * count;
+        total += artTotal;
+        lines.push({
+          label: i18n.t('estimator.lineArt')(i18n.t(`estimator.art.${a.id}.label`), count),
+          price: artTotal,
+        });
+      }
+    });
+
+    return {
+      lines,
+      low: total,
+      high: total + P.variance,
+    };
+  }
+
+  function bindEvents() {
     view.querySelector('#est-back').addEventListener('click', () => closeEstimator());
 
-    view.querySelectorAll('[data-design]').forEach(el => {
-      el.addEventListener('click', () => { selectedDesign = el.dataset.design; render(); });
-    });
-
-    view.querySelectorAll('[data-ext]').forEach(el => {
-      el.addEventListener('click', () => { selectedExtension = el.dataset.ext; render(); });
-    });
-
     view.querySelectorAll('[data-removal]').forEach(el => {
-      el.addEventListener('click', () => { selectedRemoval = el.dataset.removal; render(); });
+      el.addEventListener('click', () => {
+        state.removal = el.dataset.removal;
+        render();
+      });
     });
 
-    const minusBtn = view.querySelector('#count-minus');
-    const plusBtn = view.querySelector('#count-plus');
-    if (minusBtn) minusBtn.addEventListener('click', () => { if (fingerCount > 1) { fingerCount--; render(); } });
-    if (plusBtn) plusBtn.addEventListener('click', () => { if (fingerCount < 10) { fingerCount++; render(); } });
+    const overlayToggle = view.querySelector('#overlay-toggle');
+    if (overlayToggle) {
+      overlayToggle.addEventListener('click', (e) => {
+        if (e.target.closest('.count-btn')) return;
+        state.overlayEnabled = !state.overlayEnabled;
+        if (state.overlayEnabled && state.overlayCount === 0) state.overlayCount = 1;
+        render();
+      });
+    }
+
+    const extToggle = view.querySelector('#extension-toggle');
+    if (extToggle) {
+      extToggle.addEventListener('click', (e) => {
+        if (e.target.closest('.count-btn')) return;
+        state.extensionEnabled = !state.extensionEnabled;
+        if (state.extensionEnabled && state.extensionCount === 0) state.extensionCount = 1;
+        render();
+      });
+    }
+
+    bindCounter('#overlay-minus', '#overlay-plus', () => state.overlayCount, (v) => state.overlayCount = Math.max(0, Math.min(10, v)));
+    bindCounter('#ext-minus', '#ext-plus', () => state.extensionCount, (v) => state.extensionCount = Math.max(0, Math.min(10, v)));
+
+    view.querySelectorAll('[data-finger]').forEach(el => {
+      el.addEventListener('click', () => {
+        const idx = parseInt(el.dataset.finger);
+        state.selectedFinger = state.selectedFinger === idx ? null : idx;
+        render();
+      });
+    });
+
+    view.querySelectorAll('[data-art]').forEach(el => {
+      el.addEventListener('click', () => {
+        if (state.selectedFinger === null) return;
+        state.fingers[state.selectedFinger] = el.dataset.art;
+        render();
+      });
+    });
+
+    const applyAll = view.querySelector('#apply-all-btn');
+    if (applyAll) {
+      applyAll.addEventListener('click', () => {
+        if (state.selectedFinger === null) return;
+        const art = state.fingers[state.selectedFinger];
+        state.fingers = new Array(FINGER_COUNT).fill(art);
+        render();
+      });
+    }
+
+    const uploadBtn = view.querySelector('#est-upload-btn');
+    const fileInput = view.querySelector('#est-file');
+    const photoArea = view.querySelector('#est-photo-area');
+
+    if (uploadBtn) {
+      uploadBtn.addEventListener('click', () => fileInput.click());
+    }
+    if (photoArea && !state.photoUrl) {
+      photoArea.addEventListener('click', () => fileInput.click());
+    }
+    if (fileInput) {
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files[0]) {
+          const reader = new FileReader();
+          reader.onload = (ev) => analyzeAndSuggest(ev.target.result);
+          reader.readAsDataURL(e.target.files[0]);
+        }
+      });
+    }
+
+    const galleryBtn = view.querySelector('#est-gallery-btn');
+    if (galleryBtn) {
+      galleryBtn.addEventListener('click', () => openGalleryPicker());
+    }
 
     const header = view.querySelector('.detail-header');
     view.addEventListener('scroll', () => {
@@ -119,25 +411,207 @@ export function openEstimator() {
     }, { once: false });
   }
 
-  function calculate() {
-    const design = PRICING.designs.find(d => d.id === selectedDesign);
-    const ext = PRICING.extensions.find(e => e.id === selectedExtension);
-    const removal = PRICING.removals.find(r => r.id === selectedRemoval);
+  function bindCounter(minusSel, plusSel, getter, setter) {
+    const minus = view.querySelector(minusSel);
+    const plus = view.querySelector(plusSel);
+    if (minus) minus.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setter(getter() - 1);
+      render();
+    });
+    if (plus) plus.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setter(getter() + 1);
+      render();
+    });
+  }
 
-    let total = PRICING.base;
-    if (design) total += design.price;
-    if (ext) {
-      if (ext.hasCount) {
-        total += ext.price * fingerCount;
+  function openGalleryPicker() {
+    const overlay = document.createElement('div');
+    overlay.className = 'gallery-picker-overlay';
+    overlay.innerHTML = `
+      <div class="gallery-picker">
+        <div class="gallery-picker-header">
+          <span>${i18n.t('estimator.selectFromGallery')}</span>
+          <button class="gallery-picker-close" id="gp-close">&times;</button>
+        </div>
+        <div class="gallery-picker-grid">
+          ${DATA.feed.map(item => `
+            <div class="gp-item" data-src="${item.image}">
+              <img src="${item.image}" alt="${item.title}" loading="lazy" />
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add('active'));
+
+    overlay.querySelector('#gp-close').addEventListener('click', () => closePicker());
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closePicker();
+    });
+
+    overlay.querySelectorAll('.gp-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const src = el.dataset.src;
+        closePicker();
+        analyzeAndSuggest(src);
+      });
+    });
+
+    function closePicker() {
+      overlay.classList.remove('active');
+      setTimeout(() => overlay.remove(), 300);
+    }
+  }
+
+  async function analyzeAndSuggest(imageSrc, item) {
+    state.photoUrl = imageSrc;
+    state.aiSuggested = false;
+    render();
+
+    const loadingEl = view.querySelector('.est-photo-placeholder span');
+    if (loadingEl) loadingEl.textContent = i18n.t('estimator.analyzing');
+
+    try {
+      const result = await analyzeImage(imageSrc);
+      applyAISuggestion(result);
+      state.aiSuggested = true;
+    } catch (err) {
+      if (item && item.tags) {
+        applyTagBasedSuggestion(item.tags);
+        state.aiSuggested = true;
       } else {
-        total += ext.price;
+        state.aiSuggested = false;
       }
     }
-    if (removal) total += removal.price;
-    return total;
+    render();
+  }
+
+  function analyzeImage(src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          const w = 100;
+          const h = 100;
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const data = ctx.getImageData(0, 0, w, h).data;
+
+          let totalR = 0, totalG = 0, totalB = 0;
+          let totalLum = 0, lumVariance = 0;
+          let brightPixels = 0;
+          let darkPixels = 0;
+          const colorBuckets = {};
+          const lums = [];
+
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i], g = data[i + 1], b = data[i + 2];
+            const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+            totalR += r; totalG += g; totalB += b;
+            totalLum += lum;
+            lums.push(lum);
+            if (lum > 230) brightPixels++;
+            if (lum < 50) darkPixels++;
+
+            const bucket = `${Math.floor(r / 64)},${Math.floor(g / 64)},${Math.floor(b / 64)}`;
+            colorBuckets[bucket] = (colorBuckets[bucket] || 0) + 1;
+          }
+
+          const pixelCount = data.length / 4;
+          const avgLum = totalLum / pixelCount;
+
+          for (const lum of lums) {
+            lumVariance += (lum - avgLum) ** 2;
+          }
+          lumVariance = Math.sqrt(lumVariance / pixelCount);
+
+          const distinctColors = Object.keys(colorBuckets).length;
+          const brightRatio = brightPixels / pixelCount;
+          const darkRatio = darkPixels / pixelCount;
+
+          let baseArt = 'oneColor';
+          let accentArt = null;
+
+          if (lumVariance > 60 && brightRatio > 0.08) {
+            baseArt = 'catEye';
+          } else if (distinctColors > 10 && lumVariance > 35) {
+            baseArt = 'art2dL2';
+          } else if (distinctColors > 6 && lumVariance > 20) {
+            baseArt = 'art2dL1';
+          } else if (distinctColors > 3 && lumVariance > 12) {
+            baseArt = 'french';
+          } else {
+            baseArt = 'oneColor';
+          }
+
+          if (baseArt !== 'art2dL2' && distinctColors > 8) {
+            accentArt = 'art2dL2';
+          } else if (baseArt === 'oneColor' && distinctColors > 4) {
+            accentArt = 'french';
+          }
+
+          resolve({ baseArt, accentArt, avgLum, lumVariance, distinctColors });
+        } catch (err) {
+          reject(err);
+        }
+      };
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
+
+  function applyAISuggestion(result) {
+    const fingers = new Array(FINGER_COUNT).fill(result.baseArt);
+    if (result.accentArt) {
+      fingers[1] = result.accentArt;
+      fingers[6] = result.accentArt;
+    }
+    state.fingers = fingers;
+  }
+
+  function applyTagBasedSuggestion(tags) {
+    const tagStr = tags.join(' ').toLowerCase();
+    let baseArt = 'oneColor';
+    let accentArt = null;
+
+    if (tagStr.includes('chrome') || tagStr.includes('cat eye')) {
+      baseArt = 'catEye';
+    } else if (tagStr.includes('3dart') || tagStr.includes('detailed') || tagStr.includes('avantgarde') || tagStr.includes('editorial')) {
+      baseArt = 'art2dL2';
+    } else if (tagStr.includes('lineart') || tagStr.includes('graphic') || tagStr.includes('art')) {
+      baseArt = 'art2dL1';
+    } else if (tagStr.includes('frenchtip') || tagStr.includes('ombr') || tagStr.includes('dot')) {
+      baseArt = 'french';
+    } else if (tagStr.includes('singlecolor') || tagStr.includes('minimalist') || tagStr.includes('natural')) {
+      baseArt = 'oneColor';
+    }
+
+    if (tagStr.includes('statement') || tagStr.includes('bold') || tagStr.includes('3dart')) {
+      accentArt = 'art2dL2';
+    } else if (tagStr.includes('floral') || tagStr.includes('glitter') || tagStr.includes('gold')) {
+      accentArt = 'art2dL1';
+    }
+
+    const fingers = new Array(FINGER_COUNT).fill(baseArt);
+    if (accentArt) {
+      fingers[1] = accentArt;
+      fingers[6] = accentArt;
+    }
+    state.fingers = fingers;
   }
 
   render();
+
+  if (item && item.image) {
+    analyzeAndSuggest(item.image, item);
+  }
 }
 
 export function closeEstimator() {

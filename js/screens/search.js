@@ -47,7 +47,7 @@ export function initSearch() {
 
     const filtered = DATA.feed.filter(item => {
       const inTitle = item.title.toLowerCase().includes(q);
-      const tierLabel = i18n.t(`estimator.designs.${item.tier}.label`);
+      const tierLabel = i18n.t(`estimator.tierLabels.${item.tier}`);
       const inTier = tierLabel.toLowerCase().includes(q);
       const inColors = (item.colors || []).some(c =>
         c.brand.toLowerCase().includes(q) ||

@@ -15,7 +15,7 @@ export function openDetailView(item) {
   const estPrice = getTierPrice(item.tier);
   const tierLabel = item.tier === 'custom'
     ? i18n.t('detail.tierCustom')
-    : i18n.t(`estimator.designs.${item.tier}.label`);
+    : i18n.t(`estimator.tierLabels.${item.tier}`);
 
   view.innerHTML = `
     <div class="detail-header">
@@ -83,7 +83,7 @@ export function openDetailView(item) {
   }, { once: false });
 
   view.querySelector('#detail-back').addEventListener('click', () => closeDetailView());
-  view.querySelector('#open-estimator').addEventListener('click', () => openEstimator());
+  view.querySelector('#open-estimator').addEventListener('click', () => openEstimator(item));
   view.querySelector('#try-canvas').addEventListener('click', () => openCanvas(item));
 
   view.querySelectorAll('.tag-pill').forEach(pill => {
