@@ -169,17 +169,79 @@ function openBookingModal() {
   const content = document.getElementById('booking-modal-content');
   if (!modal || !content) return;
 
-  renderLocationStep();
+  const funnelState = {
+    step: 0,
+    location: null,
+    tech: '',
+    language: 'english',
+    notes: '',
+  };
 
   modal.classList.add('active');
   document.body.classList.add('est-open');
 
-  function renderLocationStep() {
+  function render() {
     content.innerHTML = `
-      <div class="booking-location-header">
-        <h2>${i18n.t('booking.chooseLocation')}</h2>
-        <p>${i18n.t('booking.chooseLocationDesc')}</p>
+      <div class="funnel-progress">
+        <span class="funnel-dot ${funnelState.step >= 0 ? 'active' : ''}"></span>
+        <span class="funnel-dot ${funnelState.step >= 1 ? 'active' : ''}"></span>
+        <span class="funnel-dot ${funnelState.step >= 2 ? 'active' : ''}"></span>
+        <span class="funnel-dot ${funnelState.step >= 3 ? 'active' : ''}"></span>
+      </div>
+      <div class="funnel-step" id="funnel-step"></div>
+    `;
+    renderStep();
+  }
+
+  function renderStep() {
+    const stepEl = content.querySelector('#funnel-step');
+    if (!stepEl) return;
+
+    if (funnelState.step === 0) renderPolicyStep(stepEl);
+    else if (funnelState.step === 1) renderLocationStep(stepEl);
+    else if (funnelState.step === 2) renderPreferencesStep(stepEl);
+    else if (funnelState.step === 3) renderRedirectStep(stepEl);
+  }
+
+  function renderPolicyStep(el) {
+    el.innerHTML = `
+      <div class="funnel-header">
         <button class="booking-close" id="booking-close">&times;</button>
+        <h2>${i18n.t('policy.title')}</h2>
+        <p class="funnel-subtitle">${i18n.t('policy.subtitle')}</p>
+      </div>
+      <div class="funnel-scroll">
+        <div class="policy-section">
+          <h3>${i18n.t('policy.cancellation')}</h3>
+          <ul>${i18n.t('policy.cancellationItems').map(item => `<li>${item}</li>`).join('')}</ul>
+          <div class="policy-note">${i18n.t('policy.cancellationNote')}</div>
+        </div>
+        <div class="policy-section">
+          <h3>${i18n.t('policy.late')}</h3>
+          <ul>${i18n.t('policy.lateItems').map(item => `<li>${item}</li>`).join('')}</ul>
+        </div>
+        <div class="policy-section">
+          <h3>${i18n.t('policy.refix')}</h3>
+          <ul>${i18n.t('policy.refixItems').map(item => `<li>${item}</li>`).join('')}</ul>
+          <div class="policy-subtitle">${i18n.t('policy.refixCovers')}</div>
+          <ul>${i18n.t('policy.refixCoversItems').map(item => `<li>${item}</li>`).join('')}</ul>
+          <div class="policy-note">${i18n.t('policy.refixNote')}</div>
+          <div class="policy-note" style="margin-top:8px;">${i18n.t('policy.refixFinal')}</div>
+        </div>
+      </div>
+      <button class="funnel-next-btn" id="funnel-next">${i18n.t('funnel.agreeContinue')} &rarr;</button>
+    `;
+    el.scrollTop = 0;
+    el.querySelector('#booking-close').addEventListener('click', closeModal);
+    el.querySelector('#funnel-next').addEventListener('click', () => { funnelState.step = 1; render(); });
+  }
+
+  function renderLocationStep(el) {
+    el.innerHTML = `
+      <div class="funnel-header">
+        <button class="booking-close" id="booking-close">&times;</button>
+        <h2>${i18n.t('booking.chooseLocation')}</h2>
+        <p class="funnel-subtitle">${i18n.t('booking.chooseLocationDesc')}</p>
       </div>
       <button class="booking-location-card salon-card" id="select-salon">
         <span class="booking-dot salon-dot"></span>
@@ -198,40 +260,104 @@ function openBookingModal() {
         <span class="booking-select">${i18n.t('booking.select')} &rarr;</span>
       </button>
     `;
-
-    document.getElementById('booking-close').addEventListener('click', closeModal);
-    document.getElementById('select-salon').addEventListener('click', () => renderServiceStep('salon'));
-    document.getElementById('select-studio').addEventListener('click', () => renderServiceStep('studio'));
+    el.querySelector('#booking-close').addEventListener('click', closeModal);
+    el.querySelector('#select-salon').addEventListener('click', () => { funnelState.location = 'salon'; funnelState.step = 2; render(); });
+    el.querySelector('#select-studio').addEventListener('click', () => { funnelState.location = 'studio'; funnelState.step = 2; render(); });
   }
 
-  function renderServiceStep(locId) {
-    const loc = LOCATIONS[locId];
-    const availableServices = SERVICES.filter(s => s.location === locId || s.location === 'both');
-
-    content.innerHTML = `
-      <div class="booking-location-header">
+  function renderPreferencesStep(el) {
+    const techs = ['Tiyu', 'Aya', 'Mika', 'No preference'];
+    el.innerHTML = `
+      <div class="funnel-header">
         <button class="booking-back" id="booking-back">&larr;</button>
-        <h2>${i18n.t(locId === 'salon' ? 'booking.salonServices' : 'booking.studioServices')}</h2>
-        <p>${i18n.t(locId === 'salon' ? 'booking.salonDesc' : 'booking.studioDesc')}</p>
         <button class="booking-close" id="booking-close">&times;</button>
+        <h2>${i18n.t('funnel.preferences')}</h2>
+        <p class="funnel-subtitle">${i18n.t('funnel.preferencesDesc')}</p>
       </div>
-      <div class="booking-service-list">
-        ${availableServices.map(s => `
-          <a href="${loc.bookingUrl}" target="_blank" rel="noopener noreferrer" class="booking-service-item">
-            <span class="booking-service-dot ${s.location === 'both' ? 'dual-dot' : locId + '-dot'}"></span>
-            <span class="booking-service-name">${i18n.t(`services.${s.id}`)}</span>
-            <span class="booking-service-arrow">${i18n.t('booking.bookService')} &rarr;</span>
-          </a>
-        `).join('')}
+      <div class="funnel-scroll">
+        <div class="funnel-field">
+          <label class="funnel-label">${i18n.t('funnel.nailTech')}</label>
+          <select class="funnel-select" id="pref-tech">
+            ${techs.map(t => `<option value="${t}" ${funnelState.tech === t ? 'selected' : ''}>${t}</option>`).join('')}
+          </select>
+        </div>
+        <div class="funnel-field">
+          <label class="funnel-label">${i18n.t('funnel.languagePref')}</label>
+          <div class="funnel-toggle-group">
+            <button class="funnel-toggle ${funnelState.language === 'english' ? 'active' : ''}" data-lang="english">${i18n.t('funnel.english')}</button>
+            <button class="funnel-toggle ${funnelState.language === 'japanese' ? 'active' : ''}" data-lang="japanese">${i18n.t('funnel.japanese')}</button>
+          </div>
+        </div>
+        <div class="funnel-field">
+          <label class="funnel-label">${i18n.t('funnel.specialNotes')}</label>
+          <textarea class="funnel-textarea" id="pref-notes" placeholder="${i18n.t('funnel.notesPlaceholder')}" rows="4">${funnelState.notes}</textarea>
+        </div>
       </div>
+      <button class="funnel-next-btn" id="funnel-next">${i18n.t('funnel.proceedCalendar')} &rarr;</button>
     `;
+    el.scrollTop = 0;
+    el.querySelector('#booking-close').addEventListener('click', closeModal);
+    el.querySelector('#booking-back').addEventListener('click', () => { funnelState.step = 1; render(); });
+    el.querySelector('#pref-tech').addEventListener('change', (e) => { funnelState.tech = e.target.value; });
+    el.querySelectorAll('[data-lang]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        funnelState.language = btn.dataset.lang;
+        el.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('active', b === btn));
+      });
+    });
+    el.querySelector('#pref-notes').addEventListener('input', (e) => { funnelState.notes = e.target.value; });
+    el.querySelector('#funnel-next').addEventListener('click', () => { funnelState.step = 3; render(); });
+  }
 
-    document.getElementById('booking-close').addEventListener('click', closeModal);
-    document.getElementById('booking-back').addEventListener('click', renderLocationStep);
+  function renderRedirectStep(el) {
+    const url = funnelState.location === 'studio'
+      ? LOCATIONS.studio.bookingUrl
+      : LOCATIONS.salon.bookingUrl;
+    const locLabel = funnelState.location === 'studio' ? i18n.t('booking.studio') : i18n.t('booking.salon');
+    const techLabel = funnelState.tech || 'No preference';
+    const langLabel = funnelState.language === 'english' ? i18n.t('funnel.english') : i18n.t('funnel.japanese');
+
+    el.innerHTML = `
+      <div class="funnel-header">
+        <button class="booking-back" id="booking-back">&larr;</button>
+        <button class="booking-close" id="booking-close">&times;</button>
+        <h2>${i18n.t('funnel.ready')}</h2>
+        <p class="funnel-subtitle">${i18n.t('funnel.readyDesc')}</p>
+      </div>
+      <div class="funnel-summary">
+        <div class="funnel-summary-row">
+          <span class="funnel-summary-label">${i18n.t('booking.chooseLocation')}</span>
+          <span class="funnel-summary-value">${locLabel}</span>
+        </div>
+        <div class="funnel-summary-row">
+          <span class="funnel-summary-label">${i18n.t('funnel.nailTech')}</span>
+          <span class="funnel-summary-value">${techLabel}</span>
+        </div>
+        <div class="funnel-summary-row">
+          <span class="funnel-summary-label">${i18n.t('funnel.languagePref')}</span>
+          <span class="funnel-summary-value">${langLabel}</span>
+        </div>
+        ${funnelState.notes ? `
+          <div class="funnel-summary-row">
+            <span class="funnel-summary-label">${i18n.t('funnel.specialNotes')}</span>
+            <span class="funnel-summary-value">${funnelState.notes}</span>
+          </div>
+        ` : ''}
+      </div>
+      <a href="${url}" target="_blank" rel="noopener noreferrer" class="funnel-next-btn" id="funnel-redirect">
+        ${i18n.t('funnel.openCalendar')} &rarr;
+      </a>
+    `;
+    el.scrollTop = 0;
+    el.querySelector('#booking-back').addEventListener('click', () => { funnelState.step = 2; render(); });
+    el.querySelector('#booking-close').addEventListener('click', closeModal);
   }
 
   function closeModal() {
     modal.classList.remove('active');
     document.body.classList.remove('est-open');
+    setTimeout(() => { content.innerHTML = ''; }, 350);
   }
+
+  render();
 }
