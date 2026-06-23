@@ -27,6 +27,7 @@ export function renderHome() {
 
   const feed = getFeedByCategory(activeCategory);
   const isNails = activeCategory === 'nails';
+  const isVintage = activeCategory === 'vintage';
 
   container.innerHTML = `
     <div class="feed-header">
@@ -56,6 +57,12 @@ export function renderHome() {
         <h3>${i18n.t('home.ctaTitle')}</h3>
         <p>${i18n.t('home.ctaDesc')}</p>
         <span class="cta-arrow">${i18n.t('home.ctaArrow')} &rarr;</span>
+      </div>
+    ` : isVintage ? `
+      <div class="cta-banner vintage-banner">
+        <h3>Tiyu Vintage</h3>
+        <p>A curated collection of vintage pieces & traditional Japanese textiles</p>
+        <a href="https://www.tiyutokyo.com" target="_blank" rel="noopener noreferrer" class="cta-arrow">Explore &rarr;</a>
       </div>
     ` : `
       <div class="cta-banner" id="pricelist-cta">

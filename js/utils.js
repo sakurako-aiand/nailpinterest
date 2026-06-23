@@ -42,6 +42,14 @@ function navigateTo(screenName) {
   if (screenName === 'search') {
     import('./screens/search.js').then(m => m.initSearch());
   }
+
+  if (screenName === 'policy') {
+    import('./screens/policy-screen.js').then(m => m.renderPolicyScreen());
+  }
+
+  if (screenName === 'contact') {
+    import('./screens/contact.js').then(m => m.renderContact());
+  }
 }
 
 export { showToast, navigateTo };

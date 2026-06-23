@@ -32,6 +32,7 @@ const SERVICES = [
   { id: 'tattoos',  label: 'Tattoos',    jaLabel: 'タトゥー',   location: 'studio' },
   { id: 'pressons', label: 'Press-ons',  jaLabel: 'プレスオン',  location: 'both' },
   { id: 'pedicures', label: 'Pedicures', jaLabel: 'ペディキュア', location: 'salon' },
+  { id: 'vintage',  label: 'Vintage',    jaLabel: 'ビンテージ',  location: 'both', special: true },
 ];
 
 const LOCATIONS = {
@@ -320,6 +321,24 @@ const DATA = {
       colors: [] },
     { id: 'pe6', title: 'Bold Red Glamour Pedi',         category: 'pedicures', location: 'salon', image: img('7c92d2_f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5'),
       tags: ['#Pedicure', '#Red', '#Bold', '#Glamour', '#Classic'],
+      colors: [] },
+    { id: 'v1',  title: 'Vintage Silk Kimono',           category: 'vintage',  location: 'salon',  image: img('7c92d2_a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1'),
+      tags: ['#Vintage', '#Kimono', '#Silk', '#Traditional', '#Elegant'],
+      colors: [] },
+    { id: 'v2',  title: 'Antique Lace Collection',       category: 'vintage',  location: 'studio', image: img('7c92d2_b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2'),
+      tags: ['#Vintage', '#Lace', '#Antique', '#Delicate', '#Romantic'],
+      colors: [] },
+    { id: 'v3',  title: 'Retro Accessories Display',     category: 'vintage',  location: 'salon',  image: img('7c92d2_c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3'),
+      tags: ['#Vintage', '#Accessories', '#Retro', '#Curated', '#Display'],
+      colors: [] },
+    { id: 'v4',  title: 'Hand-Painted Yukata',            category: 'vintage',  location: 'studio', image: img('7c92d2_d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4'),
+      tags: ['#Vintage', '#Yukata', '#HandPainted', '#Summer', '#Art'],
+      colors: [] },
+    { id: 'v5',  title: 'Meiji Era Artifacts',            category: 'vintage',  location: 'salon',  image: img('7c92d2_e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5'),
+      tags: ['#Vintage', '#Meiji', '#Artifacts', '#Historical', '#Curated'],
+      colors: [] },
+    { id: 'v6',  title: 'Vintage Obi Belt Collection',   category: 'vintage',  location: 'studio', image: img('7c92d2_f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6'),
+      tags: ['#Vintage', '#Obi', '#Belt', '#Textile', '#Traditional'],
       colors: [] },
   ],
 };

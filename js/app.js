@@ -2,6 +2,8 @@ import { navigateTo } from './utils.js';
 import { renderHome } from './screens/home.js';
 import { renderUpload } from './screens/upload.js';
 import { renderCollection } from './screens/collection.js';
+import { renderPolicyScreen } from './screens/policy-screen.js';
+import { renderContact } from './screens/contact.js';
 import { store } from './store.js';
 import { i18n } from './i18n.js';
 import { LOCATIONS, SERVICES } from './data.js';
@@ -77,6 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderHome();
   renderUpload();
+  renderPolicyScreen();
+  renderContact();
 
   store.onChange(() => {
     const activeScreen = document.querySelector('.nav-btn.active');
@@ -89,6 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateLangToggle();
     renderHome();
     renderUpload();
+    renderPolicyScreen();
+    renderContact();
     const activeScreen = document.querySelector('.nav-btn.active');
     if (activeScreen) {
       const screen = activeScreen.dataset.screen;
@@ -113,6 +119,41 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       navigateTo(btn.dataset.screen);
+    });
+  });
+
+  const hamburger = document.getElementById('hamburger-btn');
+  const drawer = document.getElementById('side-drawer');
+  const drawerBackdrop = document.getElementById('side-drawer-backdrop');
+
+  hamburger.addEventListener('click', () => {
+    drawer.classList.add('open');
+    drawerBackdrop.classList.add('active');
+  });
+
+  drawerBackdrop.addEventListener('click', () => {
+    drawer.classList.remove('open');
+    drawerBackdrop.classList.remove('active');
+  });
+
+  drawer.querySelectorAll('.drawer-item').forEach(item => {
+    item.addEventListener('click', () => {
+      drawer.classList.remove('open');
+      drawerBackdrop.classList.remove('active');
+      const target = item.dataset.drawer;
+      if (target === 'home') {
+        navigateTo('home');
+      } else if (target === 'vintage') {
+        navigateTo('home');
+        setTimeout(() => {
+          const vintageTab = document.querySelector('.service-tab[data-service="vintage"]');
+          if (vintageTab) vintageTab.click();
+        }, 100);
+      } else if (target === 'policy') {
+        navigateTo('policy');
+      } else if (target === 'contact') {
+        navigateTo('contact');
+      }
     });
   });
 
