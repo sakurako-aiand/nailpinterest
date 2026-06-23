@@ -16,6 +16,9 @@
   --espresso-muted: #9A9A9A;
   --border: #EBE6DE;
   --white: #FFFFFF;
+  --accent: #C9A991;
+  --accent-dark: #A38874;
+  --accent-light: #E5D9CC;
   --shadow-soft: 0 2px 16px rgba(64, 64, 64, 0.04);
   --shadow-md: 0 4px 24px rgba(64, 64, 64, 0.06);
   --shadow-lg: 0 12px 40px rgba(64, 64, 64, 0.10);
@@ -27,6 +30,34 @@
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Questrial', -apple-system, sans-serif;
   --font-brand: 'Syne', sans-serif;
+}
+
+/* ── Theme: Salon (default, Ivory/Beige) ── */
+#app[data-theme="salon"] {
+  --bg: #FCFBF7;
+  --bg-alt: #F7F4EF;
+  --accent: #C9A991;
+  --accent-dark: #A38874;
+  --accent-light: #E5D9CC;
+  --border: #EBE6DE;
+  --taupe: #C9A991;
+  --taupe-dark: #A38874;
+  --taupe-light: #E5D9CC;
+  --beige: #EDE6DA;
+}
+
+/* ── Theme: Studio (Soft Pink/Charcoal) ── */
+#app[data-theme="studio"] {
+  --bg: #FDFAFB;
+  --bg-alt: #FDF5F8;
+  --accent: #E8B4C8;
+  --accent-dark: #D49AB0;
+  --accent-light: #F8C8DC;
+  --border: #F5EBEF;
+  --taupe: #E8B4C8;
+  --taupe-dark: #D49AB0;
+  --taupe-light: #F8C8DC;
+  --beige: #FCE4EC;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,7 +82,13 @@ html, body {
   margin: 0 auto;
   position: relative;
   background: var(--bg);
-  transition: max-width 0.4s ease;
+  transition: max-width 0.4s ease, background 0.4s ease;
+}
+
+.location-switcher {
+  flex-shrink: 0;
+  margin: 12px auto 0;
+  width: calc(100% - 48px);
 }
 
 #app.full-width {
@@ -225,6 +262,72 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 
 .nav-btn svg { transition: transform 0.3s ease; }
 .nav-btn:active svg { transform: scale(0.92); }
+
+/* ── Location Switcher ── */
+.location-switcher {
+  display: flex;
+  position: relative;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 3px;
+  z-index: 200;
+  height: 40px;
+}
+
+.loc-switch-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--espresso-muted);
+  cursor: pointer;
+  transition: color 0.3s ease;
+  z-index: 1;
+  position: relative;
+  text-align: center;
+}
+
+.loc-switch-btn.active {
+  color: var(--espresso);
+  font-weight: 500;
+}
+
+.loc-switch-slider {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  height: calc(100% - 6px);
+  background: var(--accent);
+  border-radius: 20px;
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), background 0.35s ease;
+}
+
+.location-switcher.studio-mode .loc-switch-slider {
+  transform: translateX(100%);
+}
+
+/* ── Theme Transition ── */
+#app.theme-transitioning {
+  pointer-events: none;
+}
+
+#app.theme-transitioning #screen-home {
+  animation: themeCrossFade 0.3s ease;
+}
+
+@keyframes themeCrossFade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+#app {
+  transition: background 0.4s ease;
+}
 
 /* ── Side Navigation Rail (Desktop) ── */
 .side-rail {
@@ -753,9 +856,9 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 }
 
 .service-tab.active {
-  background: var(--taupe);
+  background: var(--accent);
   color: var(--espresso);
-  border-color: var(--taupe);
+  border-color: var(--accent);
   font-weight: 500;
 }
 
@@ -1295,6 +1398,11 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 }
 
 .booking-location-card:active { transform: scale(0.97); }
+
+.booking-location-card.pre-selected {
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 3px rgba(201, 169, 145, 0.1);
+}
 
 .salon-card {
   background: #F5E6D3;

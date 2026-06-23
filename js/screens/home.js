@@ -1,4 +1,4 @@
-import { DATA, PRICING, SERVICES, LOCATIONS, PRICE_LISTS, getTierPrice, getFeedByCategory, formatPrice } from '../data.js';
+import { DATA, PRICING, SERVICES, LOCATIONS, PRICE_LISTS, getTierPrice, getFeedByCategoryAndLocation, getServicesByLocation, formatPrice } from '../data.js';
 import { openDetailView } from './detail.js';
 import { openEstimator } from './estimator.js';
 import { openPolicy } from './policy.js';
@@ -6,12 +6,15 @@ import { openCanvas } from './canvas.js';
 import { i18n } from '../i18n.js';
 
 let activeCategory = 'nails';
+let activeLocation = localStorage.getItem('tiyu_location') || 'salon';
 
-function getLocationDot(loc) {
-  if (loc === 'salon') return '<span class="loc-dot salon-dot"></span>';
-  if (loc === 'studio') return '<span class="loc-dot studio-dot"></span>';
-  if (loc === 'both') return '<span class="loc-dot dual-dot"></span>';
-  return '';
+export function getActiveLocation() {
+  return activeLocation;
+}
+
+export function setActiveLocation(loc) {
+  activeLocation = loc;
+  localStorage.setItem('tiyu_location', loc);
 }
 
 function getLocationPill(loc) {
@@ -25,7 +28,13 @@ export function renderHome() {
   const container = document.getElementById('screen-home');
   if (!container) return;
 
-  const feed = getFeedByCategory(activeCategory);
+  const locServices = getServicesByLocation(activeLocation);
+  const feed = getFeedByCategoryAndLocation(activeCategory, activeLocation);
+
+  if (!feed.length && activeCategory !== 'vintage') {
+    activeCategory = locServices[0]?.id || 'nails';
+  }
+
   const isNails = activeCategory === 'nails';
   const isVintage = activeCategory === 'vintage';
 
@@ -34,10 +43,9 @@ export function renderHome() {
       <div class="brand">${i18n.t('brand')}</div>
       <h1>${i18n.t('home.title')}</h1>
       <p class="subtitle">${i18n.t('home.subtitle')}</p>
-      <div class="service-tabs" id="service-tabs">
-        ${SERVICES.map(s => `
+      <div class="service-tabs masonry-fade" id="service-tabs">
+        ${locServices.map(s => `
           <button class="service-tab ${activeCategory === s.id ? 'active' : ''}" data-service="${s.id}">
-            ${getLocationDot(s.location)}
             <span>${i18n.t(`services.${s.id}`)}</span>
           </button>
         `).join('')}

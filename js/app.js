@@ -1,5 +1,5 @@
 import { navigateTo } from './utils.js';
-import { renderHome } from './screens/home.js';
+import { renderHome, getActiveLocation, setActiveLocation } from './screens/home.js';
 import { renderUpload } from './screens/upload.js';
 import { renderCollection } from './screens/collection.js';
 import { renderPolicyScreen } from './screens/policy-screen.js';
@@ -76,11 +76,25 @@ function closeAllOverlays() {
 document.addEventListener('DOMContentLoaded', () => {
   document.documentElement.lang = i18n.lang;
   loadViewMode();
+  applyTheme(getActiveLocation());
 
   renderHome();
   renderUpload();
   renderPolicyScreen();
   renderContact();
+
+  const switcher = document.getElementById('location-switcher');
+  if (switcher) {
+    const savedLoc = getActiveLocation();
+    updateSwitcherUI(savedLoc);
+    switcher.querySelectorAll('.loc-switch-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const loc = btn.dataset.loc;
+        if (loc === getActiveLocation()) return;
+        switchLocation(loc);
+      });
+    });
+  }
 
   store.onChange(() => {
     const activeScreen = document.querySelector('.nav-btn.active');
@@ -159,6 +173,33 @@ function updateRailActive(target) {
   });
 }
 
+function switchLocation(loc) {
+  const app = document.getElementById('app');
+  app.classList.add('theme-transitioning');
+  setActiveLocation(loc);
+  applyTheme(loc);
+  updateSwitcherUI(loc);
+  setTimeout(() => {
+    renderHome();
+    app.classList.remove('theme-transitioning');
+  }, 300);
+}
+
+function applyTheme(loc) {
+  const app = document.getElementById('app');
+  if (!app) return;
+  app.setAttribute('data-theme', loc);
+}
+
+function updateSwitcherUI(loc) {
+  const switcher = document.getElementById('location-switcher');
+  if (!switcher) return;
+  switcher.querySelectorAll('.loc-switch-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.loc === loc);
+  });
+  switcher.classList.toggle('studio-mode', loc === 'studio');
+}
+
 function openMoreSheet() {
   const overlay = document.createElement('div');
   overlay.className = 'more-sheet-overlay';
@@ -229,9 +270,10 @@ function openBookingModal() {
   const content = document.getElementById('booking-modal-content');
   if (!modal || !content) return;
 
+  const activeLoc = getActiveLocation();
   const funnelState = {
-    step: 0,
-    location: null,
+    step: activeLoc ? 0 : 0,
+    location: activeLoc || null,
     tech: 'no-preference',
     language: 'english',
     friendRequest: false,
@@ -305,15 +347,15 @@ function openBookingModal() {
         <h2>${i18n.t('booking.chooseLocation')}</h2>
         <p class="funnel-subtitle">${i18n.t('booking.chooseLocationDesc')}</p>
       </div>
-      <button class="booking-location-card salon-card" id="select-salon">
+      <button class="booking-location-card salon-card ${funnelState.location === 'salon' ? 'pre-selected' : ''}" id="select-salon">
         <span class="booking-dot salon-dot"></span>
         <div class="booking-location-info">
           <span class="booking-location-name">${i18n.t('booking.salon')}</span>
           <span class="booking-location-desc">${i18n.t('booking.salonDesc')}</span>
         </div>
-        <span class="booking-select">${i18n.t('booking.select')} &rarr;</span>
+        <span class="booking-select">${funnelState.location === 'salon' ? i18n.t('booking.select') : i18n.t('booking.select')} &rarr;</span>
       </button>
-      <button class="booking-location-card studio-card" id="select-studio">
+      <button class="booking-location-card studio-card ${funnelState.location === 'studio' ? 'pre-selected' : ''}" id="select-studio">
         <span class="booking-dot studio-dot"></span>
         <div class="booking-location-info">
           <span class="booking-location-name">${i18n.t('booking.studio')}</span>

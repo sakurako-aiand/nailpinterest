@@ -362,6 +362,17 @@ function getFeedByCategory(category) {
   return DATA.feed.filter(item => item.category === category);
 }
 
+function getFeedByCategoryAndLocation(category, location) {
+  return DATA.feed.filter(item =>
+    item.category === category &&
+    (item.location === location || item.location === 'both')
+  );
+}
+
+function getServicesByLocation(location) {
+  return SERVICES.filter(s => s.location === location || s.location === 'both');
+}
+
 function getAllTags(category) {
   const tagSet = new Set();
   const items = category ? getFeedByCategory(category) : DATA.feed;
@@ -371,4 +382,4 @@ function getAllTags(category) {
   return Array.from(tagSet).sort();
 }
 
-export { DATA, PRICING, ESTIMATOR_PRICING, SERVICES, LOCATIONS, PRICE_LISTS, getTierPrice, getTierLabel, formatPrice, getAllTags, getFeedByCategory };
+export { DATA, PRICING, ESTIMATOR_PRICING, SERVICES, LOCATIONS, PRICE_LISTS, getTierPrice, getTierLabel, formatPrice, getAllTags, getFeedByCategory, getFeedByCategoryAndLocation, getServicesByLocation };
