@@ -13,6 +13,7 @@ const translations = {
       vintage: 'Tiyu Vintage',
       policy: 'Our Policy',
       contact: 'Contact Us',
+      more: 'More',
     },
     contact: {
       title: 'Contact Us',
@@ -288,6 +289,7 @@ const translations = {
       vintage: 'Tiyu Vintage',
       policy: 'ポリシー',
       contact: 'お問い合わせ',
+      more: 'その他',
     },
     contact: {
       title: 'お問い合わせ',

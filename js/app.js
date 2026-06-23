@@ -119,43 +119,32 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       navigateTo(btn.dataset.screen);
+      if (btn.dataset.screen === 'home') updateRailActive('home');
     });
   });
 
-  const hamburger = document.getElementById('hamburger-btn');
-  const drawer = document.getElementById('side-drawer');
-  const drawerBackdrop = document.getElementById('side-drawer-backdrop');
+  function handleRailNav(target) {
+    if (target === 'home') {
+      navigateTo('home');
+    } else if (target === 'vintage') {
+      navigateTo('home');
+      setTimeout(() => {
+        const vintageTab = document.querySelector('.service-tab[data-service="vintage"]');
+        if (vintageTab) vintageTab.click();
+      }, 100);
+    } else if (target === 'policy') {
+      navigateTo('policy');
+    } else if (target === 'contact') {
+      navigateTo('contact');
+    }
+    updateRailActive(target);
+  }
 
-  hamburger.addEventListener('click', () => {
-    drawer.classList.add('open');
-    drawerBackdrop.classList.add('active');
+  document.querySelectorAll('.rail-item').forEach(item => {
+    item.addEventListener('click', () => handleRailNav(item.dataset.rail));
   });
 
-  drawerBackdrop.addEventListener('click', () => {
-    drawer.classList.remove('open');
-    drawerBackdrop.classList.remove('active');
-  });
-
-  drawer.querySelectorAll('.drawer-item').forEach(item => {
-    item.addEventListener('click', () => {
-      drawer.classList.remove('open');
-      drawerBackdrop.classList.remove('active');
-      const target = item.dataset.drawer;
-      if (target === 'home') {
-        navigateTo('home');
-      } else if (target === 'vintage') {
-        navigateTo('home');
-        setTimeout(() => {
-          const vintageTab = document.querySelector('.service-tab[data-service="vintage"]');
-          if (vintageTab) vintageTab.click();
-        }, 100);
-      } else if (target === 'policy') {
-        navigateTo('policy');
-      } else if (target === 'contact') {
-        navigateTo('contact');
-      }
-    });
-  });
+  document.getElementById('more-btn').addEventListener('click', () => openMoreSheet());
 
   if (document.querySelector('.nav-btn[data-screen="home"].active')) {
     navigateTo('home');
@@ -163,6 +152,77 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateLangToggle();
 });
+
+function updateRailActive(target) {
+  document.querySelectorAll('.rail-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.rail === target);
+  });
+}
+
+function openMoreSheet() {
+  const overlay = document.createElement('div');
+  overlay.className = 'more-sheet-overlay';
+  overlay.innerHTML = `
+    <div class="est-backdrop" data-more-close></div>
+    <div class="est-sheet more-sheet">
+      <div class="est-sheet-handle" data-more-close></div>
+      <button class="est-close-btn" data-more-close aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="est-sheet-scroll">
+        <div class="est-sheet-header">
+          <h1>${i18n.t('menu.more')}</h1>
+        </div>
+        <div class="more-list">
+          <button class="more-item" data-more="vintage">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <span>${i18n.t('menu.vintage')}</span>
+          </button>
+          <button class="more-item" data-more="policy">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            <span>${i18n.t('menu.policy')}</span>
+          </button>
+          <button class="more-item" data-more="contact">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span>${i18n.t('menu.contact')}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  document.body.classList.add('est-open');
+  requestAnimationFrame(() => overlay.classList.add('active'));
+
+  overlay.querySelectorAll('[data-more-close]').forEach(el => {
+    el.addEventListener('click', () => closeMoreSheet(overlay));
+  });
+
+  overlay.querySelectorAll('[data-more]').forEach(item => {
+    item.addEventListener('click', () => {
+      const target = item.dataset.more;
+      closeMoreSheet(overlay);
+      setTimeout(() => {
+        if (target === 'vintage') {
+          navigateTo('home');
+          setTimeout(() => {
+            const vintageTab = document.querySelector('.service-tab[data-service="vintage"]');
+            if (vintageTab) vintageTab.click();
+          }, 100);
+        } else {
+          navigateTo(target);
+        }
+      }, 300);
+    });
+  });
+}
+
+function closeMoreSheet(overlay) {
+  overlay.classList.remove('active');
+  document.body.classList.remove('est-open');
+  setTimeout(() => overlay.remove(), 350);
+}
 
 function openBookingModal() {
   const modal = document.getElementById('booking-modal');
