@@ -13,6 +13,9 @@ const translations = {
       ctaTitle: 'Plan Your Visit',
       ctaDesc: 'Estimate your investment with our price calculator',
       ctaArrow: 'Open Estimator',
+      instagramHandle: '@tiyusalontokyo',
+      instagramDesc: 'More looks & behind-the-scenes on Instagram',
+      instagramFollow: 'Follow on Instagram',
     },
     detail: {
       back: 'Back',
@@ -190,6 +193,9 @@ const translations = {
       ctaTitle: 'ご来店の計画',
       ctaDesc: '料金計算ツールでご予算を估算',
       ctaArrow: '計算ツールを開く',
+      instagramHandle: '@tiyusalontokyo',
+      instagramDesc: 'Instagramで作品や裏側をもっと見る',
+      instagramFollow: 'Instagramでフォロー',
     },
     detail: {
       back: '戻る',
