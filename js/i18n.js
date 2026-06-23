@@ -40,6 +40,7 @@ const translations = {
       bookBtn: 'Book Appointment',
       prepNote: 'Before your appointment',
       addOns: 'Add-ons',
+      duration: 'Estimated Duration',
     },
     booking: {
       chooseLocation: 'Choose a Location',
@@ -337,6 +338,7 @@ const translations = {
       bookBtn: '予約する',
       prepNote: 'ご来店前に',
       addOns: 'オプション',
+      duration: '所要時間',
     },
     booking: {
       chooseLocation: '店舗を選択',

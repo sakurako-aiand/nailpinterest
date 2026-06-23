@@ -1596,6 +1596,23 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
   letter-spacing: 0.2px;
 }
 
+.pricelist-duration {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--taupe-dark);
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+.pricelist-duration svg {
+  color: var(--taupe-dark);
+  flex-shrink: 0;
+}
+
 .book-now-link {
   display: block;
   text-align: center;

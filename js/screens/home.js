@@ -192,6 +192,12 @@ function openPriceList(category) {
               <div class="pricelist-item-info">
                 <span class="receipt-item">${item.label}</span>
                 <span class="pricelist-item-desc">${item.desc}</span>
+                ${item.duration ? `
+                  <span class="pricelist-duration">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    ${item.duration}
+                  </span>
+                ` : ''}
                 ${item.addOns ? `
                   <div class="pricelist-addons">
                     ${item.addOns.map(a => `<span class="pricelist-addon">+${formatPrice(a.price)} ${a.label}</span>`).join('')}

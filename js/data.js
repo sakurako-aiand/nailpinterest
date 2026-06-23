@@ -44,26 +44,26 @@ const PRICE_LISTS = {
   lashes: {
     prepNote: 'Please arrive with no makeup on your lashes',
     items: [
-      { label: 'Omakase / Custom Anime Lash',  desc: 'SIGNATURE — Custom design based on your eyes & style. 120-160 lashes / 90 min', low: 16000, high: 16000, addOns: [{ label: 'Removal', price: 1500 }] },
-      { label: 'Single Lash Extensions',         desc: 'Super lightweight, long lasting. Only menu you can combine with lash lift. 120-200 lashes / 60-90 min', low: 11000, high: 19000, addOns: [{ label: 'Removal', price: 1500 }, { label: 'Upper Lash Lift', price: 7000 }] },
-      { label: 'Double Lash Extensions',        desc: 'Clumpy lash bundles for a bold, trendy look. 120-200 lashes / 60-90 min', low: 12500, high: 20500, addOns: [{ label: 'Removal', price: 1500 }] },
-      { label: 'Volume Lash Extensions',         desc: 'Layers of ultra-thin extensions for a fluffy look. 400-1000 lashes / 90 min', low: 15000, high: 21000, addOns: [{ label: 'Removal', price: 1500 }] },
-      { label: 'Lash Lift',                       desc: 'Upper & lower lash lift for a naturally defined look. 90 min', low: 13000, high: 13000 },
+      { label: 'Omakase / Custom Anime Lash',  desc: 'SIGNATURE — Custom design based on your eyes & style. 120-160 lashes', low: 16000, high: 16000, duration: '1 hr 30 mins', addOns: [{ label: 'Removal', price: 1500 }] },
+      { label: 'Single Lash Extensions',         desc: 'Super lightweight, long lasting. Only menu you can combine with lash lift. 120-200 lashes', low: 11000, high: 19000, duration: '1 hr 30 mins – 2 hrs 15 mins', addOns: [{ label: 'Removal', price: 1500 }, { label: 'Upper Lash Lift', price: 7000 }] },
+      { label: 'Double Lash Extensions',        desc: 'Clumpy lash bundles for a bold, trendy look. 120-200 lashes', low: 12500, high: 20500, duration: '1 hr 30 mins', addOns: [{ label: 'Removal', price: 1500 }] },
+      { label: 'Volume Lash Extensions',         desc: 'Layers of ultra-thin extensions for a fluffy look. 400-1000 lashes', low: 15000, high: 21000, duration: '1 hr 30 mins', addOns: [{ label: 'Removal', price: 1500 }] },
+      { label: 'Lash Lift',                       desc: 'Upper & lower lash lift for a naturally defined look', low: 13000, high: 13000, duration: '1 hr 30 mins' },
     ],
   },
   brows: {
     prepNote: 'Please arrive with no makeup on your brows. Avoid trimming or plucking for at least 2 weeks prior. Mild redness may occur — book ahead of important events.',
     items: [
-      { label: 'Eyebrow Wax',     desc: 'Removes unwanted hair using wax and tweezers to shape and define your brows based on your natural bone structure. 50 min', low: 8000, high: 8000 },
-      { label: 'Hybrid Brow',     desc: 'Beautifully styled brows without makeup. Combines a specialized brow perm with waxing to correct hair direction and create a fuller, lifted look. 75 min', low: 10000, high: 10000 },
+      { label: 'Eyebrow Wax',     desc: 'Removes unwanted hair using wax and tweezers to shape and define your brows based on your natural bone structure', low: 8000, high: 8000, duration: '50 mins' },
+      { label: 'Hybrid Brow',     desc: 'Beautifully styled brows without makeup. Combines a specialized brow perm with waxing to correct hair direction and create a fuller, lifted look', low: 10000, high: 10000, duration: '1 hr 15 mins' },
     ],
   },
   tattoos: {
     items: [
-      { label: 'Small Size',      desc: 'Up to 5cm × 5cm (approx. 2" × 2"). Price varies with design complexity', low: 8000, high: 12000 },
-      { label: 'Medium Size',     desc: 'Up to 5cm × 8cm (approx. 2" × 3.1"). Price varies with design complexity', low: 15000, high: 21000 },
-      { label: 'Large Size',      desc: 'Up to 10cm × 10cm (approx. 3.9" × 3.9"). Price varies with design complexity', low: 25000, high: 35000 },
-      { label: 'Custom',          desc: 'For custom designs, please DM us for inquiries. Send inspiration images in advance', low: 35000, high: null },
+      { label: 'Small Size',      desc: 'Up to 5cm × 5cm (approx. 2" × 2"). Price varies with design complexity', low: 8000, high: 12000, duration: '1 hr' },
+      { label: 'Medium Size',     desc: 'Up to 5cm × 8cm (approx. 2" × 3.1"). Price varies with design complexity', low: 15000, high: 21000, duration: '1 hr 30 mins' },
+      { label: 'Large Size',      desc: 'Up to 10cm × 10cm (approx. 3.9" × 3.9"). Price varies with design complexity', low: 25000, high: 35000, duration: '2 hrs 30 mins' },
+      { label: 'Custom',          desc: 'For custom designs, please DM us for inquiries. Send inspiration images in advance', low: 35000, high: null, duration: '3 hrs' },
     ],
   },
   pressons: {
@@ -78,9 +78,9 @@ const PRICE_LISTS = {
   pedicures: {
     prepNote: 'All pedicures include a wet massage. Removal charges apply additionally.',
     items: [
-      { label: 'Single Color',       desc: 'Solid color / Cat Eye / Chrome. +¥1,000 for Cat Eye and Chrome', low: 9000, high: 10000 },
-      { label: 'French Tips / Dots',  desc: 'Classic French tips or dot designs', low: 10500, high: 10500 },
-      { label: 'Design',              desc: 'With 2D art or charms', low: 11000, high: 11000 },
+      { label: 'Single Color',       desc: 'Solid color / Cat Eye / Chrome. +¥1,000 for Cat Eye and Chrome', low: 9000, high: 10000, duration: '1 hr 15 mins – 1 hr 45 mins' },
+      { label: 'French Tips / Dots',  desc: 'Classic French tips or dot designs', low: 10500, high: 10500, duration: '1 hr 30 mins – 2 hrs' },
+      { label: 'Design',              desc: 'With 2D art or charms', low: 11000, high: 11000, duration: '1 hr 45 mins – 2 hrs 15 mins' },
       { label: 'Polish Removal',      desc: 'Regular polish removal (additional charge)', low: 1000, high: 1000 },
       { label: 'Gel Removal',         desc: 'Gel polish removal (additional charge)', low: 2000, high: 2000 },
     ],
