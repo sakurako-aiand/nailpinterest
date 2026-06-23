@@ -19,6 +19,8 @@ function updateLangToggle() {
     navSpans[2].textContent = i18n.t('nav.inspo');
     navSpans[3].textContent = i18n.t('nav.wishlist');
   }
+  const bookSpan = document.querySelector('.book-now-btn span');
+  if (bookSpan) bookSpan.textContent = i18n.t('nav.bookNow');
 }
 
 function updateViewToggle() {

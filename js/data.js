@@ -20,9 +20,43 @@ const PRICING = {
     { id: 'gel',      label: 'Gel Removal',        price: 2000, desc: 'Gel polish removal' },
     { id: 'acrylic',  label: 'Acrylic/Fill Removal', price: 3000, desc: 'Acrylic or fill removal' },
   ],
-  bookingUrl: 'https://www.tiyutokyo.com/salon-manicure',
+  bookingUrl: 'https://www.tiyutokyo.com/tiyusalontokyo',
   contactUrl: 'https://www.tiyutokyo.com/contact',
   pressonDiscount: 3500,
+};
+
+const SERVICES = [
+  { id: 'nails',    label: 'Nails',    jaLabel: 'ネイル' },
+  { id: 'lashes',  label: 'Lashes',   jaLabel: 'まつ毛' },
+  { id: 'tattoos', label: 'Tattoos',  jaLabel: 'タトゥー' },
+  { id: 'pressons', label: 'Press-ons', jaLabel: 'プレスオン' },
+];
+
+const PRICE_LISTS = {
+  lashes: [
+    { label: 'Classic Set',          desc: 'Natural 1:1 lash extensions',       price: 8000  },
+    { label: 'Volume Set',           desc: '2D-6D volume fans for fullness',     price: 12000 },
+    { label: 'Mega Volume Set',      desc: '7D+ ultra-full dramatic look',       price: 15000 },
+    { label: 'Lash Lift & Tint',     desc: 'Perm + tint for natural lashes',     price: 5000  },
+    { label: 'Lash Refill',          desc: '2-3 week maintenance fill',         price: 5000  },
+    { label: 'Lash Removal',         desc: 'Safe removal of extensions',         price: 2000  },
+  ],
+  tattoos: [
+    { label: 'Small Design (≤3cm)',  desc: 'Minimal line work or fine script',   price: 10000 },
+    { label: 'Medium Design (3-7cm)', desc: 'Moderate detail and shading',        price: 20000 },
+    { label: 'Large Design (7cm+)',   desc: 'Detailed piece, multi-session',      price: 35000 },
+    { label: 'Custom Consultation',  desc: 'Design planning + placement',         price: 5000  },
+    { label: 'Touch-Up Session',     desc: 'Healing touch-up within 1 month',     price: 5000  },
+    { label: 'Cover-Up Work',        desc: 'Covering existing tattoo',           price: 25000 },
+  ],
+  pressons: [
+    { label: 'Full Set (10 nails)',   desc: 'Reusable press-on nail set',         price: 3500  },
+    { label: 'Custom Design Set',    desc: 'Bespoke art & charms',               price: 5000  },
+    { label: 'Individual Nail',      desc: 'Single replacement press-on',        price: 400   },
+    { label: 'Refill Kit',            desc: 'Adhesive + prep tools',              price: 1500  },
+    { label: 'Gel Overlay Set',       desc: 'Overlay on natural nails',           price: 6000  },
+    { label: 'Removal & Re-glaze',   desc: 'Remove + refresh existing set',     price: 2000  },
+  ],
 };
 
 const ESTIMATOR_PRICING = {
@@ -58,117 +92,117 @@ function img(hash, w = 400, h = 500) {
 
 const DATA = {
   feed: [
-    { id: 'p1',  title: 'Blossom French Tips',      tier: 'simple',       image: img('7c92d2_2c9f60c8f1d149efaec5fab38407512f'),
+    { id: 'p1',  title: 'Blossom French Tips',      tier: 'simple',       category: 'nails', image: img('7c92d2_2c9f60c8f1d149efaec5fab38407512f'),
       tags: ['#FrenchTip', '#Pink', '#Floral', '#Spring', '#Almond'],
       colors: [
         { label: 'Base',  brand: 'OPI',      color: 'Funny Bunny',    swatch: 'white-swatch' },
         { label: 'Tips',  brand: 'Essie',    color: 'Blanc',          swatch: 'pink-swatch' },
         { label: 'Art',   brand: 'Cirque',   color: 'Rose Jelly',     swatch: 'pink-swatch' },
       ]},
-    { id: 'p2',  title: 'Silver Chrome Statement',   tier: 'complicated', image: img('7c92d2_8fafd4a5ed3b4536bf9ece852540a82c'),
+    { id: 'p2',  title: 'Silver Chrome Statement',   tier: 'complicated', category: 'nails', image: img('7c92d2_8fafd4a5ed3b4536bf9ece852540a82c'),
       tags: ['#Chrome', '#Silver', '#Black', '#Statement', '#Coffin'],
       colors: [
         { label: 'Base',    brand: 'Holo Taco', color: 'One-Coat Black',  swatch: 'black-swatch' },
         { label: 'Chrome',  brand: 'ILNP',      color: 'Deep Space',     swatch: 'silver-swatch' },
         { label: 'Accent',  brand: 'Cirque',    color: 'Starry Night',   swatch: 'purple-swatch' },
       ]},
-    { id: 'p3',  title: 'Soft Nude Elegance',       tier: 'single',      image: img('7c92d2_4c658a2d54b44c729946a3652cbcef95'),
+    { id: 'p3',  title: 'Soft Nude Elegance',       tier: 'single',      category: 'nails', image: img('7c92d2_4c658a2d54b44c729946a3652cbcef95'),
       tags: ['#Nude', '#Minimalist', '#Natural', '#Almond', '#Everyday'],
       colors: [
         { label: 'Base', brand: 'Zoya',    color: 'Chantal',      swatch: 'nude-swatch' },
         { label: 'Top',  brand: 'Seche',   color: 'Dry Fast Top', swatch: 'white-swatch' },
       ]},
-    { id: 'p4',  title: 'Bold Glamour Set',          tier: 'intense',     image: img('7c92d2_4adb7e6d86264523a234d398c25746a9'),
+    { id: 'p4',  title: 'Bold Glamour Set',          tier: 'intense',     category: 'nails', image: img('7c92d2_4adb7e6d86264523a234d398c25746a9'),
       tags: ['#Red', '#Glamour', '#Statement', '#Stiletto', '#Bold'],
       colors: [
         { label: 'Base',   brand: 'Dior',    color: 'Rouge 999',     swatch: 'red-swatch' },
         { label: 'Accent', brand: 'OPI',     color: 'Alpine Snow',  swatch: 'white-swatch' },
         { label: 'Art',    brand: 'Essie',  color: 'Blanc',         swatch: 'white-swatch' },
       ]},
-    { id: 'p5',  title: 'Signature Gel Set',          tier: 'single',      image: img('7c92d2_a78ab1e8de0440ed8ac96e3f82085f74'),
+    { id: 'p5',  title: 'Signature Gel Set',          tier: 'single',      category: 'nails', image: img('7c92d2_a78ab1e8de0440ed8ac96e3f82085f74'),
       tags: ['#White', '#Minimalist', '#Gel', '#Natural', '#CleanGirl'],
       colors: [
         { label: 'Base', brand: 'OPI',     color: 'Funny Bunny',  swatch: 'white-swatch' },
         { label: 'Top',  brand: 'Gelish',  color: 'Top It Off',   swatch: 'white-swatch' },
       ]},
-    { id: 'p6',  title: 'Muted Single Tone',         tier: 'single',      image: img('7c92d2_2c909f90f2b14d608218e5716c733e6a'),
+    { id: 'p6',  title: 'Muted Single Tone',         tier: 'single',      category: 'nails', image: img('7c92d2_2c909f90f2b14d608218e5716c733e6a'),
       tags: ['#Pink', '#Minimalist', '#SingleColor', '#Soft', '#Everyday'],
       colors: [
         { label: 'Base', brand: 'Essie',  color: 'Ballet Slippers', swatch: 'pink-swatch' },
         { label: 'Top',  brand: 'OPI',    color: 'Gel Top Coat',    swatch: 'white-swatch' },
       ]},
-    { id: 'p7',  title: 'Effortless Nude Glow',       tier: 'single',      image: img('7c92d2_bdb91fd391ac4f2495f991cf49fc2468'),
+    { id: 'p7',  title: 'Effortless Nude Glow',       tier: 'single',      category: 'nails', image: img('7c92d2_bdb91fd391ac4f2495f991cf49fc2468'),
       tags: ['#Nude', '#Minimalist', '#Natural', '#Glossy', '#CleanGirl'],
       colors: [
         { label: 'Base', brand: 'Chanel', color: 'Ballade',      swatch: 'nude-swatch' },
         { label: 'Top',  brand: 'Seche',  color: 'Glossy Top Coat', swatch: 'white-swatch' },
       ]},
-    { id: 'p8',  title: 'Minimalist French',          tier: 'simple',      image: img('7c92d2_7408ff3f96084c00828fa3f887ab7784'),
+    { id: 'p8',  title: 'Minimalist French',          tier: 'simple',      category: 'nails', image: img('7c92d2_7408ff3f96084c00828fa3f887ab7784'),
       tags: ['#FrenchTip', '#White', '#Minimalist', '#Classic', '#Almond'],
       colors: [
         { label: 'Base', brand: 'OPI',   color: 'Funny Bunny', swatch: 'white-swatch' },
         { label: 'Tips', brand: 'Essie', color: 'Blanc',       swatch: 'white-swatch' },
       ]},
-    { id: 'p9',  title: 'Clean Line Art',             tier: 'simple',      image: img('7c92d2_d837cf907eac4903afcd583570a74c72'),
+    { id: 'p9',  title: 'Clean Line Art',             tier: 'simple',      category: 'nails', image: img('7c92d2_d837cf907eac4903afcd583570a74c72'),
       tags: ['#LineArt', '#Black', '#Minimalist', '#Pink', '#Modern'],
       colors: [
         { label: 'Base',  brand: 'Essie', color: 'Sugar Daddy',  swatch: 'pink-swatch' },
         { label: 'Lines', brand: 'Cirque', color: 'Memento Mori', swatch: 'black-swatch' },
       ]},
-    { id: 'p10', title: 'Intricate Detail Work',     tier: 'complicated', image: img('7c92d2_f556e83d6bc9468ca302f72c9009c048'),
+    { id: 'p10', title: 'Intricate Detail Work',     tier: 'complicated', category: 'nails', image: img('7c92d2_f556e83d6bc9468ca302f72c9009c048'),
       tags: ['#Blue', '#Pink', '#Detailed', '#Art', '#Coffin'],
       colors: [
         { label: 'Base',   brand: 'OPI',    color: 'Alpine Snow',  swatch: 'white-swatch' },
         { label: 'Art 1',  brand: 'Essie',  color: 'Butler Please', swatch: 'blue-swatch' },
         { label: 'Art 2',  brand: 'Cirque', color: 'Rose Jelly',    swatch: 'pink-swatch' },
       ]},
-    { id: 'p11', title: 'Jewel Tone Artistry',        tier: 'complicated', image: img('7c92d2_7089a93b863e4b5396243aa6815fb66b'),
+    { id: 'p11', title: 'Jewel Tone Artistry',        tier: 'complicated', category: 'nails', image: img('7c92d2_7089a93b863e4b5396243aa6815fb66b'),
       tags: ['#JewelTone', '#Black', '#Purple', '#Statement', '#Stiletto'],
       colors: [
         { label: 'Base',  brand: 'Holo Taco', color: 'One-Coat Black', swatch: 'black-swatch' },
         { label: 'Accent', brand: 'ILNP',      color: 'Deep Space',     swatch: 'purple-swatch' },
       ]},
-    { id: 'p12', title: 'Sculptural 3D Art',          tier: 'complicated', image: img('7c92d2_6baa7226955b47fd863593eb58d00c08'),
+    { id: 'p12', title: 'Sculptural 3D Art',          tier: 'complicated', category: 'nails', image: img('7c92d2_6baa7226955b47fd863593eb58d00c08'),
       tags: ['#3DArt', '#White', '#Purple', '#Sculptural', '#Statement'],
       colors: [
         { label: 'Base',   brand: 'Zoya',   color: 'Purity',       swatch: 'white-swatch' },
         { label: '3D Art', brand: 'Cirque', color: 'Starry Night', swatch: 'purple-swatch' },
         { label: 'Top',    brand: 'Seche',  color: 'Glossy Top',   swatch: 'white-swatch' },
       ]},
-    { id: 'p13', title: 'Graphic Statement Set',     tier: 'complicated', image: img('7c92d2_dcf94f43819e403f82cbe6ed7dd38ff3'),
+    { id: 'p13', title: 'Graphic Statement Set',     tier: 'complicated', category: 'nails', image: img('7c92d2_dcf94f43819e403f82cbe6ed7dd38ff3'),
       tags: ['#Blue', '#Red', '#Graphic', '#Bold', '#Modern'],
       colors: [
         { label: 'Base',   brand: 'OPI',    color: 'Alpine Snow',   swatch: 'white-swatch' },
         { label: 'Design', brand: 'Essie',  color: 'Butler Please',  swatch: 'blue-swatch' },
         { label: 'Accent', brand: 'Dior',   color: 'Rouge 999',     swatch: 'red-swatch' },
       ]},
-    { id: 'p14', title: 'Refined Ombré',              tier: 'complicated', image: img('7c92d2_f88a978af702407e8e192a84b3d38a9d'),
+    { id: 'p14', title: 'Refined Ombré',              tier: 'complicated', category: 'nails', image: img('7c92d2_f88a978af702407e8e192a84b3d38a9d'),
       tags: ['#Ombré', '#Pink', '#White', '#Soft', '#Almond'],
       colors: [
         { label: 'Base',   brand: 'OPI',    color: 'Funny Bunny',    swatch: 'white-swatch' },
         { label: 'Ombré',  brand: 'Essie',  color: 'Ballet Slippers', swatch: 'pink-swatch' },
       ]},
-    { id: 'p15', title: 'Editorial Bold',             tier: 'intense',     image: img('7c92d2_80e1c3d875894da5b0158e0a8fc831f1'),
+    { id: 'p15', title: 'Editorial Bold',             tier: 'intense',     category: 'nails', image: img('7c92d2_80e1c3d875894da5b0158e0a8fc831f1'),
       tags: ['#Black', '#Silver', '#Editorial', '#Bold', '#AvantGarde'],
       colors: [
         { label: 'Base',   brand: 'Holo Taco', color: 'One-Coat Black', swatch: 'black-swatch' },
         { label: 'Art',    brand: 'Cirque',    color: 'Memento Mori',   swatch: 'black-swatch' },
         { label: 'Accent', brand: 'ILNP',      color: 'Mega',           swatch: 'silver-swatch' },
       ]},
-    { id: 'p16', title: 'Fine Line Detail',           tier: 'simple',      image: img('7c92d2_10ea82c01fbc486997ecba64ed6e545f'),
+    { id: 'p16', title: 'Fine Line Detail',           tier: 'simple',      category: 'nails', image: img('7c92d2_10ea82c01fbc486997ecba64ed6e545f'),
       tags: ['#LineArt', '#Black', '#Pink', '#Minimalist', '#FineLine'],
       colors: [
         { label: 'Base',  brand: 'Essie',  color: 'Sugar Daddy', swatch: 'pink-swatch' },
         { label: 'Lines', brand: 'Cirque', color: 'Memento Mori', swatch: 'black-swatch' },
       ]},
-    { id: 'p17', title: 'Avant-Garde Set',            tier: 'intense',     image: img('7c92d2_eec64f6d23ec46e6a66a638d6024d106'),
+    { id: 'p17', title: 'Avant-Garde Set',            tier: 'intense',     category: 'nails', image: img('7c92d2_eec64f6d23ec46e6a66a638d6024d106'),
       tags: ['#Red', '#White', '#AvantGarde', '#Bold', '#Statement'],
       colors: [
         { label: 'Base',   brand: 'OPI',    color: 'Alpine Snow',  swatch: 'white-swatch' },
         { label: 'Art 1',  brand: 'Dior',   color: 'Rouge 999',    swatch: 'red-swatch' },
         { label: 'Art 2',  brand: 'Essie',  color: 'Blanc',        swatch: 'white-swatch' },
       ]},
-    { id: 'p18', title: 'Luxury Bridal Set',           tier: 'intense',     image: img('7c92d2_18b2a8c8d3ee4a22b2db4620bbbcbdec'),
+    { id: 'p18', title: 'Luxury Bridal Set',           tier: 'intense',     category: 'nails', image: img('7c92d2_18b2a8c8d3ee4a22b2db4620bbbcbdec'),
       tags: ['#Bridal', '#FrenchTip', '#Glitter', '#White', '#Elegant'],
       colors: [
         { label: 'Base',    brand: 'OPI',   color: 'Funny Bunny',   swatch: 'white-swatch' },
@@ -176,6 +210,60 @@ const DATA = {
         { label: 'Glitter', brand: 'ILNP',   color: 'Mega',         swatch: 'silver-swatch' },
         { label: 'Accent',  brand: 'Cirque', color: 'Rose Gold',    swatch: 'champagne-swatch' },
       ]},
+    { id: 'l1',  title: 'Classic Natural Lashes',      category: 'lashes',  image: img('7c92d2_a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6'),
+      tags: ['#Classic', '#Natural', '#Everyday', '#Lash', '#Soft'],
+      colors: [] },
+    { id: 'l2',  title: 'Dramatic Volume Set',         category: 'lashes',  image: img('7c92d2_b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7'),
+      tags: ['#Volume', '#Dramatic', '#Full', '#Lash', '#Bold'],
+      colors: [] },
+    { id: 'l3',  title: 'Wispy Cat Eye',               category: 'lashes',  image: img('7c92d2_c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8'),
+      tags: ['#Wispy', '#CatEye', '#Glamour', '#Lash', '#Winged'],
+      colors: [] },
+    { id: 'l4',  title: 'Mega Volume Bold',            category: 'lashes',  image: img('7c92d2_d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9'),
+      tags: ['#MegaVolume', '#Bold', '#Statement', '#Lash', '#Full'],
+      colors: [] },
+    { id: 'l5',  title: 'Soft Brown Lash Lift',         category: 'lashes',  image: img('7c92d2_e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0'),
+      tags: ['#LashLift', '#Natural', '#Brown', '#Lash', '#Everyday'],
+      colors: [] },
+    { id: 'l6',  title: 'Colored Lash Accents',        category: 'lashes',  image: img('7c92d2_f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1'),
+      tags: ['#Colored', '#Accent', '#Creative', '#Lash', '#Fun'],
+      colors: [] },
+    { id: 't1',  title: 'Fine Line Script',            category: 'tattoos', image: img('7c92d2_a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7'),
+      tags: ['#FineLine', '#Script', '#Minimalist', '#Tattoo', '#Small'],
+      colors: [] },
+    { id: 't2',  title: 'Botanical Fine Art',           category: 'tattoos', image: img('7c92d2_b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8'),
+      tags: ['#Botanical', '#Floral', '#FineLine', '#Tattoo', '#Nature'],
+      colors: [] },
+    { id: 't3',  title: 'Geometric Minimal',           category: 'tattoos', image: img('7c92d2_c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9'),
+      tags: ['#Geometric', '#Minimalist', '#Modern', '#Tattoo', '#Abstract'],
+      colors: [] },
+    { id: 't4',  title: 'Delicate Single Needle',      category: 'tattoos', image: img('7c92d2_d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0'),
+      tags: ['#SingleNeedle', '#Delicate', '#Detailed', '#Tattoo', '#Fine'],
+      colors: [] },
+    { id: 't5',  title: 'Micro Portrait Art',          category: 'tattoos', image: img('7c92d2_e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1'),
+      tags: ['#Micro', '#Portrait', '#Detailed', '#Tattoo', '#Art'],
+      colors: [] },
+    { id: 't6',  title: 'Elegant Wrist Piece',         category: 'tattoos', image: img('7c92d2_f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2'),
+      tags: ['#Wrist', '#Elegant', '#Minimalist', '#Tattoo', '#Feminine'],
+      colors: [] },
+    { id: 'po1', title: 'Pearl Press-On Set',          category: 'pressons', image: img('7c92d2_a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8'),
+      tags: ['#Pearl', '#PressOn', '#White', '#Elegant', '#Reusable'],
+      colors: [] },
+    { id: 'po2', title: 'Chrome Press-On',             category: 'pressons', image: img('7c92d2_b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9'),
+      tags: ['#Chrome', '#Silver', '#PressOn', '#Modern', '#Glossy'],
+      colors: [] },
+    { id: 'po3', title: 'Floral Art Press-On',         category: 'pressons', image: img('7c92d2_c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0'),
+      tags: ['#Floral', '#Art', '#PressOn', '#Pink', '#HandPainted'],
+      colors: [] },
+    { id: 'po4', title: 'French Tip Press-On',         category: 'pressons', image: img('7c92d2_d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1'),
+      tags: ['#FrenchTip', '#Classic', '#PressOn', '#White', '#CleanGirl'],
+      colors: [] },
+    { id: 'po5', title: 'Glitter Glam Press-On',       category: 'pressons', image: img('7c92d2_e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2'),
+      tags: ['#Glitter', '#Glam', '#PressOn', '#Sparkle', '#Bold'],
+      colors: [] },
+    { id: 'po6', title: 'Nude Minimalist Press-On',    category: 'pressons', image: img('7c92d2_f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3'),
+      tags: ['#Nude', '#Minimalist', '#PressOn', '#Natural', '#Everyday'],
+      colors: [] },
   ],
 };
 
@@ -193,12 +281,18 @@ function formatPrice(amount) {
   return PRICING.currency + amount.toLocaleString();
 }
 
-function getAllTags() {
+function getFeedByCategory(category) {
+  if (!category || category === 'all') return DATA.feed;
+  return DATA.feed.filter(item => item.category === category);
+}
+
+function getAllTags(category) {
   const tagSet = new Set();
-  DATA.feed.forEach(item => {
+  const items = category ? getFeedByCategory(category) : DATA.feed;
+  items.forEach(item => {
     (item.tags || []).forEach(tag => tagSet.add(tag));
   });
   return Array.from(tagSet).sort();
 }
 
-export { DATA, PRICING, ESTIMATOR_PRICING, getTierPrice, getTierLabel, formatPrice, getAllTags };
+export { DATA, PRICING, ESTIMATOR_PRICING, SERVICES, PRICE_LISTS, getTierPrice, getTierLabel, formatPrice, getAllTags, getFeedByCategory };

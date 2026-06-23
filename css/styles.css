@@ -226,6 +226,176 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 .nav-btn svg { transition: transform 0.3s ease; }
 .nav-btn:active svg { transform: scale(0.92); }
 
+/* ── Book Now Button (Center Nav) ── */
+.book-now-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--taupe), var(--taupe-dark));
+  color: var(--white);
+  padding: 10px 14px;
+  border-radius: 20px;
+  margin-top: -16px;
+  box-shadow: 0 4px 16px rgba(163, 136, 116, 0.3);
+  transition: all 0.25s ease;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+
+.book-now-btn:active {
+  transform: scale(0.93);
+  box-shadow: 0 2px 8px rgba(163, 136, 116, 0.2);
+}
+
+.book-now-btn svg {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.3s ease;
+}
+
+.book-now-btn:active svg { transform: scale(0.92); }
+
+/* ── Service Category Tabs ── */
+.service-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 4px 0;
+  margin-top: 4px;
+}
+
+.service-tabs::-webkit-scrollbar { display: none; }
+
+.service-tab {
+  flex-shrink: 0;
+  padding: 8px 18px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--white);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--espresso-muted);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.service-tab.active {
+  background: var(--taupe);
+  color: var(--espresso);
+  border-color: var(--taupe);
+  font-weight: 500;
+}
+
+.service-tab:active {
+  transform: scale(0.95);
+}
+
+/* ── Masonry Fade-In ── */
+.masonry-fade {
+  animation: masonryFadeIn 0.4s ease;
+}
+
+@keyframes masonryFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Price List Sheet ── */
+.pricelist-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+}
+
+.pricelist-overlay.active { pointer-events: auto; }
+
+.pricelist-overlay .est-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(64, 64, 64, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: background 0.35s ease, backdrop-filter 0.35s ease;
+}
+
+.pricelist-overlay.active .est-backdrop {
+  background: rgba(64, 64, 64, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.pricelist-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 100%;
+  max-width: 480px;
+  height: 70%;
+  background: var(--bg);
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -8px 40px rgba(64, 64, 64, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.pricelist-overlay.active .pricelist-sheet {
+  transform: translateX(-50%) translateY(0);
+}
+
+.pricelist-receipt {
+  margin-top: 16px;
+}
+
+.pricelist-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.pricelist-item-desc {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  color: var(--espresso-muted);
+  font-weight: 300;
+  letter-spacing: 0.2px;
+}
+
+.book-now-link {
+  display: block;
+  text-align: center;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--taupe), var(--taupe-dark));
+  color: var(--white);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: transform 0.2s ease;
+}
+
+.book-now-link:active { transform: scale(0.97); }
+
 /* ── Feed Headers ── */
 .feed-header {
   padding: 40px 24px 16px;

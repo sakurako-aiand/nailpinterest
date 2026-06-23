@@ -1,6 +1,6 @@
 import { showToast, navigateTo } from '../utils.js';
 import { store } from '../store.js';
-import { getTierPrice, getTierLabel, formatPrice } from '../data.js';
+import { getTierPrice, getTierLabel, formatPrice, PRICE_LISTS, PRICING } from '../data.js';
 import { openEstimator } from './estimator.js';
 import { openCanvas } from './canvas.js';
 import { i18n } from '../i18n.js';
@@ -12,10 +12,11 @@ export function openDetailView(item) {
   document.documentElement.style.overflow = 'hidden';
 
   const isSaved = store.isInCollection(item.id);
-  const estPrice = getTierPrice(item.tier);
-  const tierLabel = item.tier === 'custom'
-    ? i18n.t('detail.tierCustom')
-    : i18n.t(`estimator.tierLabels.${item.tier}`);
+  const isNails = item.category === 'nails' || (!item.category && item.tier);
+  const estPrice = isNails ? getTierPrice(item.tier) : (PRICE_LISTS[item.category]?.[0]?.price || 0);
+  const tierLabel = isNails
+    ? (item.tier === 'custom' ? i18n.t('detail.tierCustom') : i18n.t(`estimator.tierLabels.${item.tier}`))
+    : i18n.t(`services.${item.category}`);
 
   view.innerHTML = `
     <div class="detail-header">
@@ -35,22 +36,30 @@ export function openDetailView(item) {
         <h2>${i18n.t('detail.investment')}</h2>
         <div class="investment-price">${formatPrice(estPrice)}+</div>
         <div class="investment-note">${i18n.t('detail.investmentNote')}</div>
-        <button class="estimate-btn" id="open-estimator">${i18n.t('detail.customizeEstimate')}</button>
-        <button class="estimate-btn" id="try-canvas" style="margin-top: 8px;">${i18n.t('canvas.tryOnCanvas')}</button>
+        ${isNails ? `
+          <button class="estimate-btn" id="open-estimator">${i18n.t('detail.customizeEstimate')}</button>
+          <button class="estimate-btn" id="try-canvas" style="margin-top: 8px;">${i18n.t('canvas.tryOnCanvas')}</button>
+        ` : `
+          <a href="${PRICING.bookingUrl}" target="_blank" rel="noopener noreferrer" class="estimate-btn" style="display: block; text-align: center; text-decoration: none;">
+            ${i18n.t('services.bookBtn')}
+          </a>
+        `}
       </div>
 
-      <div class="colors-section">
-        <h2>${i18n.t('detail.palette')}</h2>
-        <div class="color-chip-list">
-          ${(item.colors || []).map(c => `
-            <div class="color-chip">
-              <div class="swatch ${c.swatch || 'taupe-swatch'}"></div>
-              <span class="color-label">${c.label}</span>
-              <span class="color-brand">${c.brand} &mdash; ${c.color}</span>
-            </div>
-          `).join('')}
+      ${(item.colors && item.colors.length > 0) ? `
+        <div class="colors-section">
+          <h2>${i18n.t('detail.palette')}</h2>
+          <div class="color-chip-list">
+            ${(item.colors || []).map(c => `
+              <div class="color-chip">
+                <div class="swatch ${c.swatch || 'taupe-swatch'}"></div>
+                <span class="color-label">${c.label}</span>
+                <span class="color-brand">${c.brand} &mdash; ${c.color}</span>
+              </div>
+            `).join('')}
+          </div>
         </div>
-      </div>
+      ` : ''}
 
       ${(item.tags || []).length ? `
         <div class="tags-section">
@@ -83,8 +92,10 @@ export function openDetailView(item) {
   }, { once: false });
 
   view.querySelector('#detail-back').addEventListener('click', () => closeDetailView());
-  view.querySelector('#open-estimator').addEventListener('click', () => openEstimator(item));
-  view.querySelector('#try-canvas').addEventListener('click', () => openCanvas(item));
+  const estBtn = view.querySelector('#open-estimator');
+  if (estBtn) estBtn.addEventListener('click', () => openEstimator(item));
+  const canvasBtn = view.querySelector('#try-canvas');
+  if (canvasBtn) canvasBtn.addEventListener('click', () => openCanvas(item));
 
   view.querySelectorAll('.tag-pill').forEach(pill => {
     pill.addEventListener('click', () => {

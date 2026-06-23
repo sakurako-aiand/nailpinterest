@@ -47,7 +47,7 @@ export function initSearch() {
 
     const filtered = DATA.feed.filter(item => {
       const inTitle = item.title.toLowerCase().includes(q);
-      const tierLabel = i18n.t(`estimator.tierLabels.${item.tier}`);
+      const tierLabel = item.tier ? i18n.t(`estimator.tierLabels.${item.tier}`) : i18n.t(`services.${item.category}`);
       const inTier = tierLabel.toLowerCase().includes(q);
       const inColors = (item.colors || []).some(c =>
         c.brand.toLowerCase().includes(q) ||
@@ -78,10 +78,10 @@ export function initSearch() {
       masonry.innerHTML = filtered.map(item => `
         <div class="masonry-item" data-id="${item.id}">
           <img src="${item.image}" alt="${item.title}" loading="lazy" />
-          <div class="pin-overlay">
-            <span class="pin-title">${item.title}</span>
-            <div class="pin-price">${formatPrice(getTierPrice(item.tier))}+</div>
-          </div>
+            <div class="pin-overlay">
+              <span class="pin-title">${item.title}</span>
+              ${item.tier ? `<div class="pin-price">${formatPrice(getTierPrice(item.tier))}+</div>` : ''}
+            </div>
         </div>
       `).join('');
 
