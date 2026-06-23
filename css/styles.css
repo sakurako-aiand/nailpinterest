@@ -86,7 +86,7 @@ html, body {
 
 #app.full-width .cta-banner,
 #app.full-width .canvas-cta,
-#app.full-width .ig-footer {
+#app.full-width .social-footer {
   margin-left: max(18px, calc((100% - 720px) / 2));
   margin-right: max(18px, calc((100% - 720px) / 2));
 }
@@ -2050,11 +2050,18 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 #app.full-width .mb-masonry { column-count: 3; max-height: 380px; }
 
 /* ── Instagram Footer ── */
-.ig-footer {
+.social-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 24px 18px calc(24px + var(--safe-bottom));
+}
+
+.ig-footer,
+.tt-footer {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin: 24px 18px calc(24px + var(--safe-bottom));
   padding: 20px 22px;
   background: linear-gradient(135deg, var(--beige), var(--bg-alt));
   border-radius: var(--radius);
@@ -2064,7 +2071,8 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.ig-footer:active {
+.ig-footer:active,
+.tt-footer:active {
   transform: scale(0.98);
   box-shadow: var(--shadow-md);
 }
@@ -2080,6 +2088,10 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
   justify-content: center;
   color: var(--taupe-dark);
   box-shadow: var(--shadow-soft);
+}
+
+.tt-icon {
+  color: var(--espresso);
 }
 
 .ig-text {

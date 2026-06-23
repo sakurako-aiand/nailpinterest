@@ -16,6 +16,9 @@ const translations = {
       instagramHandle: '@tiyusalontokyo',
       instagramDesc: 'More looks & behind-the-scenes on Instagram',
       instagramFollow: 'Follow on Instagram',
+      tiktokHandle: '@tiyusalontokyo',
+      tiktokDesc: 'Watch nail videos & trends on TikTok',
+      tiktokFollow: 'Follow on TikTok',
     },
     detail: {
       back: 'Back',
@@ -196,6 +199,9 @@ const translations = {
       instagramHandle: '@tiyusalontokyo',
       instagramDesc: 'Instagramで作品や裏側をもっと見る',
       instagramFollow: 'Instagramでフォロー',
+      tiktokHandle: '@tiyusalontokyo',
+      tiktokDesc: 'TikTokでネイル動画やトレンドをチェック',
+      tiktokFollow: 'TikTokでフォロー',
     },
     detail: {
       back: '戻る',
