@@ -83,12 +83,16 @@ html, body {
   position: relative;
   background: var(--bg);
   transition: max-width 0.4s ease, background 0.4s ease;
+  overflow-x: hidden;
 }
 
 .location-switcher {
   flex-shrink: 0;
   margin: 12px auto 0;
   width: calc(100% - 48px);
+  max-width: 280px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 #app.full-width {
@@ -99,6 +103,8 @@ html, body {
   column-count: 4;
   column-gap: 16px;
   padding: 16px 24px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #app.full-width .feed-header,
@@ -222,10 +228,8 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 #bottom-nav {
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 480px;
+  left: 0;
+  width: 100vw;
   height: calc(var(--nav-height) + var(--safe-bottom));
   padding-bottom: var(--safe-bottom);
   background: rgba(252, 251, 247, 0.94);
@@ -1688,16 +1692,18 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 
 /* ── Feed Headers ── */
 .feed-header {
-  padding: 40px 24px 16px 56px;
+  padding: 40px 16px 16px 56px;
   position: sticky;
   top: 0;
   background: var(--bg);
   z-index: 10;
+  overflow: hidden;
 }
 
 @media (min-width: 769px) {
   .feed-header {
     padding-left: 24px;
+    padding-right: 24px;
   }
 }
 
@@ -1733,8 +1739,11 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 /* ── Masonry Grid ── */
 .masonry {
   column-count: 2;
-  column-gap: 14px;
-  padding: 16px 20px;
+  column-gap: 12px;
+  padding: 16px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .masonry-item {
@@ -1757,6 +1766,7 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 .masonry-item img {
   width: 100%;
   display: block;
+  height: auto;
   object-fit: cover;
 }
 
