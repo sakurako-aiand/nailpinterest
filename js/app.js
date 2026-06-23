@@ -4,7 +4,7 @@ import { renderUpload } from './screens/upload.js';
 import { renderCollection } from './screens/collection.js';
 import { store } from './store.js';
 import { i18n } from './i18n.js';
-import { LOCATIONS } from './data.js';
+import { LOCATIONS, SERVICES } from './data.js';
 
 function updateLangToggle() {
   const toggle = document.getElementById('lang-toggle');
@@ -128,35 +128,69 @@ function openBookingModal() {
   const content = document.getElementById('booking-modal-content');
   if (!modal || !content) return;
 
-  content.innerHTML = `
-    <div class="booking-location-header">
-      <h2>${i18n.t('booking.chooseLocation')}</h2>
-      <p>${i18n.t('booking.chooseLocationDesc')}</p>
-      <button class="booking-close" id="booking-close">&times;</button>
-    </div>
-    <a href="${LOCATIONS.salon.bookingUrl}" target="_blank" rel="noopener noreferrer" class="booking-location-card salon-card">
-      <span class="booking-dot salon-dot"></span>
-      <div class="booking-location-info">
-        <span class="booking-location-name">${i18n.t('booking.salon')}</span>
-        <span class="booking-location-desc">${i18n.t('booking.salonDesc')}</span>
-      </div>
-      <span class="booking-select">${i18n.t('booking.select')} &rarr;</span>
-    </a>
-    <a href="${LOCATIONS.studio.bookingUrl}" target="_blank" rel="noopener noreferrer" class="booking-location-card studio-card">
-      <span class="booking-dot studio-dot"></span>
-      <div class="booking-location-info">
-        <span class="booking-location-name">${i18n.t('booking.studio')}</span>
-        <span class="booking-location-desc">${i18n.t('booking.studioDesc')}</span>
-      </div>
-      <span class="booking-select">${i18n.t('booking.select')} &rarr;</span>
-    </a>
-  `;
+  renderLocationStep();
 
   modal.classList.add('active');
   document.body.classList.add('est-open');
 
-  document.getElementById('booking-close').addEventListener('click', () => {
+  function renderLocationStep() {
+    content.innerHTML = `
+      <div class="booking-location-header">
+        <h2>${i18n.t('booking.chooseLocation')}</h2>
+        <p>${i18n.t('booking.chooseLocationDesc')}</p>
+        <button class="booking-close" id="booking-close">&times;</button>
+      </div>
+      <button class="booking-location-card salon-card" id="select-salon">
+        <span class="booking-dot salon-dot"></span>
+        <div class="booking-location-info">
+          <span class="booking-location-name">${i18n.t('booking.salon')}</span>
+          <span class="booking-location-desc">${i18n.t('booking.salonDesc')}</span>
+        </div>
+        <span class="booking-select">${i18n.t('booking.select')} &rarr;</span>
+      </button>
+      <button class="booking-location-card studio-card" id="select-studio">
+        <span class="booking-dot studio-dot"></span>
+        <div class="booking-location-info">
+          <span class="booking-location-name">${i18n.t('booking.studio')}</span>
+          <span class="booking-location-desc">${i18n.t('booking.studioDesc')}</span>
+        </div>
+        <span class="booking-select">${i18n.t('booking.select')} &rarr;</span>
+      </button>
+    `;
+
+    document.getElementById('booking-close').addEventListener('click', closeModal);
+    document.getElementById('select-salon').addEventListener('click', () => renderServiceStep('salon'));
+    document.getElementById('select-studio').addEventListener('click', () => renderServiceStep('studio'));
+  }
+
+  function renderServiceStep(locId) {
+    const loc = LOCATIONS[locId];
+    const availableServices = SERVICES.filter(s => s.location === locId || s.location === 'both');
+
+    content.innerHTML = `
+      <div class="booking-location-header">
+        <button class="booking-back" id="booking-back">&larr;</button>
+        <h2>${i18n.t(locId === 'salon' ? 'booking.salonServices' : 'booking.studioServices')}</h2>
+        <p>${i18n.t(locId === 'salon' ? 'booking.salonDesc' : 'booking.studioDesc')}</p>
+        <button class="booking-close" id="booking-close">&times;</button>
+      </div>
+      <div class="booking-service-list">
+        ${availableServices.map(s => `
+          <a href="${loc.bookingUrl}" target="_blank" rel="noopener noreferrer" class="booking-service-item">
+            <span class="booking-service-dot ${s.location === 'both' ? 'dual-dot' : locId + '-dot'}"></span>
+            <span class="booking-service-name">${i18n.t(`services.${s.id}`)}</span>
+            <span class="booking-service-arrow">${i18n.t('booking.bookService')} &rarr;</span>
+          </a>
+        `).join('')}
+      </div>
+    `;
+
+    document.getElementById('booking-close').addEventListener('click', closeModal);
+    document.getElementById('booking-back').addEventListener('click', renderLocationStep);
+  }
+
+  function closeModal() {
     modal.classList.remove('active');
     document.body.classList.remove('est-open');
-  });
+  }
 }

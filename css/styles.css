@@ -498,6 +498,69 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
   white-space: nowrap;
 }
 
+/* ── Booking: Service List Step ── */
+.booking-back {
+  position: absolute;
+  top: -2px;
+  left: 0;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--espresso-muted);
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+}
+
+.booking-service-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.booking-service-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.booking-service-item:active {
+  transform: scale(0.97);
+  background: var(--bg-alt);
+}
+
+.booking-service-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.booking-service-name {
+  flex: 1;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--espresso);
+  font-style: italic;
+}
+
+.booking-service-arrow {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--taupe-dark);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 /* ── Masonry Fade-In ── */
 .masonry-fade {
   animation: masonryFadeIn 0.4s ease;

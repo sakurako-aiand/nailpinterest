@@ -29,6 +29,10 @@ const translations = {
       studio: 'Tiyu Studio Tokyo',
       studioDesc: 'Waseda',
       select: 'Select',
+      availableBoth: 'Available at both Tiyu Salon & Tiyu Studio',
+      salonServices: 'Services available at Tiyu Salon',
+      studioServices: 'Services available at Tiyu Studio',
+      bookService: 'Book',
     },
     home: {
       title: 'The Lookbook',
@@ -266,6 +270,10 @@ const translations = {
       studio: 'Tiyu Studio Tokyo',
       studioDesc: '早稲田',
       select: '選択',
+      availableBoth: 'Tiyu Salon と Tiyu Studio 両方で利用可能',
+      salonServices: 'Tiyu Salon でご利用いただけるサービス',
+      studioServices: 'Tiyu Studio でご利用いただけるサービス',
+      bookService: '予約',
     },
     home: {
       title: 'ルックブック',
