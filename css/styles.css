@@ -787,34 +787,6 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
   transform: scale(0.97);
 }
 
-/* ── Vintage Tab Special Style ── */
-.service-tab[data-service="vintage"] {
-  border-color: var(--taupe);
-  position: relative;
-}
-
-.service-tab[data-service="vintage"].active {
-  background: linear-gradient(135deg, #E5D3B3, #F8C8DC);
-  border-color: transparent;
-}
-
-.service-tab[data-service="vintage"] .loc-dot {
-  background: linear-gradient(135deg, #D4AF37, #E5D3B3);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.vintage-banner {
-  background: linear-gradient(135deg, #F5E6D3, #FCE4EC);
-}
-
-.vintage-banner h3 {
-  font-family: var(--font-serif) !important;
-  font-size: 20px !important;
-  font-style: italic;
-}
-
 /* ── Book Now Button (Center Nav) ── */
 .book-now-btn {
   display: flex;

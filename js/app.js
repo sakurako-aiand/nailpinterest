@@ -141,12 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function handleRailNav(target) {
     if (target === 'home') {
       navigateTo('home');
-    } else if (target === 'vintage') {
-      navigateTo('home');
-      setTimeout(() => {
-        const vintageTab = document.querySelector('.service-tab[data-service="vintage"]');
-        if (vintageTab) vintageTab.click();
-      }, 100);
     } else if (target === 'policy') {
       navigateTo('policy');
     } else if (target === 'contact') {
@@ -216,10 +210,6 @@ function openMoreSheet() {
           <h1>${i18n.t('menu.more')}</h1>
         </div>
         <div class="more-list">
-          <button class="more-item" data-more="vintage">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            <span>${i18n.t('menu.vintage')}</span>
-          </button>
           <button class="more-item" data-more="policy">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
             <span>${i18n.t('menu.policy')}</span>
@@ -246,15 +236,7 @@ function openMoreSheet() {
       const target = item.dataset.more;
       closeMoreSheet(overlay);
       setTimeout(() => {
-        if (target === 'vintage') {
-          navigateTo('home');
-          setTimeout(() => {
-            const vintageTab = document.querySelector('.service-tab[data-service="vintage"]');
-            if (vintageTab) vintageTab.click();
-          }, 100);
-        } else {
-          navigateTo(target);
-        }
+        navigateTo(target);
       }, 300);
     });
   });

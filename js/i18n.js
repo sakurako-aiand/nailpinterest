@@ -10,7 +10,6 @@ const translations = {
     },
     menu: {
       home: 'Home',
-      vintage: 'Tiyu Vintage',
       policy: 'Our Policy',
       contact: 'Contact Us',
       more: 'More',
@@ -34,7 +33,6 @@ const translations = {
       tattoos: 'Tattoos',
       pressons: 'Press-ons',
       pedicures: 'Pedicures',
-      vintage: 'Vintage',
       priceList: 'Price List',
       priceListDesc: 'Service pricing for this category',
       bookBtn: 'Book Appointment',
@@ -308,7 +306,6 @@ const translations = {
     },
     menu: {
       home: 'ホーム',
-      vintage: 'Tiyu Vintage',
       policy: 'ポリシー',
       contact: 'お問い合わせ',
       more: 'その他',
@@ -332,7 +329,6 @@ const translations = {
       tattoos: 'タトゥー',
       pressons: 'プレスオン',
       pedicures: 'ペディキュア',
-      vintage: 'ビンテージ',
       priceList: '価格表',
       priceListDesc: 'このサービスの料金',
       bookBtn: '予約する',
