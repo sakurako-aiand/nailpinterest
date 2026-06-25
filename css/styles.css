@@ -2992,6 +2992,52 @@ body.est-open {
   font-weight: 500;
 }
 
+/* ── Book with Selections Button ── */
+.book-selections-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 20px;
+  padding: 16px 28px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: var(--white);
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(201, 169, 145, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: bookBtnGlow 2.5s ease-in-out infinite;
+}
+
+.book-selections-btn:active {
+  transform: scale(0.97);
+}
+
+.book-selections-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 28px rgba(201, 169, 145, 0.5);
+}
+
+.book-selections-btn svg {
+  transition: transform 0.25s ease;
+}
+
+.book-selections-btn:hover svg {
+  transform: translateX(3px);
+}
+
+@keyframes bookBtnGlow {
+  0%, 100% { box-shadow: 0 4px 20px rgba(201, 169, 145, 0.3); }
+  50% { box-shadow: 0 4px 28px rgba(201, 169, 145, 0.55); }
+}
+
 /* ── Estimator: Gallery Picker ── */
 .gallery-picker-overlay {
   position: fixed;

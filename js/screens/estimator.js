@@ -272,6 +272,24 @@ export function openEstimator(item) {
     `;
   }
 
+  function buildSelectionSummary() {
+    const calc = calculate();
+    const parts = calc.lines.map(l => {
+      const price = l.price === 0 ? '' : ` (${formatPrice(l.price)})`;
+      return l.label + price;
+    });
+    parts.push(`${i18n.t('estimator.totalRange')}: ${formatPrice(calc.low)} — ${formatPrice(calc.high)}`);
+    return `${i18n.t('estimator.summaryPrefix')} ${parts.join(', ')}`;
+  }
+
+  function bookWithSelections() {
+    const summary = buildSelectionSummary();
+    closeEstimator();
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('tiyu:book-with-notes', { detail: summary }));
+    }, 380);
+  }
+
   function renderReceipt() {
     const calc = calculate();
     return `
@@ -290,6 +308,10 @@ export function openEstimator(item) {
             <span class="receipt-price">${formatPrice(calc.low)} — ${formatPrice(calc.high)}</span>
           </div>
         </div>
+        <button class="book-selections-btn" id="book-selections-btn">
+          ${i18n.t('estimator.bookSelections')}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
       </div>
     `;
   }
@@ -518,6 +540,14 @@ export function openEstimator(item) {
         e.preventDefault();
         state.allYouCanTake = !state.allYouCanTake;
         updateContent();
+      });
+    }
+
+    const bookSelectionsBtn = view.querySelector('#book-selections-btn');
+    if (bookSelectionsBtn) {
+      bookSelectionsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        bookWithSelections();
       });
     }
 

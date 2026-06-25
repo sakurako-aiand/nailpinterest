@@ -131,6 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
     openBookingModal();
   });
 
+  window.addEventListener('tiyu:book-with-notes', (e) => {
+    openBookingModal(e.detail || '');
+  });
+
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       navigateTo(btn.dataset.screen);
@@ -248,7 +252,7 @@ function closeMoreSheet(overlay) {
   setTimeout(() => overlay.remove(), 350);
 }
 
-function openBookingModal() {
+function openBookingModal(prefilledNotes = '') {
   const modal = document.getElementById('booking-modal');
   const content = document.getElementById('booking-modal-content');
   if (!modal || !content) return;
@@ -261,7 +265,7 @@ function openBookingModal() {
     language: 'english',
     friendRequest: false,
     drinkPolicy: false,
-    notes: '',
+    notes: prefilledNotes,
   };
 
   modal.classList.add('active');

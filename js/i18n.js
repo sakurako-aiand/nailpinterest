@@ -175,6 +175,8 @@ const translations = {
       lineArt: (label, n) => `${label} (${n} finger${n !== 1 ? 's' : ''})`,
       totalRange: 'Total Range',
       bookNow: 'Book Appointment',
+      bookSelections: 'Book with these selections',
+      summaryPrefix: 'Selected:',
     },
     upload: {
       title: 'Inspo for Tiyu',
@@ -471,6 +473,8 @@ const translations = {
       lineArt: (label, n) => `${label}（${n}本）`,
       totalRange: '合計範囲',
       bookNow: '予約する',
+      bookSelections: 'これらの選択で予約する',
+      summaryPrefix: '選択内容：',
     },
     upload: {
       title: 'Tiyuへインスポ',
