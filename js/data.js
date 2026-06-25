@@ -123,8 +123,8 @@ const ESTIMATOR_PRICING = {
   allYouCanTakeCharms: 2000,
 };
 
-function img(hash, w = 400, h = 500) {
-  return `https://static.wixstatic.com/media/${hash}~mv2.jpg/v1/fill/w_${w},h_${h},q_90/${hash}~mv2.jpg`;
+function img(hash, w = 400, h = 500, ext = 'jpg') {
+  return `https://static.wixstatic.com/media/${hash}~mv2.${ext}/v1/fill/w_${w},h_${h},q_90/${hash}~mv2.${ext}`;
 }
 
 const DATA = {
@@ -331,6 +331,31 @@ const DATA = {
     { id: 'pe6', title: 'Bold Red Glamour Pedi',         category: 'pedicures', location: 'studio', image: img('7c92d2_f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5'),
       tags: ['#Pedicure', '#Red', '#Bold', '#Glamour', '#Classic'],
       colors: [] },
+    { id: 'g1',  title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_4f0dbecf712c484ea18b6b2dbcab5ab3', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g2',  title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_0533d74681674293adc4df66066dbfe3', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g3',  title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_63f53e879cd149269f5465f6e6ec7b17'), tags: [], colors: [] },
+    { id: 'g4',  title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_e3370d7c2a3d43bcb5811bb7808f791a', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g5',  title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_a1dd53d685a440e0932f7c18d2f1e9ae', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g6',  title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_00e82380d64643d98afd3f3db93aa6b5', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g7',  title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_a4d76ee19b3d4cb59e430c5ef5a6bc83', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g8',  title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_8a11ab61cc654abaa23ebdf85f8ecb39', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g9',  title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_435264a2819c4fda9bed5d2160f43a81', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g10', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_8f6f76b1dd414d7e9628ebc20ebe60c7', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g11', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_34a041a96bff444983d2c9613ef87ad6', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g12', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_a3347862c44e43b88e1b989d7f12bb34', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g13', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_7c2eaa30e83d4e76923889c64b2c2867', 400, 500, 'jpeg'), tags: [], colors: [] },
+    { id: 'g14', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_0efe127ede044dbf9f2ad609718ea027'), tags: [], colors: [] },
+    { id: 'g15', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_e0d67274986d4ef48d065db1139bca19'), tags: [], colors: [] },
+    { id: 'g16', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_3375b3636670409cb69999c4e38c5771', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g17', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_0aa8a2f904014458abcaea4601dc1a5e', 400, 500, 'png'), tags: [], colors: [] },
+    { id: 'g18', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_25ff8db88f2f46fc93e8939a0b4094c4'), tags: [], colors: [] },
+    { id: 'g19', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_677f88964b984db689ae7bbc5918d390'), tags: [], colors: [] },
+    { id: 'g20', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_0ffe7fc6f12f4c849d3c4abb593c2c6a'), tags: [], colors: [] },
+    { id: 'g21', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_7df892872faf4a9597dc2a1bddea4882'), tags: [], colors: [] },
+    { id: 'g22', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_6ce15bb561d0463abf12cb2bd00ccf5f'), tags: [], colors: [] },
+    { id: 'g23', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_794739f1009643f1ad3e0a81813565e2'), tags: [], colors: [] },
+    { id: 'g24', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_4e7cae1fd7044ed184ae7032a245af69'), tags: [], colors: [] },
+    { id: 'g25', title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_496a56e7a91d4fb792e0d630e930eecb', 400, 500, 'png'), tags: [], colors: [] },
   ],
 };
 
