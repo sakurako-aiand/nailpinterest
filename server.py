@@ -50,37 +50,43 @@ def init_db():
         conn.execute("ALTER TABLE GalleryImages ADD COLUMN Is_Client_Photo INTEGER NOT NULL DEFAULT 0")
     conn.commit()
     count = conn.execute("SELECT COUNT(*) FROM GalleryImages").fetchone()[0]
-    conn.close()
-    if count == 0:
+    # Always re-seed if there are seed images that might have old categories
+    has_old = conn.execute("SELECT COUNT(*) FROM GalleryImages WHERE id LIKE 'seed_%' AND ServiceCategory = 'nails' AND id != 'seed_7c92d2_4f0dbecf712c484ea18b6b2dbcab5ab3' AND id != 'seed_7c92d2_496a56e7a91d4fb792e0d630e930eecb'").fetchone()[0]
+    if count == 0 or has_old > 10:
+        conn.execute("DELETE FROM GalleryImages WHERE id LIKE 'seed_%'")
+        conn.commit()
+        conn.close()
         seed_gallery()
+    else:
+        conn.close()
 
 
 SEED_IMAGES = [
-    ("7c92d2_4f0dbecf712c484ea18b6b2dbcab5ab3", "png",  "salon"),
-    ("7c92d2_0533d74681674293adc4df66066dbfe3", "png",  "studio"),
-    ("7c92d2_63f53e879cd149269f5465f6e6ec7b17", "jpg",  "salon"),
-    ("7c92d2_e3370d7c2a3d43bcb5811bb7808f791a", "png",  "studio"),
-    ("7c92d2_a1dd53d685a440e0932f7c18d2f1e9ae", "png",  "salon"),
-    ("7c92d2_00e82380d64643d98afd3f3db93aa6b5", "png",  "studio"),
-    ("7c92d2_a4d76ee19b3d4cb59e430c5ef5a6bc83", "png",  "salon"),
-    ("7c92d2_8a11ab61cc654abaa23ebdf85f8ecb39", "png",  "studio"),
-    ("7c92d2_435264a2819c4fda9bed5d2160f43a81", "png",  "salon"),
-    ("7c92d2_8f6f76b1dd414d7e9628ebc20ebe60c7", "png",  "studio"),
-    ("7c92d2_34a041a96bff444983d2c9613ef87ad6", "png",  "salon"),
-    ("7c92d2_a3347862c44e43b88e1b989d7f12bb34", "png",  "studio"),
-    ("7c92d2_7c2eaa30e83d4e76923889c64b2c2867", "jpeg", "salon"),
-    ("7c92d2_0efe127ede044dbf9f2ad609718ea027", "jpg",  "studio"),
-    ("7c92d2_e0d67274986d4ef48d065db1139bca19", "jpg",  "salon"),
-    ("7c92d2_3375b3636670409cb69999c4e38c5771", "png",  "studio"),
-    ("7c92d2_0aa8a2f904014458abcaea4601dc1a5e", "png",  "salon"),
-    ("7c92d2_25ff8db88f2f46fc93e8939a0b4094c4", "jpg",  "studio"),
-    ("7c92d2_677f88964b984db689ae7bbc5918d390", "jpg",  "salon"),
-    ("7c92d2_0ffe7fc6f12f4c849d3c4abb593c2c6a", "jpg",  "studio"),
-    ("7c92d2_7df892872faf4a9597dc2a1bddea4882", "jpg",  "salon"),
-    ("7c92d2_6ce15bb561d0463abf12cb2bd00ccf5f", "jpg",  "studio"),
-    ("7c92d2_794739f1009643f1ad3e0a81813565e2", "jpg",  "salon"),
-    ("7c92d2_4e7cae1fd7044ed184ae7032a245af69", "jpg",  "studio"),
-    ("7c92d2_496a56e7a91d4fb792e0d630e930eecb", "png",  "salon"),
+    ("7c92d2_4f0dbecf712c484ea18b6b2dbcab5ab3", "png",  "salon",  "nails"),
+    ("7c92d2_0533d74681674293adc4df66066dbfe3", "png",  "studio", "nails"),
+    ("7c92d2_63f53e879cd149269f5465f6e6ec7b17", "jpg",  "salon",  "tattoos"),
+    ("7c92d2_e3370d7c2a3d43bcb5811bb7808f791a", "png",  "studio", "lashes"),
+    ("7c92d2_a1dd53d685a440e0932f7c18d2f1e9ae", "png",  "salon",  "nails"),
+    ("7c92d2_00e82380d64643d98afd3f3db93aa6b5", "png",  "studio", "brows"),
+    ("7c92d2_a4d76ee19b3d4cb59e430c5ef5a6bc83", "png",  "salon",  "nails"),
+    ("7c92d2_8a11ab61cc654abaa23ebdf85f8ecb39", "png",  "studio", "lashes"),
+    ("7c92d2_435264a2819c4fda9bed5d2160f43a81", "png",  "salon",  "tattoos"),
+    ("7c92d2_8f6f76b1dd414d7e9628ebc20ebe60c7", "png",  "studio", "nails"),
+    ("7c92d2_34a041a96bff444983d2c9613ef87ad6", "png",  "salon",  "nails"),
+    ("7c92d2_a3347862c44e43b88e1b989d7f12bb34", "png",  "studio", "pedicures"),
+    ("7c92d2_7c2eaa30e83d4e76923889c64b2c2867", "jpeg", "salon",  "tattoos"),
+    ("7c92d2_0efe127ede044dbf9f2ad609718ea027", "jpg",  "studio", "lashes"),
+    ("7c92d2_e0d67274986d4ef48d065db1139bca19", "jpg",  "salon",  "nails"),
+    ("7c92d2_3375b3636670409cb69999c4e38c5771", "png",  "studio", "brows"),
+    ("7c92d2_0aa8a2f904014458abcaea4601dc1a5e", "png",  "salon",  "nails"),
+    ("7c92d2_25ff8db88f2f46fc93e8939a0b4094c4", "jpg",  "studio", "pedicures"),
+    ("7c92d2_677f88964b984db689ae7bbc5918d390", "jpg",  "salon",  "nails"),
+    ("7c92d2_0ffe7fc6f12f4c849d3c4abb593c2c6a", "jpg",  "studio", "pressons"),
+    ("7c92d2_7df892872faf4a9597dc2a1bddea4882", "jpg",  "salon",  "pressons"),
+    ("7c92d2_6ce15bb561d0463abf12cb2bd00ccf5f", "jpg",  "studio", "nails"),
+    ("7c92d2_794739f1009643f1ad3e0a81813565e2", "jpg",  "salon",  "nails"),
+    ("7c92d2_4e7cae1fd7044ed184ae7032a245af69", "jpg",  "studio", "lashes"),
+    ("7c92d2_496a56e7a91d4fb792e0d630e930eecb", "png",  "salon",  "nails"),
 ]
 
 
@@ -89,12 +95,12 @@ def seed_gallery():
     from datetime import datetime, timezone
     upload_date = datetime.now(timezone.utc).isoformat()
     conn = db_conn()
-    for hash_str, ext, location in SEED_IMAGES:
+    for hash_str, ext, location, category in SEED_IMAGES:
         image_url = f"https://static.wixstatic.com/media/{hash_str}~mv2.{ext}/v1/fill/w_400,h_500,q_90/{hash_str}~mv2.{ext}"
         item_id = f"seed_{hash_str}"
         conn.execute(
             "INSERT OR IGNORE INTO GalleryImages (id, ImageURL, Location, ServiceCategory, UploadDate, Is_Client_Photo) VALUES (?, ?, ?, ?, ?, 0)",
-            (item_id, image_url, location, "nails", upload_date),
+            (item_id, image_url, location, category, upload_date),
         )
     conn.commit()
     conn.close()

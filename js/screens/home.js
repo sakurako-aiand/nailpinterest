@@ -1,9 +1,19 @@
-import { DATA, PRICING, SERVICES, LOCATIONS, PRICE_LISTS, getTierPrice, getFeedByCategoryAndLocation, getServicesByLocation, formatPrice } from '../data.js';
+import { DATA, PRICING, SERVICES, LOCATIONS, PRICE_LISTS, BOOKING_MAP, getTierPrice, getFeedByCategoryAndLocation, getServicesByLocation, formatPrice } from '../data.js';
 import { openDetailView } from './detail.js';
 import { openEstimator } from './estimator.js';
 import { openPolicy } from './policy.js';
 import { openCanvas } from './canvas.js';
 import { i18n } from '../i18n.js';
+
+const EXPANDED_CATEGORIES = {
+  nails: ['nails', 'pressons'],
+  lashes: ['lashes', 'brows'],
+  tattoos: ['tattoos'],
+  pedicures: ['pedicures'],
+  pressons: ['pressons'],
+  brows: ['brows'],
+  vintage: ['vintage'],
+};
 
 let activeCategory = 'nails';
 let activeLocation = localStorage.getItem('tiyu_location') || 'salon';
@@ -36,14 +46,22 @@ let renderGeneration = 0;
 async function fetchGalleryFeed(location, category) {
   const key = `${location}:${category}`;
   if (feedCache[key]) return feedCache[key];
+
+  const categories = EXPANDED_CATEGORIES[category] || [category];
   let dbItems = [];
   try {
-    const res = await fetch(`/api/gallery?location=${encodeURIComponent(location)}&category=${encodeURIComponent(category)}`);
-    if (res.ok) dbItems = await res.json();
+    const res = await fetch(`/api/gallery?location=${encodeURIComponent(location)}`);
+    if (res.ok) {
+      const all = await res.json();
+      dbItems = all.filter(it => categories.includes(it.category));
+    }
   } catch (e) {
     dbItems = [];
   }
-  const staticItems = getFeedByCategoryAndLocation(category, location);
+  const staticItems = DATA.feed.filter(item =>
+    categories.includes(item.category) &&
+    (item.location === location || item.location === 'both')
+  );
   const seen = new Set();
   const merged = [];
   for (const it of [...dbItems, ...staticItems]) {
@@ -220,6 +238,7 @@ async function fillMasonry(container, location, category) {
   const gen = ++renderGeneration;
   const masonry = container.querySelector('#home-masonry');
   if (!masonry) return;
+  masonry.innerHTML = '<div class="gallery-spinner-wrap"><div class="gallery-spinner"></div></div>';
   const feed = await fetchGalleryFeed(location, category);
   if (gen !== renderGeneration) return;
   currentFeed = feed;

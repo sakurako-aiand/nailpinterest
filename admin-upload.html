@@ -497,6 +497,10 @@
       const location = $('location-input').value;
       const category = $('category-input').value;
       const isClientPhoto = $('client-photo-input').checked;
+      if (!category) {
+        showMsg('upload-msg', 'Please select a service category.', 'error');
+        return;
+      }
       const body = { passcode, location, category, isClientPhoto };
       if (pendingDataUrl) body.imageDataUrl = pendingDataUrl;
       else if (imageUrl) body.imageUrl = imageUrl;
