@@ -87,10 +87,10 @@ html, body {
 }
 
 .location-switcher {
-  flex: 0 0 auto;
+  flex: 1 1 0;
   margin: 0;
-  width: auto;
-  max-width: 260px;
+  width: 100%;
+  max-width: none;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -102,7 +102,7 @@ html, body {
 #app.full-width .masonry {
   column-count: 4;
   column-gap: 16px;
-  padding: 16px 24px;
+  padding: 16px 0;
   width: 100%;
   box-sizing: border-box;
 }
@@ -146,8 +146,8 @@ html, body {
   justify-content: space-between;
   align-items: center;
   height: 60px;
-  padding: 0 15px;
-  gap: 12px;
+  padding: 0 8px;
+  gap: 8px;
   position: relative;
   z-index: 50;
   background: transparent;
@@ -155,7 +155,7 @@ html, body {
 
 .top-header-left,
 .top-header-right {
-  flex: 1 1 0;
+  flex: 0 0 auto;
   min-width: 0;
   display: flex;
   align-items: center;
@@ -1813,11 +1813,10 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 /* ── Masonry Grid ── */
 .masonry {
   column-count: 2;
-  column-gap: 12px;
-  padding: 16px 16px;
+  column-gap: 10px;
+  padding: 16px 0;
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 .masonry-item {
@@ -4311,3 +4310,10 @@ body.est-open {
   font-weight: 500;
   white-space: nowrap;
 }
+
+/* ── Location-scoped social links ──
+   Salon IG only on Salon tab, Studio IG only on Studio tab.
+   TikTok stays visible on both. Driven by #app[data-theme] so the
+   swap is instant with the theme transition — no flicker or reflow. */
+#app[data-theme="salon"] .social-card[data-loc="studio"] { display: none; }
+#app[data-theme="studio"] .social-card[data-loc="salon"] { display: none; }

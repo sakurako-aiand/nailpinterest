@@ -114,7 +114,7 @@ export function renderHome() {
       <div class="gallery-spinner-wrap"><div class="gallery-spinner"></div></div>
     </div>
     <div class="social-footer">
-      <a class="social-card ig-footer" href="https://www.instagram.com/tiyusalontokyo/?hl=en" target="_blank" rel="noopener noreferrer">
+      <a class="social-card ig-footer" data-loc="salon" href="https://www.instagram.com/tiyusalontokyo/?hl=en" target="_blank" rel="noopener noreferrer">
         <span class="ig-icon" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -128,7 +128,7 @@ export function renderHome() {
         </span>
         <span class="ig-arrow">${i18n.t('home.instagramFollow')} &rarr;</span>
       </a>
-      <a class="social-card ig-footer" href="https://www.instagram.com/tiyustudiotokyo/?hl=en" target="_blank" rel="noopener noreferrer">
+      <a class="social-card ig-footer" data-loc="studio" href="https://www.instagram.com/tiyustudiotokyo/?hl=en" target="_blank" rel="noopener noreferrer">
         <span class="ig-icon" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
