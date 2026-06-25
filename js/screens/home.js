@@ -15,7 +15,12 @@ export function getActiveLocation() {
 export function setActiveLocation(loc) {
   activeLocation = loc;
   localStorage.setItem('tiyu_location', loc);
+  for (const k of Object.keys(feedCache)) delete feedCache[k];
 }
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) for (const k of Object.keys(feedCache)) delete feedCache[k];
+});
 
 function getLocationPill(loc) {
   if (loc === 'salon') return '<span class="loc-pill salon-pill"></span>';
@@ -24,14 +29,40 @@ function getLocationPill(loc) {
   return '';
 }
 
+let currentFeed = [];
+const feedCache = {};
+let renderGeneration = 0;
+
+async function fetchGalleryFeed(location, category) {
+  const key = `${location}:${category}`;
+  if (feedCache[key]) return feedCache[key];
+  let dbItems = [];
+  try {
+    const res = await fetch(`/api/gallery?location=${encodeURIComponent(location)}&category=${encodeURIComponent(category)}`);
+    if (res.ok) dbItems = await res.json();
+  } catch (e) {
+    dbItems = [];
+  }
+  const staticItems = getFeedByCategoryAndLocation(category, location);
+  const seen = new Set();
+  const merged = [];
+  for (const it of [...dbItems, ...staticItems]) {
+    if (seen.has(it.id)) continue;
+    seen.add(it.id);
+    merged.push(it);
+  }
+  feedCache[key] = merged;
+  return merged;
+}
+
 export function renderHome() {
   const container = document.getElementById('screen-home');
   if (!container) return;
 
   const locServices = getServicesByLocation(activeLocation);
-  const feed = getFeedByCategoryAndLocation(activeCategory, activeLocation);
+  const staticFeed = getFeedByCategoryAndLocation(activeCategory, activeLocation);
 
-  if (!feed.length && activeCategory !== 'vintage') {
+  if (!staticFeed.length && activeCategory !== 'vintage') {
     activeCategory = locServices[0]?.id || 'nails';
   }
 
@@ -80,16 +111,7 @@ export function renderHome() {
       </div>
     `}
     <div class="masonry masonry-fade" id="home-masonry">
-      ${feed.map(item => `
-        <div class="masonry-item" data-id="${item.id}">
-          <img src="${item.image}" alt="${item.title}" loading="lazy" />
-          ${getLocationPill(item.location)}
-          <div class="pin-overlay">
-            <span class="pin-title">${item.title}</span>
-            ${item.tier ? `<div class="pin-price">${formatPrice(getTierPrice(item.tier))}+</div>` : ''}
-          </div>
-        </div>
-      `).join('')}
+      <div class="gallery-spinner-wrap"><div class="gallery-spinner"></div></div>
     </div>
     <div class="social-footer">
       <a class="social-card ig-footer" href="https://www.instagram.com/tiyusalontokyo/?hl=en" target="_blank" rel="noopener noreferrer">
@@ -102,6 +124,20 @@ export function renderHome() {
         </span>
         <span class="ig-text">
           <span class="ig-handle">${i18n.t('home.instagramHandle')}</span>
+          <span class="ig-desc">${i18n.t('home.instagramDesc')}</span>
+        </span>
+        <span class="ig-arrow">${i18n.t('home.instagramFollow')} &rarr;</span>
+      </a>
+      <a class="social-card ig-footer" href="https://www.instagram.com/tiyustudiotokyo/?hl=en" target="_blank" rel="noopener noreferrer">
+        <span class="ig-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+          </svg>
+        </span>
+        <span class="ig-text">
+          <span class="ig-handle">@tiyustudiotokyo</span>
           <span class="ig-desc">${i18n.t('home.instagramDesc')}</span>
         </span>
         <span class="ig-arrow">${i18n.t('home.instagramFollow')} &rarr;</span>
@@ -121,6 +157,11 @@ export function renderHome() {
     </div>
   `;
 
+  attachHomeListeners(container);
+  fillMasonry(container, activeLocation, activeCategory);
+}
+
+function attachHomeListeners(container) {
   container.querySelectorAll('.service-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       activeCategory = tab.dataset.service;
@@ -128,29 +169,57 @@ export function renderHome() {
     });
   });
 
-  container.querySelectorAll('.masonry-item').forEach(el => {
+  const estimatorCta = container.querySelector('#estimator-cta');
+  if (estimatorCta) estimatorCta.addEventListener('click', () => openEstimator());
+
+  const canvasCta = container.querySelector('#canvas-cta');
+  if (canvasCta) canvasCta.addEventListener('click', () => openCanvas());
+
+  const priceListCta = container.querySelector('#pricelist-cta');
+  if (priceListCta) priceListCta.addEventListener('click', () => openPriceList(activeCategory));
+
+  container.querySelector('#home-policy-link').addEventListener('click', () => openPolicy());
+}
+
+async function fillMasonry(container, location, category) {
+  const gen = ++renderGeneration;
+  const masonry = container.querySelector('#home-masonry');
+  if (!masonry) return;
+  const feed = await fetchGalleryFeed(location, category);
+  if (gen !== renderGeneration) return;
+  currentFeed = feed;
+
+  if (!feed.length) {
+    masonry.classList.remove('masonry-fade');
+    masonry.innerHTML = `
+      <div class="empty-state">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <h3>New designs coming soon</h3>
+        <p>Please check our Instagram for latest work.</p>
+        <a href="https://www.instagram.com/tiyusalontokyo/?hl=en" target="_blank" rel="noopener noreferrer" class="back-link" style="display:inline-block; margin-top:16px;">@tiyusalontokyo &rarr;</a>
+      </div>
+    `;
+    return;
+  }
+
+  masonry.classList.add('masonry-fade');
+  masonry.innerHTML = feed.map((item, i) => `
+    <div class="masonry-item" data-id="${item.id}" style="animation-delay:${Math.min(i * 40, 480)}ms">
+      <img src="${item.image}" alt="${item.title}" loading="lazy" />
+      ${getLocationPill(item.location)}
+      <div class="pin-overlay">
+        <span class="pin-title">${item.title}</span>
+        ${item.tier ? `<div class="pin-price">${formatPrice(getTierPrice(item.tier))}+</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  masonry.querySelectorAll('.masonry-item').forEach(el => {
     el.addEventListener('click', () => {
-      const item = DATA.feed.find(p => p.id === el.dataset.id);
+      const item = currentFeed.find(p => p.id === el.dataset.id);
       if (item) openDetailView(item);
     });
   });
-
-  const estimatorCta = container.querySelector('#estimator-cta');
-  if (estimatorCta) {
-    estimatorCta.addEventListener('click', () => openEstimator());
-  }
-
-  const canvasCta = container.querySelector('#canvas-cta');
-  if (canvasCta) {
-    canvasCta.addEventListener('click', () => openCanvas());
-  }
-
-  const priceListCta = container.querySelector('#pricelist-cta');
-  if (priceListCta) {
-    priceListCta.addEventListener('click', () => openPriceList(activeCategory));
-  }
-
-  container.querySelector('#home-policy-link').addEventListener('click', () => openPolicy());
 }
 
 function openPriceList(category) {

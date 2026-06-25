@@ -51,7 +51,8 @@ function loadViewMode() {
   const saved = localStorage.getItem('tiyu_view');
   const app = document.getElementById('app');
   if (!app) return;
-  if (saved === 'desktop') {
+  const wideEnough = window.matchMedia('(min-width: 769px)').matches;
+  if (saved === 'desktop' && wideEnough) {
     app.classList.add('full-width');
     document.body.classList.add('view-desktop');
   }

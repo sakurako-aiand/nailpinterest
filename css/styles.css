@@ -87,10 +87,10 @@ html, body {
 }
 
 .location-switcher {
-  flex-shrink: 0;
-  margin: 12px auto 0;
-  width: calc(100% - 48px);
-  max-width: 280px;
+  flex: 0 0 auto;
+  margin: 0;
+  width: auto;
+  max-width: 260px;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -139,6 +139,31 @@ html, body {
   margin-right: auto;
 }
 
+/* ── Unified Top Header ── */
+.top-header {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  padding: 0 15px;
+  gap: 12px;
+  position: relative;
+  z-index: 50;
+  background: transparent;
+}
+
+.top-header-left,
+.top-header-right {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.top-header-left { justify-content: flex-start; }
+.top-header-right { justify-content: flex-end; gap: 8px; }
+
 #screen-container {
   flex: 1;
   overflow-y: auto;
@@ -159,20 +184,15 @@ html, body {
 
 /* ── View Toggle (Desktop/Mobile) ── */
 .view-toggle {
-  position: fixed;
-  top: 16px;
-  right: 120px;
-  z-index: 150;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  background: rgba(252, 251, 247, 0.94);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  border-radius: 10px;
+  background: transparent;
   color: var(--espresso-muted);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -184,31 +204,31 @@ html, body {
 .view-toggle .icon-desktop { display: none; }
 .view-toggle .icon-mobile { display: block; }
 
-#app.full-width ~ .view-toggle .icon-desktop,
 body.view-desktop .view-toggle .icon-desktop { display: block; }
 body.view-desktop .view-toggle .icon-mobile { display: none; }
 
-/* ── Language Toggle ── */
+@media (min-width: 769px) {
+  .view-toggle { display: flex; }
+}
+
+/* ── Language Toggle (EN | JP pill) ── */
 .lang-toggle {
-  position: fixed;
-  top: 16px;
-  right: 20px;
-  z-index: 150;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 8px 16px;
+  gap: 5px;
+  padding: 5px 10px;
   border: 1px solid var(--border);
   border-radius: 20px;
-  background: rgba(252, 251, 247, 0.94);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: transparent;
   font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 400;
   letter-spacing: 0.5px;
   color: var(--espresso-muted);
   cursor: pointer;
+  flex-shrink: 1;
+  min-width: 0;
+  white-space: nowrap;
   transition: all 0.3s ease;
 }
 
@@ -221,8 +241,18 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
   transition: color 0.3s ease, font-weight 0.3s ease;
 }
 
-.lang-toggle .lang-en.active { color: var(--taupe-dark); font-weight: 600; }
-.lang-toggle .lang-ja.active { color: var(--taupe-dark); font-weight: 600; }
+.lang-toggle .lang-en.active { color: var(--accent-dark); font-weight: 600; }
+.lang-toggle .lang-ja.active { color: var(--accent-dark); font-weight: 600; }
+
+/* Narrow screens: keep the pill tiny so the Location Switcher stays centered */
+@media (max-width: 360px) {
+  .lang-toggle {
+    padding: 4px 8px;
+    font-size: 10px;
+    gap: 4px;
+  }
+  .top-header { gap: 8px; padding: 0 12px; }
+}
 
 /* ── Bottom Navigation ── */
 #bottom-nav {
@@ -435,24 +465,19 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
   transform: scale(0.92);
 }
 
-/* ── More Button (Mobile) ── */
+/* ── More Button (Mobile, in top header) ── */
 .more-btn {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 500;
   width: 36px;
   height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(252, 251, 247, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: transparent;
   border: 1px solid var(--border);
   border-radius: 50%;
   cursor: pointer;
   color: var(--espresso);
+  flex-shrink: 0;
   transition: all 0.25s ease;
 }
 
@@ -1535,6 +1560,55 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Per-item staggered fade for freshly rendered gallery items */
+.masonry.masonry-fade .masonry-item {
+  animation: masonryItemFade 0.5s ease both;
+}
+
+@keyframes masonryItemFade {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Soft elegant spinner shown while the gallery fetches */
+.gallery-spinner-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 64px 0;
+  width: 100%;
+}
+
+.gallery-spinner {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--taupe-light);
+  border-top-color: var(--taupe-dark);
+  border-radius: 50%;
+  animation: gallerySpin 0.8s linear infinite;
+}
+
+@keyframes gallerySpin { to { transform: rotate(360deg); } }
+
+/* Instagram link inside the empty state */
+.empty-state a {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--taupe-dark);
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--taupe-light);
+  padding-bottom: 2px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.empty-state a:hover {
+  color: var(--espresso);
+  border-color: var(--taupe-dark);
+}
+
 /* ── Price List Sheet ── */
 .pricelist-overlay {
   position: fixed;
@@ -1692,7 +1766,7 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 
 /* ── Feed Headers ── */
 .feed-header {
-  padding: 40px 16px 16px 56px;
+  padding: 20px 16px 16px;
   position: sticky;
   top: 0;
   background: var(--bg);

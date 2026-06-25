@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tiyu — Gallery Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Questrial&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #FCFBF7;
+      --bg-alt: #F7F4EF;
+      --taupe: #C9A991;
+      --taupe-dark: #A38874;
+      --taupe-light: #E5D9CC;
+      --beige: #EDE6DA;
+      --espresso: #404040;
+      --espresso-light: #6B6B6B;
+      --espresso-muted: #9A9A9A;
+      --border: #EBE6DE;
+      --white: #FFFFFF;
+      --accent: #C9A991;
+      --accent-dark: #A38874;
+      --shadow-soft: 0 2px 16px rgba(64,64,64,0.04);
+      --shadow-md: 0 4px 24px rgba(64,64,64,0.06);
+      --shadow-lg: 0 12px 40px rgba(64,64,64,0.10);
+      --radius: 18px;
+      --radius-sm: 14px;
+      --radius-xs: 10px;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Questrial', -apple-system, sans-serif;
+      --font-brand: 'Syne', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--espresso);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: 0.3px;
+    }
+    .admin-shell {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .admin-header { margin-bottom: 36px; }
+    .admin-header .brand {
+      font-family: var(--font-brand);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--taupe-dark);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .admin-header h1 {
+      font-family: var(--font-serif);
+      font-size: 30px;
+      font-weight: 500;
+      font-style: italic;
+      color: var(--espresso);
+      letter-spacing: -0.5px;
+    }
+    .admin-header .subtitle {
+      font-size: 12px;
+      color: var(--espresso-muted);
+      margin-top: 6px;
+      font-weight: 300;
+      letter-spacing: 0.8px;
+    }
+
+    /* Passcode gate */
+    .gate {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .gate h2 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .gate p { font-size: 12px; color: var(--espresso-muted); margin-bottom: 24px; }
+    .gate input {
+      width: 100%;
+      max-width: 280px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      background: var(--bg);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--espresso);
+      text-align: center;
+      letter-spacing: 1px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .gate input:focus { border-color: var(--taupe); }
+
+    /* Upload form */
+    .upload-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 32px;
+    }
+    .field { margin-bottom: 24px; }
+    .field label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--espresso-muted);
+      margin-bottom: 8px;
+    }
+    .dropzone {
+      border: 1.5px dashed var(--taupe-light);
+      border-radius: var(--radius-sm);
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+      background: var(--bg);
+    }
+    .dropzone:hover, .dropzone.drag { border-color: var(--taupe); background: var(--bg-alt); }
+    .dropzone .dz-icon { color: var(--taupe); margin-bottom: 10px; }
+    .dropzone .dz-text { font-size: 13px; color: var(--espresso-light); }
+    .dropzone .dz-hint { font-size: 11px; color: var(--espresso-muted); margin-top: 4px; }
+    .preview-wrap { margin-top: 14px; }
+    .preview-wrap img {
+      max-width: 100%;
+      max-height: 240px;
+      border-radius: var(--radius-xs);
+      display: block;
+      box-shadow: var(--shadow-soft);
+    }
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0;
+      color: var(--espresso-muted);
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+    .or-divider::before, .or-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .text-input, .select-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      background: var(--bg);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--espresso);
+      outline: none;
+      transition: border-color 0.2s ease;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .text-input:focus, .select-input:focus { border-color: var(--taupe); }
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      width: 7px;
+      height: 7px;
+      border-right: 1.5px solid var(--espresso-muted);
+      border-bottom: 1.5px solid var(--espresso-muted);
+      transform: translateY(-65%) rotate(45deg);
+      pointer-events: none;
+    }
+    .row-two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: var(--radius-xs);
+      background: var(--espresso);
+      color: var(--white);
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-style: italic;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+    }
+    .submit-btn:active { transform: scale(0.985); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .submit-btn.success { background: var(--taupe-dark); }
+
+    .status-msg {
+      margin-top: 14px;
+      font-size: 12px;
+      text-align: center;
+      letter-spacing: 0.4px;
+      min-height: 16px;
+    }
+    .status-msg.error { color: #B5686B; }
+    .status-msg.ok { color: var(--taupe-dark); }
+
+    /* Instagram import card */
+    .ig-hint {
+      font-size: 12px;
+      color: var(--espresso-muted);
+      margin: -8px 0 20px;
+      line-height: 1.5;
+      font-weight: 300;
+      letter-spacing: 0.4px;
+    }
+    .ig-preview { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .ig-preview .preview-wrap img {
+      max-height: 360px;
+      margin: 0 auto;
+    }
+
+    /* Existing uploads */
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-style: italic;
+      font-weight: 500;
+      margin: 48px 0 16px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+    .grid-existing {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
+    }
+    .existing-item {
+      position: relative;
+      border-radius: var(--radius-xs);
+      overflow: hidden;
+      background: var(--bg-alt);
+      aspect-ratio: 3/4;
+      box-shadow: var(--shadow-soft);
+    }
+    .existing-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .existing-item .meta {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 18px 10px 8px;
+      background: linear-gradient(transparent, rgba(64,64,64,0.6));
+      color: white;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+    }
+    .existing-item .del {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(252,251,247,0.9);
+      color: #B5686B;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      transition: transform 0.2s ease;
+    }
+    .existing-item .del:active { transform: scale(0.9); }
+    .existing-empty {
+      font-size: 12px;
+      color: var(--espresso-muted);
+      padding: 24px 0;
+      text-align: center;
+    }
+    .spinner {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--taupe-light);
+      border-top-color: var(--taupe-dark);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hidden { display: none; }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 32px;
+      font-size: 12px;
+      color: var(--espresso-muted);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+    .back-link:hover { color: var(--taupe-dark); }
+  </style>
+</head>
+<body>
+  <div class="admin-shell">
+    <div class="admin-header">
+      <div class="brand">tiyu salon tokyo</div>
+      <h1>Gallery Admin</h1>
+      <p class="subtitle">Hand-pick & curate photos for the lookbook</p>
+    </div>
+
+    <!-- Passcode gate -->
+    <div class="gate" id="gate">
+      <h2>Admin Access</h2>
+      <p>Enter your passcode to manage the gallery</p>
+      <input type="password" id="passcode" placeholder="Passcode" autocomplete="current-password" />
+      <div class="status-msg error" id="gate-msg"></div>
+      <button class="submit-btn" id="gate-btn" style="margin-top:18px; max-width:280px; margin-left:auto; margin-right:auto;">Enter</button>
+    </div>
+
+    <!-- Upload form (hidden until authenticated) -->
+    <div class="upload-card hidden" id="upload-card">
+      <div class="field">
+        <label>Photo</label>
+        <div class="dropzone" id="dropzone">
+          <div class="dz-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div class="dz-text">Tap to upload from device</div>
+          <div class="dz-hint">or drag &amp; drop — JPEG / PNG / WebP</div>
+        </div>
+        <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" hidden />
+        <div class="preview-wrap hidden" id="preview-wrap">
+          <img id="preview-img" alt="preview" />
+        </div>
+        <div class="or-divider">OR PASTE A LINK</div>
+        <input type="url" class="text-input" id="url-input" placeholder="https://instagram.com/p/.../media.jpg" />
+      </div>
+
+      <div class="field row-two">
+        <div>
+          <label>Location</label>
+          <div class="select-wrap">
+            <select class="select-input" id="location-input">
+              <option value="salon">Tiyu Salon Tokyo</option>
+              <option value="studio">Tiyu Studio Tokyo</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label>Service Category</label>
+          <div class="select-wrap">
+            <select class="select-input" id="category-input">
+              <option value="nails">Nails</option>
+              <option value="pressons">Press-ons</option>
+              <option value="lashes">Lashes</option>
+              <option value="brows">Brows</option>
+              <option value="pedicures">Pedicures</option>
+              <option value="tattoos">Tattoos</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="upload-btn">Upload to Gallery</button>
+      <div class="status-msg" id="upload-msg"></div>
+    </div>
+
+    <!-- Instagram Import -->
+    <div class="upload-card hidden" id="ig-import-card">
+      <h2 class="section-title" style="margin-top:0; padding-top:0; border-top:none;">Instagram Import</h2>
+      <p class="ig-hint">Paste an Instagram post link — the app will fetch the photo and store it permanently.</p>
+      <div class="field">
+        <label>Paste Instagram Post Link</label>
+        <input type="url" class="text-input" id="ig-url-input" placeholder="https://www.instagram.com/p/CXXXXXX/" />
+      </div>
+      <button class="submit-btn" id="ig-fetch-btn">Import Photo</button>
+      <div class="status-msg" id="ig-fetch-msg"></div>
+
+      <div class="ig-preview hidden" id="ig-preview">
+        <div class="preview-wrap">
+          <img id="ig-preview-img" alt="imported preview" />
+        </div>
+        <div class="field row-two" style="margin-top:18px;">
+          <div>
+            <label>Location</label>
+            <div class="select-wrap">
+              <select class="select-input" id="ig-location-input">
+                <option value="salon">Tiyu Salon Tokyo</option>
+                <option value="studio">Tiyu Studio Tokyo</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label>Service Category</label>
+            <div class="select-wrap">
+              <select class="select-input" id="ig-category-input">
+                <option value="nails">Nails</option>
+                <option value="pressons">Press-ons</option>
+                <option value="lashes">Lashes</option>
+                <option value="brows">Brows</option>
+                <option value="pedicures">Pedicures</option>
+                <option value="tattoos">Tattoos</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <button class="submit-btn" id="ig-save-btn">Save to Gallery</button>
+        <div class="status-msg" id="ig-save-msg"></div>
+      </div>
+    </div>
+
+    <!-- Existing uploads -->
+    <div class="hidden" id="existing-section">
+      <h2 class="section-title">Curated Gallery</h2>
+      <div class="grid-existing" id="existing-grid"></div>
+    </div>
+
+    <a href="/" class="back-link">&larr; Back to Lookbook</a>
+  </div>
+
+  <script>
+    const API = '/api';
+    let passcode = '';
+    let pendingDataUrl = null;
+    let pendingFileName = null;
+
+    const $ = (id) => document.getElementById(id);
+
+    // ── Passcode gate ──
+    $('gate-btn').addEventListener('click', tryEnter);
+    $('passcode').addEventListener('keydown', (e) => { if (e.key === 'Enter') tryEnter(); });
+
+    function tryEnter() {
+      const val = $('passcode').value.trim();
+      if (!val) { $('gate-msg').textContent = 'Please enter the passcode.'; return; }
+      passcode = val;
+      $('gate').classList.add('hidden');
+      $('upload-card').classList.remove('hidden');
+      $('ig-import-card').classList.remove('hidden');
+      $('existing-section').classList.remove('hidden');
+      loadExisting();
+    }
+
+    // ── File upload (drag + tap) ──
+    const dz = $('dropzone');
+    const fileInput = $('file-input');
+    dz.addEventListener('click', () => fileInput.click());
+    dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('drag'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
+    dz.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dz.classList.remove('drag');
+      if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+    function handleFile(file) {
+      if (!file.type.startsWith('image/')) {
+        showMsg('upload-msg', 'Please choose an image file.', 'error');
+        return;
+      }
+      pendingFileName = file.name;
+      const reader = new FileReader();
+      reader.onload = () => {
+        pendingDataUrl = reader.result;
+        $('preview-img').src = pendingDataUrl;
+        $('preview-wrap').classList.remove('hidden');
+        $('url-input').value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ── Submit ──
+    $('upload-btn').addEventListener('click', upload);
+    async function upload() {
+      const imageUrl = $('url-input').value.trim();
+      const location = $('location-input').value;
+      const category = $('category-input').value;
+      const body = { passcode, location, category };
+      if (pendingDataUrl) body.imageDataUrl = pendingDataUrl;
+      else if (imageUrl) body.imageUrl = imageUrl;
+      else {
+        showMsg('upload-msg', 'Upload a photo or paste a link.', 'error');
+        return;
+      }
+      $('upload-btn').disabled = true;
+      $('upload-btn').textContent = 'Uploading…';
+      try {
+        const res = await fetch(`${API}/upload`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Upload failed');
+        showMsg('upload-msg', 'Added to the gallery.', 'ok');
+        resetForm();
+        loadExisting();
+      } catch (err) {
+        showMsg('upload-msg', err.message, 'error');
+      } finally {
+        $('upload-btn').disabled = false;
+        $('upload-btn').textContent = 'Upload to Gallery';
+      }
+    }
+
+    function resetForm() {
+      pendingDataUrl = null;
+      pendingFileName = null;
+      fileInput.value = '';
+      $('preview-wrap').classList.add('hidden');
+      $('url-input').value = '';
+    }
+
+    // ── Instagram Import ──
+    let igImportedImageUrl = null;
+
+    $('ig-fetch-btn').addEventListener('click', importFromInstagram);
+    $('ig-url-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') importFromInstagram(); });
+    $('ig-save-btn').addEventListener('click', saveImportedToGallery);
+
+    async function importFromInstagram() {
+      const url = $('ig-url-input').value.trim();
+      if (!url) { showMsg('ig-fetch-msg', 'Paste an Instagram link first.', 'error'); return; }
+      $('ig-fetch-btn').disabled = true;
+      $('ig-fetch-btn').textContent = 'Fetching…';
+      $('ig-preview').classList.add('hidden');
+      igImportedImageUrl = null;
+      try {
+        const res = await fetch(`${API}/import-ig`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passcode, url }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Import failed');
+        igImportedImageUrl = data.image;
+        $('ig-preview-img').src = igImportedImageUrl;
+        $('ig-preview').classList.remove('hidden');
+        showMsg('ig-fetch-msg', 'Photo fetched — tag it and save below.', 'ok');
+      } catch (err) {
+        showMsg('ig-fetch-msg', err.message, 'error');
+      } finally {
+        $('ig-fetch-btn').disabled = false;
+        $('ig-fetch-btn').textContent = 'Import Photo';
+      }
+    }
+
+    async function saveImportedToGallery() {
+      if (!igImportedImageUrl) { showMsg('ig-save-msg', 'Import a photo first.', 'error'); return; }
+      const location = $('ig-location-input').value;
+      const category = $('ig-category-input').value;
+      $('ig-save-btn').disabled = true;
+      $('ig-save-btn').textContent = 'Saving…';
+      try {
+        const res = await fetch(`${API}/upload`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passcode, imageUrl: igImportedImageUrl, location, category }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Save failed');
+        showMsg('ig-save-msg', 'Saved to gallery.', 'ok');
+        $('ig-preview').classList.add('hidden');
+        $('ig-url-input').value = '';
+        igImportedImageUrl = null;
+        loadExisting();
+      } catch (err) {
+        showMsg('ig-save-msg', err.message, 'error');
+      } finally {
+        $('ig-save-btn').disabled = false;
+        $('ig-save-btn').textContent = 'Save to Gallery';
+      }
+    }
+
+    // ── Existing uploads ──
+    async function loadExisting() {
+      const grid = $('existing-grid');
+      grid.innerHTML = '<div class="spinner"></div>';
+      try {
+        const res = await fetch(`${API}/gallery`);
+        const items = await res.json();
+        if (!items.length) {
+          grid.innerHTML = '<div class="existing-empty">No photos yet. Upload your first above.</div>';
+          return;
+        }
+        const labels = { salon: 'Salon', studio: 'Studio', nails: 'Nails', pressons: 'Press-ons', lashes: 'Lashes', brows: 'Brows', pedicures: 'Pedicures', tattoos: 'Tattoos' };
+        grid.innerHTML = items.map(it => `
+          <div class="existing-item">
+            <img src="${it.image}" alt="" loading="lazy" />
+            <div class="meta">${labels[it.location] || it.location} · ${labels[it.category] || it.category}</div>
+            <button class="del" data-id="${it.id}" aria-label="Delete">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        `).join('');
+        grid.querySelectorAll('.del').forEach(btn => {
+          btn.addEventListener('click', () => removeItem(btn.dataset.id));
+        });
+      } catch (err) {
+        grid.innerHTML = '<div class="existing-empty">Could not load gallery.</div>';
+      }
+    }
+
+    async function removeItem(id) {
+      if (!confirm('Remove this photo from the gallery?')) return;
+      try {
+        const res = await fetch(`${API}/gallery`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passcode, id }),
+        });
+        if (!res.ok) throw new Error('Delete failed');
+        loadExisting();
+      } catch (err) {
+        showMsg('upload-msg', err.message, 'error');
+      }
+    }
+
+    function showMsg(id, text, kind) {
+      const el = $(id);
+      el.textContent = text;
+      el.className = 'status-msg ' + (kind || '');
+    }
+  </script>
+</body>
+</html>
