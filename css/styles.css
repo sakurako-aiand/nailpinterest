@@ -404,6 +404,8 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
   padding: 12px 24px;
   border: none;
   background: none;
+  width: 100%;
+  text-decoration: none;
   font-family: var(--font-serif);
   font-size: 15px;
   font-weight: 400;
