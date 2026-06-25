@@ -374,6 +374,13 @@
         </div>
       </div>
 
+      <div class="field">
+        <label class="checkbox-row" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+          <input type="checkbox" id="client-photo-input" style="width:18px; height:18px; accent-color:#C9A991;" />
+          <span style="font-family:'Questrial',sans-serif; font-size:13px; color:#6B6B6B;">Client Photo (shows 'Real Love' badge)</span>
+        </label>
+      </div>
+
       <button class="submit-btn" id="upload-btn">Upload to Gallery</button>
       <div class="status-msg" id="upload-msg"></div>
     </div>
@@ -489,7 +496,8 @@
       const imageUrl = $('url-input').value.trim();
       const location = $('location-input').value;
       const category = $('category-input').value;
-      const body = { passcode, location, category };
+      const isClientPhoto = $('client-photo-input').checked;
+      const body = { passcode, location, category, isClientPhoto };
       if (pendingDataUrl) body.imageDataUrl = pendingDataUrl;
       else if (imageUrl) body.imageUrl = imageUrl;
       else {

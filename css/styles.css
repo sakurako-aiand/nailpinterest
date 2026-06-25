@@ -1918,6 +1918,26 @@ a.contact-link-item:hover .contact-link-icon {
 .masonry-item:active .pin-overlay,
 .masonry-item:hover .pin-overlay { opacity: 1; }
 
+/* ── Client Photo Badge ── */
+.client-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 50px;
+  font-family: var(--font-serif);
+  font-size: 10px;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--espresso);
+  letter-spacing: 0.5px;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(64, 64, 64, 0.1);
+}
+
 .pin-overlay .pin-title {
   font-family: var(--font-sans);
   color: white;

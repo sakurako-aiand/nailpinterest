@@ -242,6 +242,7 @@ async function fillMasonry(container, location, category) {
     <div class="masonry-item" data-id="${item.id}" style="animation-delay:${Math.min(i * 40, 480)}ms">
       <img src="${item.image}" alt="${item.title}" loading="lazy" />
       ${getLocationPill(item.location)}
+      ${item.isClientPhoto ? '<span class="client-badge">Real Love</span>' : ''}
       <div class="pin-overlay">
         <span class="pin-title">${item.title}</span>
         ${item.tier ? `<div class="pin-price">${formatPrice(getTierPrice(item.tier))}+</div>` : ''}

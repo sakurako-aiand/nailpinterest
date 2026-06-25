@@ -40,9 +40,14 @@ def init_db():
             ImageURL TEXT NOT NULL,
             Location TEXT NOT NULL,
             ServiceCategory TEXT NOT NULL,
-            UploadDate TEXT NOT NULL
+            UploadDate TEXT NOT NULL,
+            Is_Client_Photo INTEGER NOT NULL DEFAULT 0
         )
     """)
+    # Add column if upgrading from old schema
+    cols = [r[1] for r in conn.execute("PRAGMA table_info(GalleryImages)").fetchall()]
+    if "Is_Client_Photo" not in cols:
+        conn.execute("ALTER TABLE GalleryImages ADD COLUMN Is_Client_Photo INTEGER NOT NULL DEFAULT 0")
     conn.commit()
     count = conn.execute("SELECT COUNT(*) FROM GalleryImages").fetchone()[0]
     conn.close()
@@ -88,7 +93,7 @@ def seed_gallery():
         image_url = f"https://static.wixstatic.com/media/{hash_str}~mv2.{ext}/v1/fill/w_400,h_500,q_90/{hash_str}~mv2.{ext}"
         item_id = f"seed_{hash_str}"
         conn.execute(
-            "INSERT OR IGNORE INTO GalleryImages (id, ImageURL, Location, ServiceCategory, UploadDate) VALUES (?, ?, ?, ?, ?)",
+            "INSERT OR IGNORE INTO GalleryImages (id, ImageURL, Location, ServiceCategory, UploadDate, Is_Client_Photo) VALUES (?, ?, ?, ?, ?, 0)",
             (item_id, image_url, location, "nails", upload_date),
         )
     conn.commit()
@@ -118,6 +123,7 @@ def row_to_item(row):
         "tags": [],
         "colors": [],
         "uploadDate": row["UploadDate"],
+        "isClientPhoto": bool(row["Is_Client_Photo"]),
     }
 
 
@@ -196,11 +202,12 @@ class TiyuHandler(SimpleHTTPRequestHandler):
         # sqlite3 adapter handles the datetime
         from datetime import datetime, timezone
         upload_date = datetime.now(timezone.utc).isoformat()
+        is_client = 1 if body.get("isClientPhoto") else 0
 
         conn = db_conn()
         conn.execute(
-            "INSERT INTO GalleryImages (id, ImageURL, Location, ServiceCategory, UploadDate) VALUES (?, ?, ?, ?, ?)",
-            (item_id, image_url, location, category, upload_date),
+            "INSERT INTO GalleryImages (id, ImageURL, Location, ServiceCategory, UploadDate, Is_Client_Photo) VALUES (?, ?, ?, ?, ?, ?)",
+            (item_id, image_url, location, category, upload_date, is_client),
         )
         conn.commit()
         conn.close()
