@@ -50,6 +50,10 @@ function navigateTo(screenName) {
   if (screenName === 'contact') {
     import('./screens/contact.js').then(m => m.renderContact());
   }
+
+  if (screenName === 'vintage') {
+    import('./screens/vintage.js').then(m => m.renderVintage());
+  }
 }
 
 export { showToast, navigateTo };

@@ -32,6 +32,7 @@ const SERVICES = [
   { id: 'pedicures', label: 'Pedicures',  jaLabel: 'ペディキュア', location: 'studio' },
   { id: 'tattoos',   label: 'Tattoos',    jaLabel: 'タトゥー',   location: 'salon' },
   { id: 'pressons',  label: 'Press-ons',  jaLabel: 'プレスオン',  location: 'both' },
+  { id: 'vintage',   label: 'Vintage',    jaLabel: 'ビンテージ',  location: 'studio', special: true },
 ];
 
 const LOCATIONS = {

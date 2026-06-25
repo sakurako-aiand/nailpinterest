@@ -4337,3 +4337,211 @@ body.est-open {
    swap is instant with the theme transition — no flicker or reflow. */
 #app[data-theme="salon"] .social-card[data-loc="studio"] { display: none; }
 #app[data-theme="studio"] .social-card[data-loc="salon"] { display: none; }
+
+/* ── Vintage Tab Gold Indicator ── */
+.service-tab[data-service="vintage"] {
+  border-color: #D4AF37;
+  color: #B8860B;
+}
+
+.service-tab[data-service="vintage"].active {
+  background: linear-gradient(135deg, #F5E6D3, #D4AF37);
+  border-color: transparent;
+  color: var(--espresso);
+  font-weight: 500;
+}
+
+/* ── Vintage Editorial Page ── */
+.vintage-page {
+  padding: 0 0 calc(var(--nav-height) + 40px + var(--safe-bottom));
+}
+
+.vintage-hero {
+  text-align: center;
+  padding: 48px 24px 40px;
+}
+
+.vintage-hero-img {
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto 28px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.vintage-hero-img svg,
+.vintage-hero-img img {
+  width: 100%;
+  display: block;
+}
+
+.vintage-hero-title {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--espresso);
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+.vintage-hero-subtitle {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: #B8860B;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.vintage-story,
+.vintage-experience {
+  padding: 32px 28px;
+}
+
+.vintage-section-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 500;
+  font-style: italic;
+  color: #B8860B;
+  margin-bottom: 16px;
+  letter-spacing: 0.3px;
+}
+
+.vintage-story-body,
+.vintage-experience-body {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--espresso-light);
+  font-weight: 400;
+  letter-spacing: 0.2px;
+}
+
+.vintage-story-signature {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-style: italic;
+  color: #B8860B;
+  margin-top: 20px;
+}
+
+.vintage-ctas {
+  padding: 16px 28px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vintage-cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border: 1.5px solid #D4AF37;
+  border-radius: 50px;
+  background: transparent;
+  color: #B8860B;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.vintage-cta-btn:active { transform: scale(0.97); }
+
+.vintage-cta-btn:hover {
+  background: rgba(212, 175, 55, 0.08);
+  border-color: #B8860B;
+}
+
+.vintage-cta-primary {
+  background: linear-gradient(135deg, #F5E6D3, #D4AF37);
+  color: var(--espresso);
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.25);
+}
+
+.vintage-cta-primary:hover {
+  background: linear-gradient(135deg, #D4AF37, #B8860B);
+  color: var(--white);
+}
+
+/* Vintage tab banner (in home feed) */
+.vintage-tab-banner {
+  padding: 32px 24px 40px;
+  text-align: center;
+}
+
+.vintage-tab-hero {
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto 24px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.vintage-tab-hero svg {
+  width: 100%;
+  display: block;
+}
+
+.vintage-tab-title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--espresso);
+  margin-bottom: 6px;
+}
+
+.vintage-tab-subtitle {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: #B8860B;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.vintage-tab-story {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--espresso-light);
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.vintage-tab-ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Rail vintage item — gold accent */
+.rail-item.rail-vintage {
+  color: #B8860B;
+}
+
+.rail-item.rail-vintage.active {
+  color: #B8860B;
+}
+
+.rail-item.rail-vintage.active::before {
+  background: linear-gradient(135deg, #D4AF37, #B8860B);
+}
+
+/* Desktop layout for Vintage page */
+#app.full-width .vintage-page {
+  max-width: 720px;
+  margin: 0 auto;
+}

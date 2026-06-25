@@ -62,11 +62,12 @@ export function renderHome() {
   const locServices = getServicesByLocation(activeLocation);
   const staticFeed = getFeedByCategoryAndLocation(activeCategory, activeLocation);
 
-  if (!staticFeed.length) {
+  if (!staticFeed.length && activeCategory !== 'vintage') {
     activeCategory = locServices[0]?.id || 'nails';
   }
 
   const isNails = activeCategory === 'nails';
+  const isVintage = activeCategory === 'vintage';
 
   container.innerHTML = `
     <div class="feed-header">
@@ -95,6 +96,34 @@ export function renderHome() {
         <h3>${i18n.t('home.ctaTitle')}</h3>
         <p>${i18n.t('home.ctaDesc')}</p>
         <span class="cta-arrow">${i18n.t('home.ctaArrow')} &rarr;</span>
+      </div>
+    ` : isVintage ? `
+      <div class="vintage-tab-banner" id="vintage-tab-banner">
+        <div class="vintage-hero-img vintage-tab-hero">
+          <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="400" height="200" fill="#F7F4EF"/>
+            <ellipse cx="200" cy="110" rx="100" ry="60" fill="#E5D3B3" opacity="0.3"/>
+            <path d="M140 90 Q140 60 175 60 L225 60 Q260 60 260 90 L260 140 Q260 155 245 155 L155 155 Q140 155 140 140 Z" fill="#C9A991" opacity="0.35"/>
+            <rect x="175" y="55" width="50" height="15" rx="6" fill="#A38874" opacity="0.4"/>
+          </svg>
+        </div>
+        <h2 class="vintage-tab-title">${i18n.t('vintage.heroTitle')}</h2>
+        <p class="vintage-tab-subtitle">${i18n.t('vintage.heroSubtitle')}</p>
+        <p class="vintage-tab-story">${i18n.t('vintage.storyBody')}</p>
+        <div class="vintage-tab-ctas">
+          <a href="https://www.tiyutokyo.com/category/all-products" target="_blank" rel="noopener noreferrer" class="vintage-cta-btn">
+            ${i18n.t('vintage.exploreCollection')}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="https://www.instagram.com/tiyuvintagetokyo/" target="_blank" rel="noopener noreferrer" class="vintage-cta-btn">
+            ${i18n.t('vintage.followInstagram')}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <button class="vintage-cta-btn vintage-cta-primary" id="vintage-tab-viewing-btn">
+            ${i18n.t('vintage.requestViewing')}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </button>
+        </div>
       </div>
     ` : `
       <div class="cta-banner" id="pricelist-cta">
@@ -151,7 +180,11 @@ export function renderHome() {
   `;
 
   attachHomeListeners(container);
-  fillMasonry(container, activeLocation, activeCategory);
+  if (!isVintage) fillMasonry(container, activeLocation, activeCategory);
+  else {
+    const masonry = container.querySelector('#home-masonry');
+    if (masonry) masonry.innerHTML = '';
+  }
 }
 
 function attachHomeListeners(container) {
@@ -170,6 +203,15 @@ function attachHomeListeners(container) {
 
   const priceListCta = container.querySelector('#pricelist-cta');
   if (priceListCta) priceListCta.addEventListener('click', () => openPriceList(activeCategory));
+
+  const vintageViewingBtn = container.querySelector('#vintage-tab-viewing-btn');
+  if (vintageViewingBtn) {
+    vintageViewingBtn.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('tiyu:book-with-notes', {
+        detail: i18n.t('vintage.viewingNotes'),
+      }));
+    });
+  }
 
   container.querySelector('#home-policy-link').addEventListener('click', () => openPolicy());
 }
