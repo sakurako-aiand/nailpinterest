@@ -1246,6 +1246,18 @@ a.contact-link-item:hover .contact-link-icon {
 }
 
 .funnel-next-btn:active { transform: scale(0.97); }
+.funnel-next-btn:disabled { opacity: 0.6; cursor: default; }
+
+.funnel-redirect-msg {
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--taupe-dark);
+  margin-top: 12px;
+  min-height: 18px;
+  letter-spacing: 0.3px;
+}
 
 /* ── Booking Funnel: Preferences Fields ── */
 .funnel-field {

@@ -79,6 +79,7 @@ const translations = {
       ready: 'Ready to Book',
       readyDesc: 'Please review your selections',
       openCalendar: 'Open Calendar',
+      redirecting: 'Redirecting you to our calendar...',
     },
     home: {
       title: 'The Lookbook',
@@ -396,6 +397,7 @@ const translations = {
       ready: 'ご予約の準備ができました',
       readyDesc: 'ご選択内容をご確認ください',
       openCalendar: 'カレンダーを開く',
+      redirecting: 'カレンダーへリダイレクトしています...',
     },
     home: {
       title: 'ルックブック',

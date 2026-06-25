@@ -36,8 +36,43 @@ const SERVICES = [
 ];
 
 const LOCATIONS = {
-  salon:  { id: 'salon',  label: 'Tiyu Salon Tokyo',  jaLabel: 'tiyu salon tokyo',  color: '#E5D3B3', bookingUrl: 'https://www.tiyutokyo.com/tiyusalontokyo' },
-  studio: { id: 'studio', label: 'Tiyu Studio Tokyo', jaLabel: 'tiyu studio tokyo', color: '#F8C8DC', bookingUrl: 'https://www.tiyutokyo.com/tiyustudiotokyo' },
+  salon:  { id: 'salon',  label: 'Tiyu Salon Tokyo',  jaLabel: 'tiyu salon tokyo',  color: '#E5D3B3', bookingUrl: 'https://tiyusalontokyo.square.site/?location=L03VB1A3GCW75' },
+  studio: { id: 'studio', label: 'Tiyu Studio Tokyo', jaLabel: 'tiyu studio tokyo', color: '#F8C8DC', bookingUrl: 'https://tiyusalontokyo.square.site/?location=L03VB1A3GCW75' },
+};
+
+const SQUARE_BASE = 'https://tiyusalontokyo.square.site';
+const SQUARE_LOC = 'L03VB1A3GCW75';
+
+const BOOKING_MAP = {
+  nails: {
+    default: `${SQUARE_BASE}/shop/book-manicure-choose-base-design/OCPP5TES2C4VXFVGLUI6C4FV`,
+    single:  `${SQUARE_BASE}/shop/single-color-manicure/NJENYJIAPDQMFN45SD2PSU5R`,
+    simple:  `${SQUARE_BASE}/shop/simple-design-manicure/3LGIVR2YGBCVNK6LWYZNTQLY`,
+    complicated: `${SQUARE_BASE}/shop/complicated-design-manicure/TE5VLYPUFH6EYZG2CJMNF7WG`,
+    intense: `${SQUARE_BASE}/shop/intense-design-manicure/GYDKQ6SWXUMXZYE64MRLFZCF`,
+  },
+  tattoos: {
+    default: `${SQUARE_BASE}/shop/tattoos/SMZE4PWBMM62WH2REATOZGVH`,
+    small: `${SQUARE_BASE}/shop/tattoos/SMZE4PWBMM62WH2REATOZGVH`,
+    medium: `${SQUARE_BASE}/shop/tattoos/SMZE4PWBMM62WH2REATOZGVH`,
+    large: `${SQUARE_BASE}/shop/tattoos/SMZE4PWBMM62WH2REATOZGVH`,
+    custom: `${SQUARE_BASE}/shop/tattoos/SMZE4PWBMM62WH2REATOZGVH`,
+  },
+  pressons: {
+    default: `${SQUARE_BASE}/shop/custom-press-on-nails-oreder/YEYTWQ4DL7Q75N6LXZUREDHT`,
+  },
+  brows: {
+    default: `${SQUARE_BASE}/shop/brows/7LQNW3ZH42URT5C5OZ6XVLNJ`,
+  },
+  lashes: {
+    default: `${SQUARE_BASE}/?location=${SQUARE_LOC}`,
+  },
+  pedicures: {
+    default: `${SQUARE_BASE}/?location=${SQUARE_LOC}`,
+  },
+  vintage: {
+    default: `${SQUARE_BASE}/?location=${SQUARE_LOC}`,
+  },
 };
 
 const PRICE_LISTS = {
@@ -398,4 +433,4 @@ function getAllTags(category) {
   return Array.from(tagSet).sort();
 }
 
-export { DATA, PRICING, ESTIMATOR_PRICING, SERVICES, LOCATIONS, PRICE_LISTS, getTierPrice, getTierLabel, formatPrice, getAllTags, getFeedByCategory, getFeedByCategoryAndLocation, getServicesByLocation };
+export { DATA, PRICING, ESTIMATOR_PRICING, SERVICES, LOCATIONS, PRICE_LISTS, BOOKING_MAP, getTierPrice, getTierLabel, formatPrice, getAllTags, getFeedByCategory, getFeedByCategoryAndLocation, getServicesByLocation };

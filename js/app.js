@@ -6,7 +6,7 @@ import { renderPolicyScreen } from './screens/policy-screen.js';
 import { renderContact } from './screens/contact.js';
 import { store } from './store.js';
 import { i18n } from './i18n.js';
-import { LOCATIONS, SERVICES } from './data.js';
+import { LOCATIONS, SERVICES, BOOKING_MAP } from './data.js';
 
 function updateLangToggle() {
   const toggle = document.getElementById('lang-toggle');
@@ -264,6 +264,16 @@ function openBookingModal(prefilledNotes = '') {
   if (!modal || !content) return;
 
   const activeLoc = getActiveLocation();
+  const notesLower = prefilledNotes.toLowerCase();
+  let detectedCategory = '';
+  if (notesLower.includes('vintage') || notesLower.includes('viewing')) detectedCategory = 'vintage';
+  else if (notesLower.includes('tattoo') || notesLower.includes('removal')) detectedCategory = 'tattoos';
+  else if (notesLower.includes('lash')) detectedCategory = 'lashes';
+  else if (notesLower.includes('brow')) detectedCategory = 'brows';
+  else if (notesLower.includes('pedicure')) detectedCategory = 'pedicures';
+  else if (notesLower.includes('press')) detectedCategory = 'pressons';
+  else if (notesLower.includes('base') || notesLower.includes('nail') || notesLower.includes('art') || notesLower.includes('extension') || notesLower.includes('charm') || notesLower.includes('selected:')) detectedCategory = 'nails';
+
   const funnelState = {
     step: activeLoc ? 0 : 0,
     location: activeLoc || null,
@@ -272,6 +282,7 @@ function openBookingModal(prefilledNotes = '') {
     friendRequest: false,
     drinkPolicy: false,
     notes: prefilledNotes,
+    category: detectedCategory,
   };
 
   modal.classList.add('active');
@@ -468,10 +479,32 @@ function openBookingModal(prefilledNotes = '') {
     });
   }
 
+  function getSmartBookingUrl() {
+    const notes = (funnelState.notes || '').toLowerCase();
+    const category = funnelState.category || '';
+
+    if (category && BOOKING_MAP[category]) {
+      const map = BOOKING_MAP[category];
+      if (category === 'nails') {
+        if (notes.includes('intense') || notes.includes('complicated') || notes.includes('simple') || notes.includes('single')) {
+          for (const tier of ['intense', 'complicated', 'simple', 'single']) {
+            if (notes.includes(tier) && map[tier]) return map[tier];
+          }
+        }
+      }
+      if (category === 'tattoos') {
+        for (const size of ['custom', 'large', 'medium', 'small']) {
+          if (notes.includes(size) && map[size]) return map[size];
+        }
+      }
+      return map.default || LOCATIONS[funnelState.location]?.bookingUrl;
+    }
+
+    return LOCATIONS[funnelState.location]?.bookingUrl
+      || 'https://tiyusalontokyo.square.site/?location=L03VB1A3GCW75';
+  }
+
   function renderRedirectStep(el) {
-    const url = funnelState.location === 'studio'
-      ? LOCATIONS.studio.bookingUrl
-      : LOCATIONS.salon.bookingUrl;
     const locLabel = funnelState.location === 'studio' ? i18n.t('booking.studio') : i18n.t('booking.salon');
     const techMap = {
       'no-preference': i18n.t('funnel.noPreference'),
@@ -514,13 +547,26 @@ function openBookingModal(prefilledNotes = '') {
           </div>
         ` : ''}
       </div>
-      <a href="${url}" target="_blank" rel="noopener noreferrer" class="funnel-next-btn" id="funnel-redirect">
+      <button class="funnel-next-btn" id="funnel-redirect">
         ${i18n.t('funnel.openCalendar')} &rarr;
-      </a>
+      </button>
+      <p class="funnel-redirect-msg" id="funnel-redirect-msg"></p>
     `;
     el.scrollTop = 0;
     el.querySelector('#booking-back').addEventListener('click', () => { funnelState.step = 2; render(); });
     el.querySelector('#booking-close').addEventListener('click', closeModal);
+
+    const redirectBtn = el.querySelector('#funnel-redirect');
+    const redirectMsg = el.querySelector('#funnel-redirect-msg');
+    redirectBtn.addEventListener('click', () => {
+      const url = getSmartBookingUrl();
+      redirectMsg.textContent = i18n.t('funnel.redirecting');
+      redirectBtn.disabled = true;
+      setTimeout(() => {
+        window.open(url, '_blank', 'noopener');
+        closeModal();
+      }, 800);
+    });
   }
 
   function closeModal() {
