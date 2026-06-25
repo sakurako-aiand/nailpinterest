@@ -50,15 +50,12 @@ def init_db():
         conn.execute("ALTER TABLE GalleryImages ADD COLUMN Is_Client_Photo INTEGER NOT NULL DEFAULT 0")
     conn.commit()
     count = conn.execute("SELECT COUNT(*) FROM GalleryImages").fetchone()[0]
-    # Always re-seed if there are seed images that might have old categories
-    has_old = conn.execute("SELECT COUNT(*) FROM GalleryImages WHERE id LIKE 'seed_%' AND ServiceCategory = 'nails' AND id != 'seed_7c92d2_4f0dbecf712c484ea18b6b2dbcab5ab3' AND id != 'seed_7c92d2_496a56e7a91d4fb792e0d630e930eecb'").fetchone()[0]
-    if count == 0 or has_old > 10:
-        conn.execute("DELETE FROM GalleryImages WHERE id LIKE 'seed_%'")
-        conn.commit()
-        conn.close()
+    nails_seed_count = conn.execute("SELECT COUNT(*) FROM GalleryImages WHERE id LIKE 'seed_%' AND ServiceCategory = 'nails'").fetchone()[0]
+    non_nails_seed_count = conn.execute("SELECT COUNT(*) FROM GalleryImages WHERE id LIKE 'seed_%' AND ServiceCategory != 'nails'").fetchone()[0]
+    conn.close()
+    # Re-seed if DB is empty, or if all seed images are nails (old schema)
+    if count == 0 or (nails_seed_count > 10 and non_nails_seed_count == 0):
         seed_gallery()
-    else:
-        conn.close()
 
 
 SEED_IMAGES = [
@@ -95,6 +92,7 @@ def seed_gallery():
     from datetime import datetime, timezone
     upload_date = datetime.now(timezone.utc).isoformat()
     conn = db_conn()
+    conn.execute("DELETE FROM GalleryImages WHERE id LIKE 'seed_%'")
     for hash_str, ext, location, category in SEED_IMAGES:
         image_url = f"https://static.wixstatic.com/media/{hash_str}~mv2.{ext}/v1/fill/w_400,h_500,q_90/{hash_str}~mv2.{ext}"
         item_id = f"seed_{hash_str}"
