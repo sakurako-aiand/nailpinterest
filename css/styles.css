@@ -695,98 +695,185 @@ body.view-desktop .view-toggle .icon-mobile { display: none; }
 }
 
 /* ── Contact Screen ── */
-.contact-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  padding: 24px 20px;
-  box-shadow: var(--shadow-soft);
-  margin-bottom: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
+.contact-screen {
+  padding: 48px 20px 24px;
 }
 
-.contact-card .loc-dot {
-  width: 12px;
-  height: 12px;
+.contact-luxury-card {
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border);
+}
+
+.contact-luxury-card.salon-card {
+  background: linear-gradient(160deg, #F7F4EF, #EDE6DA);
+  border-color: rgba(201, 169, 145, 0.2);
+}
+
+.contact-luxury-card.studio-card {
+  background: linear-gradient(160deg, #FDFAFB, #FCE4EC);
+  border-color: rgba(232, 180, 200, 0.2);
+}
+
+.contact-card-header {
+  margin-bottom: 24px;
+}
+
+.contact-loc-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-bottom: 12px;
+}
+
+.contact-loc-dot.salon-dot { background: var(--taupe); }
+.contact-loc-dot.studio-dot { background: var(--accent); }
+
+.contact-loc-name {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--espresso);
+  letter-spacing: -0.3px;
+  line-height: 1.2;
   margin-bottom: 4px;
 }
 
-.contact-card h2 {
-  font-family: var(--font-serif);
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--espresso);
+.contact-loc-tagline {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--espresso-muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 400;
 }
 
-.contact-address {
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contact-link-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  text-decoration: none;
+  color: var(--espresso);
+  border-bottom: 1px solid rgba(64, 64, 64, 0.06);
+  transition: all 0.2s ease;
+}
+
+.contact-link-item:last-child {
+  border-bottom: none;
+}
+
+a.contact-link-item:hover {
+  color: var(--taupe-dark);
+}
+
+a.contact-link-item:active {
+  transform: scale(0.98);
+}
+
+a.contact-link-item:hover .contact-link-icon {
+  color: var(--taupe-dark);
+  transform: scale(1.1);
+}
+
+.contact-link-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--espresso-light);
+  transition: all 0.25s ease;
+}
+
+.contact-link-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-link-label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  color: var(--espresso-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 400;
+  margin-bottom: 2px;
+}
+
+.contact-link-value {
   font-family: var(--font-sans);
   font-size: 13px;
-  color: var(--espresso-light);
+  color: var(--espresso);
   letter-spacing: 0.3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-address-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.contact-address-item .contact-link-text {
+  width: 100%;
 }
 
 .contact-maps-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 16px;
-  background: var(--bg-alt);
-  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--border);
+  border-radius: 50px;
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: 10px;
   color: var(--taupe-dark);
   font-weight: 500;
   letter-spacing: 1px;
   text-transform: uppercase;
   text-decoration: none;
-  margin-top: 8px;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
-.contact-maps-btn:active { transform: scale(0.97); }
-
-.contact-message-section {
-  margin-top: 24px;
-}
-
-.contact-message-section h3 {
-  font-family: var(--font-serif);
-  font-size: 18px;
-  font-weight: 500;
-  font-style: italic;
-  color: var(--espresso);
-  margin-bottom: 16px;
-}
-
-.contact-message-buttons {
-  display: flex;
-  gap: 12px;
-}
-
-.contact-msg-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px;
+.contact-maps-btn:hover {
   background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-family: var(--font-sans);
-  font-size: 11px;
-  color: var(--espresso-light);
-  font-weight: 400;
-  letter-spacing: 0.5px;
-  text-decoration: none;
-  transition: all 0.2s ease;
+  border-color: var(--taupe-light);
+  color: var(--espresso);
 }
 
-.contact-msg-btn:active {
-  background: var(--bg-alt);
-  transform: scale(0.97);
+.contact-maps-btn:active {
+  transform: scale(0.95);
+}
+
+.contact-bottom-note {
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--espresso-muted);
+  margin-top: 32px;
+  padding: 0 16px;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
 }
 
 /* ── Book Now Button (Center Nav) ── */
