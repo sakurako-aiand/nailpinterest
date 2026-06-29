@@ -6,12 +6,7 @@ import { openCanvas } from './canvas.js';
 import { i18n } from '../i18n.js';
 
 const EXPANDED_CATEGORIES = {
-  nails: ['nails', 'pressons'],
-  lashes: ['lashes', 'brows'],
-  tattoos: ['tattoos'],
-  pedicures: ['pedicures'],
-  pressons: ['pressons'],
-  brows: ['brows'],
+  nails: ['nails'],
   vintage: ['vintage'],
 };
 

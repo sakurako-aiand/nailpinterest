@@ -27,7 +27,6 @@ const PRICING = {
 
 const SERVICES = [
   { id: 'nails',     label: 'Nails',      jaLabel: 'ネイル',     location: 'both' },
-  { id: 'pressons',  label: 'Press-ons',  jaLabel: 'プレスオン',  location: 'both' },
   { id: 'vintage',   label: 'Vintage',    jaLabel: 'ビンテージ',  location: 'studio', special: true },
 ];
 
@@ -278,24 +277,6 @@ const DATA = {
         { label: 'Glitter', brand: 'ILNP',   color: 'Mega',         swatch: 'silver-swatch' },
         { label: 'Accent',  brand: 'Cirque', color: 'Rose Gold',    swatch: 'champagne-swatch' },
       ]},
-    { id: 'po1', title: 'Pearl Press-On Set',          category: 'pressons', location: 'salon', image: img('7c92d2_a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8'),
-      tags: ['#Pearl', '#PressOn', '#White', '#Elegant', '#Reusable'],
-      colors: [] },
-    { id: 'po2', title: 'Chrome Press-On',             category: 'pressons', location: 'studio', image: img('7c92d2_b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9'),
-      tags: ['#Chrome', '#Silver', '#PressOn', '#Modern', '#Glossy'],
-      colors: [] },
-    { id: 'po3', title: 'Floral Art Press-On',         category: 'pressons', location: 'studio', image: img('7c92d2_c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0'),
-      tags: ['#Floral', '#Art', '#PressOn', '#Pink', '#HandPainted'],
-      colors: [] },
-    { id: 'po4', title: 'French Tip Press-On',         category: 'pressons', location: 'salon', image: img('7c92d2_d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1'),
-      tags: ['#FrenchTip', '#Classic', '#PressOn', '#White', '#CleanGirl'],
-      colors: [] },
-    { id: 'po5', title: 'Glitter Glam Press-On',       category: 'pressons', location: 'studio', image: img('7c92d2_e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2'),
-      tags: ['#Glitter', '#Glam', '#PressOn', '#Sparkle', '#Bold'],
-      colors: [] },
-    { id: 'po6', title: 'Nude Minimalist Press-On',    category: 'pressons', location: 'studio', image: img('7c92d2_f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3'),
-      tags: ['#Nude', '#Minimalist', '#PressOn', '#Natural', '#Everyday'],
-      colors: [] },
     { id: 'g1',  title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_4f0dbecf712c484ea18b6b2dbcab5ab3', 400, 500, 'png'), tags: [], colors: [] },
     { id: 'g2',  title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'studio', image: img('7c92d2_0533d74681674293adc4df66066dbfe3', 400, 500, 'png'), tags: [], colors: [] },
     { id: 'g3',  title: 'Tiyu Creation',   tier: 'simple', category: 'nails', location: 'salon',  image: img('7c92d2_63f53e879cd149269f5465f6e6ec7b17'), tags: [], colors: [], isClientPhoto: true },
