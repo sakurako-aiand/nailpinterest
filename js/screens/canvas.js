@@ -3,49 +3,25 @@ import { i18n } from '../i18n.js';
 import { showToast, navigateTo } from '../utils.js';
 import { openBookingModal } from './booking.js';
 
-const NAIL_TEMPLATE_SVG = (n, h) => {
-  const W = 48, H = 86;
-  const w2 = W / 2;
-  const hh = H / 2;
-  return `<svg viewBox="-${w2} 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <clipPath id="nailClip-${n}">
-        <path d="M 0,4
-                 C -10,8 -14,20 -14,35
-                 C -14,55 -8,70 -4,78
-                 C -2,82 0,84 0,84
-                 C 0,84 2,82 4,78
-                 C 8,70 14,55 14,35
-                 C 14,20 10,8 0,4
-                 Z"/>
-      </clipPath>
-    </defs>
-    <path d="M 0,4
-             C -10,8 -14,20 -14,35
-             C -14,55 -8,70 -4,78
-             C -2,82 0,84 0,84
-             C 0,84 2,82 4,78
-             C 8,70 14,55 14,35
-             C 14,20 10,8 0,4
-             Z"
-          fill="${h ? 'transparent' : '#FFFFFF'}" stroke="#8A8A8A" stroke-width="1.2"/>
-    <!-- cuticle arc -->
-    <path d="M -11,16 Q 0,27 11,16" fill="none" stroke="#8A8A8A" stroke-width="0.7" opacity="0.5"/>
-    <!-- finger guide lines -->
-    <path d="M -14,25 L -18,76" fill="none" stroke="#8A8A8A" stroke-width="0.7" opacity="0.4"/>
-    <path d="M 14,25 L 18,76" fill="none" stroke="#8A8A8A" stroke-width="0.7" opacity="0.4"/>
-    <!-- cuticle boundary arc -->
-    <path d="M -15,22 Q 0,36 15,22" fill="none" stroke="#8A8A8A" stroke-width="0.9" opacity="0.3"/>
-  </svg>`;
-};
+const NAIL_PATH_D = "M 24,4 C 34,4 40,14 42,32 C 44,50 40,68 34,75 C 31,78 17,78 14,75 C 8,68 4,50 6,32 C 8,14 14,4 24,4 Z";
+
+const NAIL_GUIDES_SVG = `
+  <path d="M 14,72 C 12,86 11,102 12,116" fill="none" stroke="#8A8A8A" stroke-width="0.8" opacity="0.45"/>
+  <path d="M 34,72 C 36,86 37,102 36,116" fill="none" stroke="#8A8A8A" stroke-width="0.8" opacity="0.45"/>
+  <path d="M 10,68 Q 24,80 38,68" fill="none" stroke="#8A8A8A" stroke-width="0.9" opacity="0.35"/>
+`;
+
+const NAIL_TEMPLATE_SVG = `<svg viewBox="0 0 48 120" width="48" height="120" xmlns="http://www.w3.org/2000/svg">
+  <path d="${NAIL_PATH_D}" fill="#FFFFFF" stroke="#8A8A8A" stroke-width="1.2"/>
+  ${NAIL_GUIDES_SVG}
+</svg>`;
+
+const NAIL_OUTLINE_SVG = `<svg class="nail-outline-overlay" viewBox="0 0 48 120" width="48" height="120" xmlns="http://www.w3.org/2000/svg">
+  ${NAIL_GUIDES_SVG}
+  <path d="${NAIL_PATH_D}" fill="none" stroke="#8A8A8A" stroke-width="1.2"/>
+</svg>`;
 
 const NAIL_IDS = ['n0','n1','n2','n3','n4','n5','n6','n7','n8','n9'];
-
-// Nail labels for the finalize composite
-const NAIL_LABELS = [
-  ['R Pinky', 'R Ring', 'R Mid', 'R Index', 'R Thumb'],
-  ['L Thumb', 'L Index', 'L Mid', 'L Ring', 'L Pinky'],
-];
 
 const MB_PLACEHOLDER = [
   { url: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=500&fit=crop', label: 'French Tips' },
@@ -138,16 +114,16 @@ function renderHandMode(view) {
               const n = row * 5 + col;
               const id = NAIL_IDS[n];
               const design = appliedDesigns[id];
-              const label = NAIL_LABELS[row][col];
               return `
                 <div class="nail-cell ${design ? 'has-design' : ''} ${selectedDesign && !design ? 'ready' : ''}"
                      data-nail="${id}">
                   <div class="nail-cell-inner">
-                    ${design
-                      ? `<div class="nail-svg-wrap"><img src="${design.image}" alt="" class="nail-fill-img" /></div>`
-                      : `<div class="nail-svg-wrap">${NAIL_TEMPLATE_SVG(id, false)}</div>`
-                    }
-                    <span class="nail-label">${label}</span>
+                    <div class="nail-svg-wrap">
+                      ${design
+                        ? `<img src="${design.image}" alt="" class="nail-fill-img" style="clip-path: path('${NAIL_PATH_D}')" />${NAIL_OUTLINE_SVG}`
+                        : NAIL_TEMPLATE_SVG
+                      }
+                    </div>
                     ${design ? `<button class="nail-remove" data-nail="${id}">&times;</button>` : ''}
                   </div>
                 </div>
@@ -444,13 +420,13 @@ async function finalizeLook(view) {
 
 async function generateCanvasImage() {
   const COLS = 5, ROWS = 2;
-  const CELL_W = 100, CELL_H = 160;
-  const GAP_X = 24, GAP_Y = 28;
-  const PAD_X = 40, PAD_Y = 20;
-  const TOP_PAD = 60, BOT_PAD = 60;
+  const NAIL_W = 48, NAIL_H = 120;
+  const CELL_W = 80, CELL_H = 150;
+  const GAP_X = 16, GAP_Y = 24;
+  const PAD_X = 40, TOP_PAD = 48, BOT_PAD = 48;
 
   const W = PAD_X * 2 + COLS * CELL_W + (COLS - 1) * GAP_X;
-  const H = TOP_PAD + PAD_Y * 2 + ROWS * CELL_H + (ROWS - 1) * GAP_Y + BOT_PAD;
+  const H = TOP_PAD + ROWS * CELL_H + (ROWS - 1) * GAP_Y + BOT_PAD;
   const scale = 2;
 
   const canvas = document.createElement('canvas');
@@ -459,30 +435,28 @@ async function generateCanvasImage() {
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
 
-  ctx.fillStyle = '#FCFBF7';
+  ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 0, W, H);
 
-  // Draw each nail cell
+  // Preload SVG images
+  const templateUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(NAIL_TEMPLATE_SVG);
+  const outlineUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(NAIL_OUTLINE_SVG);
+  const templateImg = new Image();
+  templateImg.src = templateUrl;
+  const outlineImg = new Image();
+  outlineImg.src = outlineUrl;
+  await new Promise((res, rej) => { templateImg.onload = res; templateImg.onerror = rej; });
+  await new Promise((res, rej) => { outlineImg.onload = res; outlineImg.onerror = rej; });
+
   for (let row = 0; row < ROWS; row++) {
     for (let col = 0; col < COLS; col++) {
       const n = row * COLS + col;
       const id = NAIL_IDS[n];
-      const label = NAIL_LABELS[row][col];
 
       const cx = PAD_X + col * (CELL_W + GAP_X) + CELL_W / 2;
-      const cy = TOP_PAD + PAD_Y + row * (CELL_H + GAP_Y) + CELL_H / 2;
-
+      const cy = TOP_PAD + row * (CELL_H + GAP_Y) + CELL_H / 2;
       const design = appliedDesigns[id];
 
-      // Draw nail SVG
-      const svgString = NAIL_TEMPLATE_SVG(id, !!design);
-      const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
-      const nailImg = new Image();
-      nailImg.src = svgUrl;
-      await new Promise((res, rej) => { nailImg.onload = res; nailImg.onerror = rej; });
-      ctx.drawImage(nailImg, cx - 24, cy - 43, 48, 86);
-
-      // Draw design if applied
       if (design) {
         const img = new Image();
         img.crossOrigin = 'anonymous';
@@ -491,36 +465,35 @@ async function generateCanvasImage() {
 
         ctx.save();
         ctx.beginPath();
-        ctx.moveTo(cx, cy - 39);
-        ctx.bezierCurveTo(cx - 10, cy - 35, cx - 14, cy - 23, cx - 14, cy - 8);
-        ctx.bezierCurveTo(cx - 14, cy + 12, cx - 8, cy + 27, cx - 4, cy + 35);
-        ctx.bezierCurveTo(cx - 2, cy + 39, cx, cy + 41, cx, cy + 41);
-        ctx.bezierCurveTo(cx, cy + 41, cx + 2, cy + 39, cx + 4, cy + 35);
-        ctx.bezierCurveTo(cx + 8, cy + 27, cx + 14, cy + 12, cx + 14, cy - 8);
-        ctx.bezierCurveTo(cx + 14, cy - 23, cx + 10, cy - 35, cx, cy - 39);
+        ctx.moveTo(cx, cy - 56);
+        ctx.bezierCurveTo(cx + 10, cy - 56, cx + 16, cy - 46, cx + 18, cy - 28);
+        ctx.bezierCurveTo(cx + 20, cy - 10, cx + 16, cy + 8, cx + 10, cy + 15);
+        ctx.bezierCurveTo(cx + 7, cy + 18, cx - 7, cy + 18, cx - 10, cy + 15);
+        ctx.bezierCurveTo(cx - 16, cy + 8, cx - 20, cy - 10, cx - 18, cy - 28);
+        ctx.bezierCurveTo(cx - 16, cy - 46, cx - 10, cy - 56, cx, cy - 56);
         ctx.closePath();
         ctx.clip();
 
+        const nailBW = 36, nailBH = 74;
+        const nailBCy = cy - 19;
         const ir = img.width / img.height;
-        const nr = 28 / 80;
+        const nr = nailBW / nailBH;
         let dw, dh;
-        if (ir > nr) { dh = 80; dw = dh * ir; } else { dw = 28; dh = dw / ir; }
-        ctx.drawImage(img, cx - dw / 2, cy - dh / 2, dw, dh);
+        if (ir > nr) { dh = nailBH; dw = dh * ir; } else { dw = nailBW; dh = dw / ir; }
+        ctx.drawImage(img, cx - dw / 2, nailBCy - dh / 2, dw, dh);
         ctx.restore();
-      }
 
-      // Label
-      ctx.fillStyle = '#9A9A9A';
-      ctx.font = '400 9px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(label, cx, cy + 58);
+        ctx.drawImage(outlineImg, cx - NAIL_W / 2, cy - NAIL_H / 2, NAIL_W, NAIL_H);
+      } else {
+        ctx.drawImage(templateImg, cx - NAIL_W / 2, cy - NAIL_H / 2, NAIL_W, NAIL_H);
+      }
     }
   }
 
   ctx.fillStyle = '#A38874';
   ctx.font = '600 11px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('tiyu salon tokyo', W / 2, H - 16);
+  ctx.fillText('tiyu salon tokyo', W / 2, H - 14);
 
   return canvas.toDataURL('image/png');
 }
