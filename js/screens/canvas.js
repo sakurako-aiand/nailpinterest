@@ -6,24 +6,90 @@ import { openBookingModal } from './booking.js';
 const HAND_SVG = `<svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="skinG" x1="50%" y1="0%" x2="50%" y2="100%">
-      <stop offset="0%" stop-color="#F4EADE"/>
-      <stop offset="100%" stop-color="#E6D5C6"/>
+      <stop offset="0%" stop-color="#F8EDDF"/>
+      <stop offset="30%" stop-color="#F2E2D2"/>
+      <stop offset="60%" stop-color="#EAD4BE"/>
+      <stop offset="100%" stop-color="#DAC4AE"/>
     </linearGradient>
-    <filter id="handShadow"><feGaussianBlur stdDeviation="2"/></filter>
+    <radialGradient id="palmG" cx="42%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#F6E8D6"/>
+      <stop offset="55%" stop-color="#EDD8C4"/>
+      <stop offset="100%" stop-color="#D6BEAA"/>
+    </radialGradient>
+    <linearGradient id="edgeG" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C5AA94" stop-opacity="0.5"/>
+      <stop offset="20%" stop-color="#C5AA94" stop-opacity="0"/>
+      <stop offset="80%" stop-color="#C5AA94" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#C5AA94" stop-opacity="0.5"/>
+    </linearGradient>
+    <radialGradient id="knuckleG" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#C5AA94" stop-opacity="0.4"/>
+      <stop offset="70%" stop-color="#C5AA94" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="nailBedG" cx="50%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FDE6D8" stop-opacity="0.75"/>
+      <stop offset="50%" stop-color="#F5D5C0" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#F5D5C0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hlG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFF0E0" stop-opacity="0.4"/>
+      <stop offset="40%" stop-color="#FFF0E0" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#FFF0E0" stop-opacity="0"/>
+    </linearGradient>
   </defs>
-  <ellipse cx="152" cy="430" rx="50" ry="8" fill="rgba(0,0,0,0.06)"/>
-  <rect x="128" y="380" width="48" height="48" rx="18" fill="url(#skinG)" stroke="#DBC9BA" stroke-width="0.8"/>
-  <ellipse cx="150" cy="325" rx="68" ry="82" fill="url(#skinG)" stroke="#DBC9BA" stroke-width="0.8"/>
-  <ellipse cx="80" cy="258" rx="19" ry="55" fill="url(#skinG)" stroke="#DBC9BA" stroke-width="0.8" transform="rotate(-33 80 258)"/>
-  <ellipse cx="115" cy="178" rx="18" ry="73" fill="url(#skinG)" stroke="#DBC9BA" stroke-width="0.8" transform="rotate(-6 115 178)"/>
-  <ellipse cx="155" cy="155" rx="19" ry="85" fill="url(#skinG)" stroke="#DBC9BA" stroke-width="0.8"/>
-  <ellipse cx="195" cy="172" rx="18" ry="77" fill="url(#skinG)" stroke="#DBC9BA" stroke-width="0.8" transform="rotate(7 195 172)"/>
-  <ellipse cx="230" cy="212" rx="16" ry="60" fill="url(#skinG)" stroke="#DBC9BA" stroke-width="0.8" transform="rotate(18 230 212)"/>
-  <ellipse cx="51" cy="210" rx="14" ry="11" fill="#F0E5DC" stroke="#DBC9BA" stroke-width="0.5" transform="rotate(-33 51 210)"/>
-  <ellipse cx="108" cy="103" rx="13" ry="10" fill="#F0E5DC" stroke="#DBC9BA" stroke-width="0.5" transform="rotate(-6 108 103)"/>
-  <ellipse cx="155" cy="68" rx="15" ry="12" fill="#F0E5DC" stroke="#DBC9BA" stroke-width="0.5"/>
-  <ellipse cx="206" cy="93" rx="14" ry="11" fill="#F0E5DC" stroke="#DBC9BA" stroke-width="0.5" transform="rotate(7 206 93)"/>
-  <ellipse cx="248" cy="156" rx="11" ry="9" fill="#F0E5DC" stroke="#DBC9BA" stroke-width="0.5" transform="rotate(18 248 156)"/>
+  <ellipse cx="152" cy="442" rx="54" ry="7" fill="rgba(0,0,0,0.07)"/>
+  <path d="M 125,376 L 125,425 C 125,435 132,439 142,439 L 158,439 C 168,439 175,435 175,425 L 175,376 Z" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.7"/>
+  <path d="M 126,382 Q 150,386 174,382" fill="none" stroke="#C5AA94" stroke-width="0.6" opacity="0.35"/>
+  <path d="M 112,255 C 106,285 103,318 108,352 C 113,382 128,400 150,405 C 172,400 187,382 192,352 C 197,318 194,285 188,255 Z" fill="url(#palmG)" stroke="#C5AA94" stroke-width="0.7"/>
+  <path d="M 112,255 C 106,285 103,318 108,352 C 113,382 128,400 150,405 C 172,400 187,382 192,352 C 197,318 194,285 188,255 Z" fill="url(#edgeG)" opacity="0.4"/>
+  <g transform="rotate(-33 80 258)">
+    <path d="M 66,280 C 61,250 56,225 54,205 C 53,195 57,187 65,187 C 73,187 78,195 79,205 C 81,225 86,250 94,280 Z" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.7"/>
+    <path d="M 66,280 C 61,250 56,225 54,205 C 53,195 57,187 65,187 C 73,187 78,195 79,205 C 81,225 86,250 94,280 Z" fill="url(#edgeG)" opacity="0.45"/>
+    <ellipse cx="74" cy="235" rx="9" ry="5" fill="url(#knuckleG)"/>
+    <ellipse cx="82" cy="200" rx="15" ry="12" fill="url(#nailBedG)"/>
+    <path d="M 55,207 Q 70,212 84,207" fill="none" stroke="#D8BCA8" stroke-width="0.6" opacity="0.4"/>
+    <path d="M 60,200 L 57,275" stroke="#FFF0E0" stroke-width="3" opacity="0.2" stroke-linecap="round"/>
+  </g>
+  <g transform="rotate(-6 115 178)">
+    <path d="M 103,258 C 100,225 101,140 104,107 C 105,96 109,90 115,90 C 121,90 125,96 126,107 C 129,140 130,225 127,258 Z" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.7"/>
+    <path d="M 103,258 C 100,225 101,140 104,107 C 105,96 109,90 115,90 C 121,90 125,96 126,107 C 129,140 130,225 127,258 Z" fill="url(#edgeG)" opacity="0.45"/>
+    <ellipse cx="115" cy="215" rx="10" ry="5" fill="url(#knuckleG)"/>
+    <ellipse cx="115" cy="165" rx="9" ry="4" fill="url(#knuckleG)"/>
+    <ellipse cx="116" cy="103" rx="16" ry="13" fill="url(#nailBedG)"/>
+    <path d="M 101,110 Q 115,115 129,110" fill="none" stroke="#D8BCA8" stroke-width="0.6" opacity="0.4"/>
+    <path d="M 111,115 L 110,250" stroke="#FFF0E0" stroke-width="3" opacity="0.18" stroke-linecap="round"/>
+  </g>
+  <path d="M 141,255 C 138,200 139,105 142,70 C 143,60 148,54 155,54 C 162,54 167,60 168,70 C 171,105 172,200 169,255 Z" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.7"/>
+  <path d="M 141,255 C 138,200 139,105 142,70 C 143,60 148,54 155,54 C 162,54 167,60 168,70 C 171,105 172,200 169,255 Z" fill="url(#edgeG)" opacity="0.45"/>
+  <ellipse cx="155" cy="190" rx="11" ry="5.5" fill="url(#knuckleG)"/>
+  <ellipse cx="155" cy="130" rx="10" ry="4.5" fill="url(#knuckleG)"/>
+  <ellipse cx="155" cy="68" rx="17" ry="14" fill="url(#nailBedG)"/>
+  <path d="M 140,75 Q 155,80 170,75" fill="none" stroke="#D8BCA8" stroke-width="0.6" opacity="0.4"/>
+  <path d="M 151,78 L 150,245" stroke="#FFF0E0" stroke-width="3" opacity="0.18" stroke-linecap="round"/>
+  <g transform="rotate(7 195 172)">
+    <path d="M 183,258 C 180,225 181,140 184,97 C 185,86 189,80 195,80 C 201,80 205,86 206,97 C 209,140 210,225 207,258 Z" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.7"/>
+    <path d="M 183,258 C 180,225 181,140 184,97 C 185,86 189,80 195,80 C 201,80 205,86 206,97 C 209,140 210,225 207,258 Z" fill="url(#edgeG)" opacity="0.45"/>
+    <ellipse cx="195" cy="215" rx="10" ry="5" fill="url(#knuckleG)"/>
+    <ellipse cx="195" cy="155" rx="9" ry="4" fill="url(#knuckleG)"/>
+    <ellipse cx="196" cy="93" rx="16" ry="13" fill="url(#nailBedG)"/>
+    <path d="M 181,100 Q 195,105 209,100" fill="none" stroke="#D8BCA8" stroke-width="0.6" opacity="0.4"/>
+    <path d="M 191,105 L 190,250" stroke="#FFF0E0" stroke-width="3" opacity="0.18" stroke-linecap="round"/>
+  </g>
+  <g transform="rotate(18 230 212)">
+    <path d="M 220,268 C 218,245 219,175 222,145 C 223,137 226,132 230,132 C 234,132 237,137 238,145 C 241,175 242,245 240,268 Z" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.7"/>
+    <path d="M 220,268 C 218,245 219,175 222,145 C 223,137 226,132 230,132 C 234,132 237,137 238,145 C 241,175 242,245 240,268 Z" fill="url(#edgeG)" opacity="0.45"/>
+    <ellipse cx="230" cy="222" rx="9" ry="4.5" fill="url(#knuckleG)"/>
+    <ellipse cx="230" cy="178" rx="8" ry="3.5" fill="url(#knuckleG)"/>
+    <ellipse cx="230" cy="153" rx="14" ry="11" fill="url(#nailBedG)"/>
+    <path d="M 217,160 Q 230,165 243,160" fill="none" stroke="#D8BCA8" stroke-width="0.6" opacity="0.4"/>
+    <path d="M 226,165 L 225,260" stroke="#FFF0E0" stroke-width="2.5" opacity="0.18" stroke-linecap="round"/>
+  </g>
+  <path d="M 127,258 Q 140,263 141,255" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.5" opacity="0.5"/>
+  <path d="M 169,255 Q 181,260 183,258" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.5" opacity="0.5"/>
+  <path d="M 207,258 Q 218,265 220,268" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.5" opacity="0.5"/>
+  <path d="M 115,252 Q 118,300 122,360" stroke="#D4BFA8" stroke-width="0.6" opacity="0.18" fill="none"/>
+  <path d="M 155,258 L 155,370" stroke="#D4BFA8" stroke-width="0.6" opacity="0.18" fill="none"/>
+  <path d="M 195,255 Q 190,300 185,360" stroke="#D4BFA8" stroke-width="0.6" opacity="0.18" fill="none"/>
 </svg>`;
 
 const NAILS = [
