@@ -7,6 +7,8 @@ import { i18n } from '../i18n.js';
 
 const EXPANDED_CATEGORIES = {
   nails: ['nails'],
+  lashes: ['lashes'],
+  tattoos: ['tattoos'],
   vintage: ['vintage'],
 };
 
