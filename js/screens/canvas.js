@@ -3,101 +3,48 @@ import { i18n } from '../i18n.js';
 import { showToast, navigateTo } from '../utils.js';
 import { openBookingModal } from './booking.js';
 
-const HAND_SVG = `<svg viewBox="0 0 300 460" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="skinG" x1="50%" y1="0%" x2="50%" y2="100%">
-      <stop offset="0%" stop-color="#F8EDDF"/>
-      <stop offset="30%" stop-color="#F2E2D2"/>
-      <stop offset="60%" stop-color="#EAD4BE"/>
-      <stop offset="100%" stop-color="#DAC4AE"/>
-    </linearGradient>
-    <radialGradient id="palmG" cx="42%" cy="45%" r="65%">
-      <stop offset="0%" stop-color="#F6E8D6"/>
-      <stop offset="55%" stop-color="#EDD8C4"/>
-      <stop offset="100%" stop-color="#D6BEAA"/>
-    </radialGradient>
-    <linearGradient id="edgeG" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#C5AA94" stop-opacity="0.5"/>
-      <stop offset="20%" stop-color="#C5AA94" stop-opacity="0"/>
-      <stop offset="80%" stop-color="#C5AA94" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#C5AA94" stop-opacity="0.5"/>
-    </linearGradient>
-    <radialGradient id="knuckleG" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#C5AA94" stop-opacity="0.4"/>
-      <stop offset="70%" stop-color="#C5AA94" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="nailBedG" cx="50%" cy="35%" r="65%">
-      <stop offset="0%" stop-color="#FDE6D8" stop-opacity="0.75"/>
-      <stop offset="50%" stop-color="#F5D5C0" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#F5D5C0" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="hlG" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFF0E0" stop-opacity="0.4"/>
-      <stop offset="40%" stop-color="#FFF0E0" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="#FFF0E0" stop-opacity="0"/>
-    </linearGradient>
-  </defs>
-  <ellipse cx="152" cy="442" rx="54" ry="7" fill="rgba(0,0,0,0.07)"/>
-  <path d="M 125,376 L 125,425 C 125,435 132,439 142,439 L 158,439 C 168,439 175,435 175,425 L 175,376 Z" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.7"/>
-  <path d="M 126,382 Q 150,386 174,382" fill="none" stroke="#C5AA94" stroke-width="0.6" opacity="0.35"/>
-  <path d="M 112,255 C 106,285 103,318 108,352 C 113,382 128,400 150,405 C 172,400 187,382 192,352 C 197,318 194,285 188,255 Z" fill="url(#palmG)" stroke="#C5AA94" stroke-width="0.7"/>
-  <path d="M 112,255 C 106,285 103,318 108,352 C 113,382 128,400 150,405 C 172,400 187,382 192,352 C 197,318 194,285 188,255 Z" fill="url(#edgeG)" opacity="0.4"/>
-  <g transform="rotate(-33 80 258)">
-    <path d="M 66,280 C 61,250 56,225 54,205 C 53,195 57,187 65,187 C 73,187 78,195 79,205 C 81,225 86,250 94,280 Z" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.7"/>
-    <path d="M 66,280 C 61,250 56,225 54,205 C 53,195 57,187 65,187 C 73,187 78,195 79,205 C 81,225 86,250 94,280 Z" fill="url(#edgeG)" opacity="0.45"/>
-    <ellipse cx="74" cy="235" rx="9" ry="5" fill="url(#knuckleG)"/>
-    <ellipse cx="82" cy="200" rx="15" ry="12" fill="url(#nailBedG)"/>
-    <path d="M 55,207 Q 70,212 84,207" fill="none" stroke="#D8BCA8" stroke-width="0.6" opacity="0.4"/>
-    <path d="M 60,200 L 57,275" stroke="#FFF0E0" stroke-width="3" opacity="0.2" stroke-linecap="round"/>
-  </g>
-  <g transform="rotate(-6 115 178)">
-    <path d="M 103,258 C 100,225 101,140 104,107 C 105,96 109,90 115,90 C 121,90 125,96 126,107 C 129,140 130,225 127,258 Z" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.7"/>
-    <path d="M 103,258 C 100,225 101,140 104,107 C 105,96 109,90 115,90 C 121,90 125,96 126,107 C 129,140 130,225 127,258 Z" fill="url(#edgeG)" opacity="0.45"/>
-    <ellipse cx="115" cy="215" rx="10" ry="5" fill="url(#knuckleG)"/>
-    <ellipse cx="115" cy="165" rx="9" ry="4" fill="url(#knuckleG)"/>
-    <ellipse cx="116" cy="103" rx="16" ry="13" fill="url(#nailBedG)"/>
-    <path d="M 101,110 Q 115,115 129,110" fill="none" stroke="#D8BCA8" stroke-width="0.6" opacity="0.4"/>
-    <path d="M 111,115 L 110,250" stroke="#FFF0E0" stroke-width="3" opacity="0.18" stroke-linecap="round"/>
-  </g>
-  <path d="M 141,255 C 138,200 139,105 142,70 C 143,60 148,54 155,54 C 162,54 167,60 168,70 C 171,105 172,200 169,255 Z" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.7"/>
-  <path d="M 141,255 C 138,200 139,105 142,70 C 143,60 148,54 155,54 C 162,54 167,60 168,70 C 171,105 172,200 169,255 Z" fill="url(#edgeG)" opacity="0.45"/>
-  <ellipse cx="155" cy="190" rx="11" ry="5.5" fill="url(#knuckleG)"/>
-  <ellipse cx="155" cy="130" rx="10" ry="4.5" fill="url(#knuckleG)"/>
-  <ellipse cx="155" cy="68" rx="17" ry="14" fill="url(#nailBedG)"/>
-  <path d="M 140,75 Q 155,80 170,75" fill="none" stroke="#D8BCA8" stroke-width="0.6" opacity="0.4"/>
-  <path d="M 151,78 L 150,245" stroke="#FFF0E0" stroke-width="3" opacity="0.18" stroke-linecap="round"/>
-  <g transform="rotate(7 195 172)">
-    <path d="M 183,258 C 180,225 181,140 184,97 C 185,86 189,80 195,80 C 201,80 205,86 206,97 C 209,140 210,225 207,258 Z" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.7"/>
-    <path d="M 183,258 C 180,225 181,140 184,97 C 185,86 189,80 195,80 C 201,80 205,86 206,97 C 209,140 210,225 207,258 Z" fill="url(#edgeG)" opacity="0.45"/>
-    <ellipse cx="195" cy="215" rx="10" ry="5" fill="url(#knuckleG)"/>
-    <ellipse cx="195" cy="155" rx="9" ry="4" fill="url(#knuckleG)"/>
-    <ellipse cx="196" cy="93" rx="16" ry="13" fill="url(#nailBedG)"/>
-    <path d="M 181,100 Q 195,105 209,100" fill="none" stroke="#D8BCA8" stroke-width="0.6" opacity="0.4"/>
-    <path d="M 191,105 L 190,250" stroke="#FFF0E0" stroke-width="3" opacity="0.18" stroke-linecap="round"/>
-  </g>
-  <g transform="rotate(18 230 212)">
-    <path d="M 220,268 C 218,245 219,175 222,145 C 223,137 226,132 230,132 C 234,132 237,137 238,145 C 241,175 242,245 240,268 Z" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.7"/>
-    <path d="M 220,268 C 218,245 219,175 222,145 C 223,137 226,132 230,132 C 234,132 237,137 238,145 C 241,175 242,245 240,268 Z" fill="url(#edgeG)" opacity="0.45"/>
-    <ellipse cx="230" cy="222" rx="9" ry="4.5" fill="url(#knuckleG)"/>
-    <ellipse cx="230" cy="178" rx="8" ry="3.5" fill="url(#knuckleG)"/>
-    <ellipse cx="230" cy="153" rx="14" ry="11" fill="url(#nailBedG)"/>
-    <path d="M 217,160 Q 230,165 243,160" fill="none" stroke="#D8BCA8" stroke-width="0.6" opacity="0.4"/>
-    <path d="M 226,165 L 225,260" stroke="#FFF0E0" stroke-width="2.5" opacity="0.18" stroke-linecap="round"/>
-  </g>
-  <path d="M 127,258 Q 140,263 141,255" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.5" opacity="0.5"/>
-  <path d="M 169,255 Q 181,260 183,258" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.5" opacity="0.5"/>
-  <path d="M 207,258 Q 218,265 220,268" fill="url(#skinG)" stroke="#C5AA94" stroke-width="0.5" opacity="0.5"/>
-  <path d="M 115,252 Q 118,300 122,360" stroke="#D4BFA8" stroke-width="0.6" opacity="0.18" fill="none"/>
-  <path d="M 155,258 L 155,370" stroke="#D4BFA8" stroke-width="0.6" opacity="0.18" fill="none"/>
-  <path d="M 195,255 Q 190,300 185,360" stroke="#D4BFA8" stroke-width="0.6" opacity="0.18" fill="none"/>
-</svg>`;
+const NAIL_TEMPLATE_SVG = (n, h) => {
+  const W = 48, H = 86;
+  const w2 = W / 2;
+  const hh = H / 2;
+  return `<svg viewBox="-${w2} 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <clipPath id="nailClip-${n}">
+        <path d="M 0,4
+                 C -10,8 -14,20 -14,35
+                 C -14,55 -8,70 -4,78
+                 C -2,82 0,84 0,84
+                 C 0,84 2,82 4,78
+                 C 8,70 14,55 14,35
+                 C 14,20 10,8 0,4
+                 Z"/>
+      </clipPath>
+    </defs>
+    <path d="M 0,4
+             C -10,8 -14,20 -14,35
+             C -14,55 -8,70 -4,78
+             C -2,82 0,84 0,84
+             C 0,84 2,82 4,78
+             C 8,70 14,55 14,35
+             C 14,20 10,8 0,4
+             Z"
+          fill="${h ? 'transparent' : '#FFFFFF'}" stroke="#8A8A8A" stroke-width="1.2"/>
+    <!-- cuticle arc -->
+    <path d="M -11,16 Q 0,27 11,16" fill="none" stroke="#8A8A8A" stroke-width="0.7" opacity="0.5"/>
+    <!-- finger guide lines -->
+    <path d="M -14,25 L -18,76" fill="none" stroke="#8A8A8A" stroke-width="0.7" opacity="0.4"/>
+    <path d="M 14,25 L 18,76" fill="none" stroke="#8A8A8A" stroke-width="0.7" opacity="0.4"/>
+    <!-- cuticle boundary arc -->
+    <path d="M -15,22 Q 0,36 15,22" fill="none" stroke="#8A8A8A" stroke-width="0.9" opacity="0.3"/>
+  </svg>`;
+};
 
-const NAILS = [
-  { id: 'thumb',  cx: 51,  cy: 210, w: 32, h: 26, rot: -33 },
-  { id: 'index',  cx: 108, cy: 103, w: 30, h: 24, rot: -6 },
-  { id: 'middle', cx: 155, cy: 68,  w: 36, h: 28, rot: 0 },
-  { id: 'ring',   cx: 206, cy: 93,  w: 32, h: 26, rot: 7 },
-  { id: 'pinky',  cx: 248, cy: 156, w: 26, h: 22, rot: 18 },
+const NAIL_IDS = ['n0','n1','n2','n3','n4','n5','n6','n7','n8','n9'];
+
+// Nail labels for the finalize composite
+const NAIL_LABELS = [
+  ['R Pinky', 'R Ring', 'R Mid', 'R Index', 'R Thumb'],
+  ['L Thumb', 'L Index', 'L Mid', 'L Ring', 'L Pinky'],
 ];
 
 const MB_PLACEHOLDER = [
@@ -161,7 +108,7 @@ function render(view) {
 }
 
 /* ═══════════════════════════════════════
-   HAND MODE (existing)
+   HAND MODE — 2×5 Nail Grid
    ═══════════════════════════════════════ */
 
 function renderHandMode(view) {
@@ -184,20 +131,30 @@ function renderHandMode(view) {
       <h1>${i18n.t('canvas.title')}</h1>
       <p class="canvas-hint" id="canvas-hint">${selectedDesign ? i18n.t('canvas.tapFinger') : i18n.t('canvas.selectDesign')}</p>
 
-      <div class="hand-container" id="hand-container">
-        <div class="hand-svg-wrap" id="hand-svg">${HAND_SVG}</div>
-        ${NAILS.map(n => {
-          const design = appliedDesigns[n.id];
-          const pct = (v, max) => (v / max) * 100;
-          return `
-            <div class="nail-zone ${design ? 'has-design' : ''} ${selectedDesign && !design ? 'ready' : ''}"
-                 data-nail="${n.id}"
-                 style="left:${pct(n.cx,300)}%;top:${pct(n.cy,460)}%;width:${pct(n.w,300)}%;height:${pct(n.h,460)}%;transform:translate(-50%,-50%) rotate(${n.rot}deg)">
-              ${design ? `<img src="${design.image}" alt="${design.title}" class="nail-image" />` : ''}
-              ${design ? `<button class="nail-remove" data-nail="${n.id}">&times;</button>` : ''}
-            </div>
-          `;
-        }).join('')}
+      <div class="nail-grid" id="nail-grid">
+        ${[0, 1].map(row => `
+          <div class="nail-grid-row">
+            ${[0, 1, 2, 3, 4].map(col => {
+              const n = row * 5 + col;
+              const id = NAIL_IDS[n];
+              const design = appliedDesigns[id];
+              const label = NAIL_LABELS[row][col];
+              return `
+                <div class="nail-cell ${design ? 'has-design' : ''} ${selectedDesign && !design ? 'ready' : ''}"
+                     data-nail="${id}">
+                  <div class="nail-cell-inner">
+                    ${design
+                      ? `<div class="nail-svg-wrap"><img src="${design.image}" alt="" class="nail-fill-img" /></div>`
+                      : `<div class="nail-svg-wrap">${NAIL_TEMPLATE_SVG(id, false)}</div>`
+                    }
+                    <span class="nail-label">${label}</span>
+                    ${design ? `<button class="nail-remove" data-nail="${id}">&times;</button>` : ''}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `).join('')}
       </div>
 
       <div class="design-strip-header">
@@ -212,7 +169,7 @@ function renderHandMode(view) {
       </div>
 
       <button class="finalize-btn ${filledCount > 0 ? '' : 'disabled'}" id="finalize-btn" ${filledCount === 0 ? 'disabled' : ''}>
-        ${i18n.t('canvas.finalize')} (${filledCount}/5)
+        ${i18n.t('canvas.finalize')} (${filledCount}/10)
       </button>
     </div>
   `;
@@ -234,11 +191,11 @@ function renderHandMode(view) {
     });
   });
 
-  view.querySelectorAll('.nail-zone').forEach(zone => {
-    zone.addEventListener('click', (e) => {
+  view.querySelectorAll('.nail-cell').forEach(cell => {
+    cell.addEventListener('click', (e) => {
       if (e.target.classList.contains('nail-remove')) {
         e.stopPropagation();
-        delete appliedDesigns[zone.dataset.nail];
+        delete appliedDesigns[cell.dataset.nail];
         render(view);
         return;
       }
@@ -246,7 +203,7 @@ function renderHandMode(view) {
         showToast(i18n.t('canvas.selectFirst'));
         return;
       }
-      appliedDesigns[zone.dataset.nail] = { ...selectedDesign };
+      appliedDesigns[cell.dataset.nail] = { ...selectedDesign };
       showToast(i18n.t('canvas.applied'), 'success');
       render(view);
     });
@@ -486,7 +443,16 @@ async function finalizeLook(view) {
 }
 
 async function generateCanvasImage() {
-  const W = 300, H = 460, scale = 2;
+  const COLS = 5, ROWS = 2;
+  const CELL_W = 100, CELL_H = 160;
+  const GAP_X = 24, GAP_Y = 28;
+  const PAD_X = 40, PAD_Y = 20;
+  const TOP_PAD = 60, BOT_PAD = 60;
+
+  const W = PAD_X * 2 + COLS * CELL_W + (COLS - 1) * GAP_X;
+  const H = TOP_PAD + PAD_Y * 2 + ROWS * CELL_H + (ROWS - 1) * GAP_Y + BOT_PAD;
+  const scale = 2;
+
   const canvas = document.createElement('canvas');
   canvas.width = W * scale;
   canvas.height = H * scale;
@@ -496,40 +462,65 @@ async function generateCanvasImage() {
   ctx.fillStyle = '#FCFBF7';
   ctx.fillRect(0, 0, W, H);
 
-  const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(HAND_SVG);
-  const handImg = new Image();
-  handImg.src = svgUrl;
-  await new Promise((res, rej) => { handImg.onload = res; handImg.onerror = rej; });
-  ctx.drawImage(handImg, 0, 0, W, H);
+  // Draw each nail cell
+  for (let row = 0; row < ROWS; row++) {
+    for (let col = 0; col < COLS; col++) {
+      const n = row * COLS + col;
+      const id = NAIL_IDS[n];
+      const label = NAIL_LABELS[row][col];
 
-  for (const nail of NAILS) {
-    const design = appliedDesigns[nail.id];
-    if (!design) continue;
+      const cx = PAD_X + col * (CELL_W + GAP_X) + CELL_W / 2;
+      const cy = TOP_PAD + PAD_Y + row * (CELL_H + GAP_Y) + CELL_H / 2;
 
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.src = design.image;
-    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
+      const design = appliedDesigns[id];
 
-    ctx.save();
-    ctx.translate(nail.cx, nail.cy);
-    ctx.rotate(nail.rot * Math.PI / 180);
-    ctx.beginPath();
-    ctx.ellipse(0, 0, nail.w / 2, nail.h / 2, 0, 0, Math.PI * 2);
-    ctx.clip();
+      // Draw nail SVG
+      const svgString = NAIL_TEMPLATE_SVG(id, !!design);
+      const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
+      const nailImg = new Image();
+      nailImg.src = svgUrl;
+      await new Promise((res, rej) => { nailImg.onload = res; nailImg.onerror = rej; });
+      ctx.drawImage(nailImg, cx - 24, cy - 43, 48, 86);
 
-    const ir = img.width / img.height;
-    const nr = nail.w / nail.h;
-    let dw, dh;
-    if (ir > nr) { dh = nail.h; dw = dh * ir; } else { dw = nail.w; dh = dw / ir; }
-    ctx.drawImage(img, -dw / 2, -dh / 2, dw, dh);
-    ctx.restore();
+      // Draw design if applied
+      if (design) {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = design.image;
+        await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - 39);
+        ctx.bezierCurveTo(cx - 10, cy - 35, cx - 14, cy - 23, cx - 14, cy - 8);
+        ctx.bezierCurveTo(cx - 14, cy + 12, cx - 8, cy + 27, cx - 4, cy + 35);
+        ctx.bezierCurveTo(cx - 2, cy + 39, cx, cy + 41, cx, cy + 41);
+        ctx.bezierCurveTo(cx, cy + 41, cx + 2, cy + 39, cx + 4, cy + 35);
+        ctx.bezierCurveTo(cx + 8, cy + 27, cx + 14, cy + 12, cx + 14, cy - 8);
+        ctx.bezierCurveTo(cx + 14, cy - 23, cx + 10, cy - 35, cx, cy - 39);
+        ctx.closePath();
+        ctx.clip();
+
+        const ir = img.width / img.height;
+        const nr = 28 / 80;
+        let dw, dh;
+        if (ir > nr) { dh = 80; dw = dh * ir; } else { dw = 28; dh = dw / ir; }
+        ctx.drawImage(img, cx - dw / 2, cy - dh / 2, dw, dh);
+        ctx.restore();
+      }
+
+      // Label
+      ctx.fillStyle = '#9A9A9A';
+      ctx.font = '400 9px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, cx, cy + 58);
+    }
   }
 
   ctx.fillStyle = '#A38874';
   ctx.font = '600 11px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('tiyu salon tokyo', W / 2, H - 12);
+  ctx.fillText('tiyu salon tokyo', W / 2, H - 16);
 
   return canvas.toDataURL('image/png');
 }
