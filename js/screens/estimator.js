@@ -103,7 +103,7 @@ export function openEstimator(item) {
               <span>${i18n.t('estimator.noPhoto')}</span>
             </div>
           `}
-          <input type="file" id="est-file" accept="image/*" style="display:none" />
+          <input type="file" id="est-file" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:-9999px;" />
         </div>
         <div class="est-photo-buttons">
           <button class="est-photo-btn" id="est-upload-btn">
